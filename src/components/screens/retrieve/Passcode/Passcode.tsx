@@ -8,26 +8,16 @@ import {
   Image,
   ActivityIndicator,
 } from 'react-native';
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import styles from './styles';
 import {
   AccountStatus,
   GlobalContext,
 } from '../../../../state/contexts/GlobalContext';
-import {
-  setAccountStatus,
-  setRetrieveData,
-  setUser,
-} from '../../../../state/actions/global';
+import {setAccountStatus, setUser} from '../../../../state/actions/global';
 import {decryptData, generateKey} from '../../../../utils/aes_encryption';
 import {showMessage} from 'react-native-flash-message';
-import useLocalStorage from '../../../../hooks/useLocalStorage';
+import {StorageSetItem} from '../../../../utils/storage';
 
 export type Props = {
   navigation: any;
@@ -43,8 +33,6 @@ const PasscodeScreen: React.FC<Props> = ({navigation}) => {
     value: false,
     message: '',
   });
-
-  const [storedUser, setStoredUser] = useLocalStorage('user', {});
 
   const tempArray = new Array(MAX_LENGTH).fill(0);
 
@@ -69,6 +57,10 @@ const PasscodeScreen: React.FC<Props> = ({navigation}) => {
 
   const decryptStoredData = async () => {
     const {encryptedSecretKey, encryptedSolaceName} = state.retrieveData!;
+    setLoading({
+      message: 'logging you in...',
+      value: true,
+    });
     try {
       const secretKey = await decryptSecretKey(encryptedSecretKey, code);
       const solaceName = await decryptSecretKey(encryptedSolaceName, code);
@@ -80,10 +72,14 @@ const PasscodeScreen: React.FC<Props> = ({navigation}) => {
       };
       console.log({user});
       dispatch(setUser(user));
-      setStoredUser(user);
+      await StorageSetItem('user', user);
       showMessage({
         message: 'successfully retrieved account',
         type: 'success',
+      });
+      setLoading({
+        message: '',
+        value: false,
       });
       dispatch(setAccountStatus(AccountStatus.EXISITING));
     } catch (e: any) {
@@ -93,6 +89,10 @@ const PasscodeScreen: React.FC<Props> = ({navigation}) => {
       showMessage({
         message: 'Incorrect passcode. Please try again.',
         type: 'danger',
+      });
+      setLoading({
+        message: '',
+        value: false,
       });
     }
   };

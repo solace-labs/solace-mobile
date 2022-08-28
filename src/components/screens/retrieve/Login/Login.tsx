@@ -7,28 +7,16 @@ import {
   ScrollView,
   Pressable,
   ActivityIndicator,
-  Alert,
 } from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import styles from './styles';
-import {
-  AccountStatus,
-  GlobalContext,
-  PROGRAM_ADDRESS,
-} from '../../../../state/contexts/GlobalContext';
-import {
-  setAccountStatus,
-  setAwsCognito,
-  setSDK,
-  setUser,
-} from '../../../../state/actions/global';
+import {GlobalContext} from '../../../../state/contexts/GlobalContext';
+import {setAwsCognito, setUser} from '../../../../state/actions/global';
 import {useTogglePasswordVisibility} from '../../../../hooks/useTogglePasswordVisibility';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {AwsCognito} from '../../../../utils/aws_cognito';
-import useLocalStorage from '../../../../hooks/useLocalStorage';
 import {showMessage} from 'react-native-flash-message';
-import {PublicKey, SolaceSDK} from 'solace-sdk';
-import {getMeta, relayTransaction} from '../../../../utils/relayer';
+import {StorageSetItem} from '../../../../utils/storage';
 
 export type Props = {
   navigation: any;
@@ -49,7 +37,6 @@ const Login: React.FC<Props> = ({navigation}) => {
     useTogglePasswordVisibility();
 
   const {state, dispatch} = useContext(GlobalContext);
-  const [tokens, setTokens] = useLocalStorage('tokens');
 
   const validateUsername = (text: string) => {
     setUsername({
@@ -88,14 +75,11 @@ const Login: React.FC<Props> = ({navigation}) => {
       );
       console.log({response});
       const {
-        //@ts-ignore
         accessToken: {jwtToken: accesstoken},
-        //@ts-ignore
         idToken: {jwtToken: idtoken},
-        //@ts-ignore
         refreshToken: {token: refreshtoken},
       } = response;
-      setTokens({
+      await StorageSetItem('tokens', {
         accesstoken,
         idtoken,
         refreshtoken,

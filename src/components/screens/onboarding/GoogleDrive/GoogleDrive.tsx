@@ -6,23 +6,19 @@ import {
   Image,
   ActivityIndicator,
 } from 'react-native';
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import styles from './styles';
-import {
-  setAccountStatus,
-  setGoogleApi,
-  setUser,
-} from '../../../../state/actions/global';
-import {
-  AccountStatus,
-  GlobalContext,
-} from '../../../../state/contexts/GlobalContext';
-import useLocalStorage from '../../../../hooks/useLocalStorage';
-import {PublicKey, SolaceSDK} from 'solace-sdk';
+import {setGoogleApi, setUser} from '../../../../state/actions/global';
+import {GlobalContext} from '../../../../state/contexts/GlobalContext';
+import {SolaceSDK} from 'solace-sdk';
 import {encryptKey} from '../../../../utils/aes_encryption';
 import {GoogleApi} from '../../../../utils/google_apis';
 import {showMessage} from 'react-native-flash-message';
-import {airdrop, getMeta, relayTransaction} from '../../../../utils/relayer';
+import {StorageSetItem} from '../../../../utils/storage';
+import {
+  SOLACE_NAME_FILENAME,
+  PRIVATE_KEY_FILENAME,
+} from '../../../../utils/constants';
 
 export type Props = {
   navigation: any;
@@ -30,9 +26,6 @@ export type Props = {
 
 const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
   const {state, dispatch} = useContext(GlobalContext);
-  const [storedUser, setStoredUser] = useLocalStorage('user', {});
-  const [tokens, setTokens] = useLocalStorage('tokens', {});
-  const [created, setCreated] = useState(false);
   const [loading, setLoading] = useState({
     value: false,
     message: 'enable now',
@@ -46,18 +39,6 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
       /** Google Drive Storage of Private Key and Solace Name */
       console.log('STORING');
       await storeToGoogleDrive(secretKeyString);
-      // dispatch(
-      //   setUser({
-      //     ...state.user,
-      //     isWalletCreated: false,
-      //     ownerPrivateKey: secretKeyString,
-      //   }),
-      // );
-      // console.log('STORED');
-      // navigation.reset({
-      //   index: 0,
-      //   routes: [{name: 'Airdrop'}],
-      // });
     } catch (e) {
       console.log(e);
     }
@@ -77,13 +58,16 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
       const username = state?.user?.solaceName!;
       const encryptedPrivateKey = await encryptKey(secretKey, pin);
       const encryptedUsername = await encryptKey(username, pin);
-      const exists = await googleApi.checkFileExists('solace_pk.solace');
+      const exists = await googleApi.checkFileExists(PRIVATE_KEY_FILENAME);
       if (!exists) {
         await googleApi.uploadFileToDrive(
-          'solace_pk.solace',
+          PRIVATE_KEY_FILENAME,
           encryptedPrivateKey,
         );
-        await googleApi.uploadFileToDrive('solace_n.solace', encryptedUsername);
+        await googleApi.uploadFileToDrive(
+          SOLACE_NAME_FILENAME,
+          encryptedUsername,
+        );
         dispatch(
           setUser({
             ...state.user,
@@ -91,7 +75,7 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
             ownerPrivateKey: secretKey,
           }),
         );
-        setStoredUser({
+        await StorageSetItem('user', {
           ...state.user,
           isWalletCreated: false,
           ownerPrivateKey: secretKey,
@@ -124,8 +108,8 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
           type: 'danger',
         });
         if (googleApi) {
-          await googleApi.deleteFile('solace_pk.solace');
-          await googleApi.deleteFile('solace_n.solace');
+          await googleApi.deleteFile(PRIVATE_KEY_FILENAME);
+          await googleApi.deleteFile(SOLACE_NAME_FILENAME);
         }
       }
       setLoading({

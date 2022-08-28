@@ -3,14 +3,12 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  Image,
   ActivityIndicator,
 } from 'react-native';
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import styles from './styles';
 import {
   setAccountStatus,
-  setGoogleApi,
   setSDK,
   setUser,
 } from '../../../../state/actions/global';
@@ -19,13 +17,12 @@ import {
   GlobalContext,
   NETWORK,
   PROGRAM_ADDRESS,
+  Tokens,
 } from '../../../../state/contexts/GlobalContext';
-import useLocalStorage from '../../../../hooks/useLocalStorage';
 import {KeyPair, PublicKey, SolaceSDK} from 'solace-sdk';
-import {encryptKey} from '../../../../utils/aes_encryption';
-import {GoogleApi} from '../../../../utils/google_apis';
 import {showMessage} from 'react-native-flash-message';
-import {airdrop, getMeta, relayTransaction} from '../../../../utils/relayer';
+import {getMeta, relayTransaction} from '../../../../utils/relayer';
+import {StorageGetItem, StorageSetItem} from '../../../../utils/storage';
 
 const enum status {
   AIRDROP_REQUESTED = 'AIRDROP_REQUESTED',
@@ -39,11 +36,7 @@ const enum status {
 
 const CreateWalletScreen: React.FC = () => {
   const {state, dispatch} = useContext(GlobalContext);
-  const [storedUser, setStoredUser] = useLocalStorage('user', {});
-  const [tokens, setTokens] = useLocalStorage('tokens', {});
   const [created, setCreated] = useState(false);
-  const [currentStatus, setCurrentStatus] = useState(status.AIRDROP_REQUESTED);
-  const [airdropConfirmed, setAirdropConfirmed] = useState(false);
   const [loading, setLoading] = useState({
     value: false,
     message: 'create',
@@ -54,12 +47,13 @@ const CreateWalletScreen: React.FC = () => {
    */
   const setToLocalStorage = useCallback(async () => {
     console.log('SETTING TO LOCALSTORAGE', state.user);
-    await setStoredUser(state.user);
+    await StorageSetItem('user', state.user);
     dispatch(setAccountStatus(AccountStatus.EXISITING));
-  }, [setStoredUser, state.user, dispatch]);
+  }, [state.user, dispatch]);
 
   const handleClick = async () => {
     try {
+      const tokens: Tokens = await StorageGetItem('tokens');
       const privateKey = state.user?.ownerPrivateKey!;
       console.log(privateKey);
       const keypair = KeyPair.fromSecretKey(

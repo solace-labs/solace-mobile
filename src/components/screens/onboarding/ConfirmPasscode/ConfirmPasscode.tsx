@@ -4,17 +4,10 @@ import {
   TouchableOpacity,
   ScrollView,
   TextInput,
-  Alert,
 } from 'react-native';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import styles from './styles';
-import {
-  AccountStatus,
-  GlobalContext,
-} from '../../../../state/contexts/GlobalContext';
-import {setAccountStatus} from '../../../../state/actions/global';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import useLocalStorage from '../../../../hooks/useLocalStorage';
+import {GlobalContext} from '../../../../state/contexts/GlobalContext';
 import {showMessage} from 'react-native-flash-message';
 
 export type Props = {
@@ -24,22 +17,17 @@ export type Props = {
 const ConfirmPasscodeScreen: React.FC<Props> = ({navigation}) => {
   const [code, setCode] = useState('');
   const textInputRef = useRef(null);
-  const {state, dispatch} = useContext(GlobalContext);
-  const [pinReady, setPinReady] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
-  const [user, setUser] = useLocalStorage('user', {});
+  const {state} = useContext(GlobalContext);
   const MAX_LENGTH = 6;
 
   const tempArray = new Array(MAX_LENGTH).fill(0);
 
   const handleOnPress = () => {
-    setIsFocused(true);
     const textInput = textInputRef.current! as TextInput;
     textInput.focus();
   };
 
   useEffect(() => {
-    setIsFocused(true);
     const textInput = textInputRef.current! as TextInput;
     textInput.focus();
   }, []);
@@ -61,6 +49,7 @@ const ConfirmPasscodeScreen: React.FC<Props> = ({navigation}) => {
       });
     }
   };
+
   return (
     <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
       <View style={styles.container}>

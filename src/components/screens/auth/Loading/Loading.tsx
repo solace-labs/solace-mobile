@@ -2,19 +2,16 @@
 import {View, Text, ScrollView, Image, ActivityIndicator} from 'react-native';
 import React, {useEffect} from 'react';
 import styles from './styles';
-import useLocalStorage from '../../../../hooks/useLocalStorage';
-import EncryptedStorage from 'react-native-encrypted-storage';
+import {StorageGetItem} from '../../../../utils/storage';
 
 export type Props = {
   navigation: any;
 };
 
 const Loading: React.FC<Props> = ({navigation}) => {
-  // const [tokens] = useLocalStorage('tokens');
-
   const getTokens = async () => {
-    const tokens = await EncryptedStorage.getItem('tokens');
-    console.log({tokens});
+    const tokens = await StorageGetItem('tokens');
+    // console.log({tokens});
     if (tokens) {
       navigation.reset({
         index: 0,

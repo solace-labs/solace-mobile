@@ -7,18 +7,13 @@ import {
 } from 'react-native';
 import React, {useContext, useState} from 'react';
 import styles from './styles';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import {
-  GlobalContext,
-  myPublicKey,
-  NETWORK,
-  PROGRAM_ADDRESS,
-} from '../../../../state/contexts/GlobalContext';
+import {GlobalContext, Tokens} from '../../../../state/contexts/GlobalContext';
 import {setSDK, setUser} from '../../../../state/actions/global';
 import {PublicKey, SolaceSDK} from 'solace-sdk';
 import {airdrop, getMeta, relayTransaction} from '../../../../utils/relayer';
-import useLocalStorage from '../../../../hooks/useLocalStorage';
 import {showMessage} from 'react-native-flash-message';
+import {NETWORK, PROGRAM_ADDRESS} from '../../../../utils/constants';
+import {StorageGetItem, StorageSetItem} from '../../../../utils/storage';
 
 export type Props = {
   navigation: any;
@@ -36,13 +31,12 @@ const GuardianRecovery: React.FC<Props> = ({navigation}) => {
     value: false,
     message: 'recover',
   });
-  const [tokens, setTokens] = useLocalStorage('tokens');
-  const [storedUser, setStoredUser] = useLocalStorage('user');
   const {state, dispatch} = useContext(GlobalContext);
 
   const handleRecovery = async () => {
     const keypair = SolaceSDK.newKeyPair();
     try {
+      const tokens: Tokens = await StorageGetItem('tokens');
       setLoading({
         message: 'recovering...',
         value: false,
@@ -54,7 +48,6 @@ const GuardianRecovery: React.FC<Props> = ({navigation}) => {
       });
       const username = state.user?.solaceName!;
       const accessToken = tokens.accesstoken;
-      // const feePayer = myPublicKey;
       const feePayer = new PublicKey(await getFeePayer(accessToken));
       console.log({feePayer, username});
       const data = await requestAirdrop(
@@ -68,7 +61,7 @@ const GuardianRecovery: React.FC<Props> = ({navigation}) => {
       const res = await relayTransaction(tx, accessToken);
       console.log({res});
       await confirmTransaction(res.data);
-      setStoredUser({
+      await StorageSetItem('user', {
         solaceName: username,
         ownerPrivateKey: keypair.secretKey.toString(),
         inRecovery: true,

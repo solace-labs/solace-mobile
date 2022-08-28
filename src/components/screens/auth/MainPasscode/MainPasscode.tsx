@@ -5,33 +5,21 @@ import {
   TouchableOpacity,
   ScrollView,
   TextInput,
-  TextInputComponent,
-  Pressable,
-  Alert,
   Image,
   ActivityIndicator,
 } from 'react-native';
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import styles from './styles';
 import {
   AccountStatus,
   GlobalContext,
-  NETWORK,
-  PROGRAM_ADDRESS,
+  User,
 } from '../../../../state/contexts/GlobalContext';
 import {setAccountStatus, setSDK} from '../../../../state/actions/global';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import useLocalStorage from '../../../../hooks/useLocalStorage';
-import {AwsCognito} from '../../../../utils/aws_cognito';
-import {check} from 'prettier';
 import {KeyPair, SolaceSDK} from 'solace-sdk';
 import {showMessage} from 'react-native-flash-message';
+import {StorageGetItem} from '../../../../utils/storage';
+import {NETWORK, PROGRAM_ADDRESS} from '../../../../utils/constants';
 
 export type Props = {
   navigation: any;
@@ -40,8 +28,6 @@ export type Props = {
 const MainPasscodeScreen: React.FC<Props> = ({navigation}) => {
   const [code, setCode] = useState('');
   const textInputRef = useRef(null);
-  // const [tokens] = useLocalStorage('tokens');
-  const [user] = useLocalStorage('user', {});
   const MAX_LENGTH = 6;
 
   const {state, dispatch} = useContext(GlobalContext);
@@ -57,8 +43,6 @@ const MainPasscodeScreen: React.FC<Props> = ({navigation}) => {
     textInput.focus();
   };
 
-  // console.log({tokens});
-
   const handleOnPress = () => {
     focusMainInput();
   };
@@ -68,32 +52,61 @@ const MainPasscodeScreen: React.FC<Props> = ({navigation}) => {
   }, []);
 
   const retrieveAccount = async () => {
-    console.log('RETRIEVE ACCOUNT', user);
-    const privateKey = state.user?.ownerPrivateKey!;
-    const solaceName = state.user?.solaceName!;
-    console.log(privateKey);
-    const keypair = KeyPair.fromSecretKey(
-      Uint8Array.from(privateKey.split(',').map(e => +e)),
-    );
-    setLoading({
-      value: true,
-      message: 'logging you in',
-    });
-    const sdk = await SolaceSDK.retrieveFromName(solaceName, {
-      network: NETWORK,
-      owner: keypair,
-      programAddress: PROGRAM_ADDRESS,
-    });
-    console.log({sdk});
-    dispatch(setSDK(sdk));
-    setLoading({
-      value: false,
-      message: '',
-    });
-    dispatch(setAccountStatus(AccountStatus.ACTIVE));
+    try {
+      const user: User = await StorageGetItem('user');
+      if (!user) {
+        showMessage({
+          message: 'User not found',
+          type: 'info',
+        });
+        return;
+      }
+      console.log('RETRIEVE ACCOUNT', user);
+      const privateKey = state.user?.ownerPrivateKey!;
+      const solaceName = state.user?.solaceName!;
+      console.log({privateKey});
+      const keypair = KeyPair.fromSecretKey(
+        Uint8Array.from(privateKey.split(',').map(e => +e)),
+      );
+      setLoading({
+        value: true,
+        message: 'logging you in',
+      });
+      const sdk = await SolaceSDK.retrieveFromName(solaceName, {
+        network: NETWORK,
+        owner: keypair,
+        programAddress: PROGRAM_ADDRESS,
+      });
+      console.log({sdk});
+      dispatch(setSDK(sdk));
+      setLoading({
+        value: false,
+        message: '',
+      });
+      dispatch(setAccountStatus(AccountStatus.ACTIVE));
+    } catch (e) {
+      setLoading({
+        value: false,
+        message: '',
+      });
+      setCode('');
+      showMessage({
+        message: 'error retrieving accout, contact solace team',
+        type: 'default',
+      });
+      console.log('ERROR RETRIEVING ACCOUNT');
+    }
   };
 
   const checkPinReady = async () => {
+    const user: User = await StorageGetItem('user');
+    if (!user) {
+      showMessage({
+        message: 'User not found',
+        type: 'info',
+      });
+      return;
+    }
     if (code.length === MAX_LENGTH) {
       if (user && code === user.pin) {
         await retrieveAccount();

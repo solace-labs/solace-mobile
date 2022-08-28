@@ -3,9 +3,7 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  Image,
   TextInput,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
 import React, {useContext, useState} from 'react';
@@ -16,55 +14,34 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {
   AccountStatus,
   GlobalContext,
+  Tokens,
 } from '../../../../state/contexts/GlobalContext';
-import {
-  addNewContact,
-  setAccountStatus,
-  setSDK,
-} from '../../../../state/actions/global';
-import {KeyPair, PublicKey, SolaceSDK} from 'solace-sdk';
+import {setAccountStatus} from '../../../../state/actions/global';
+import {PublicKey, SolaceSDK} from 'solace-sdk';
 import {
   getMeta,
   relayTransaction,
   requestGuardian,
 } from '../../../../utils/relayer';
-import useLocalStorage from '../../../../hooks/useLocalStorage';
 import {showMessage} from 'react-native-flash-message';
-import EncryptedStorage from 'react-native-encrypted-storage';
-import {NavigationProp} from '@react-navigation/native';
+import {StorageDeleteItem, StorageGetItem} from '../../../../utils/storage';
 
 export type Props = {
   navigation: any;
 };
 
 const AddGuardian: React.FC<Props> = ({navigation}) => {
-  const [name, setName] = useState('');
   const [address, setAddress] = useState(
     'GNgMfSSJ4NjSuu1EdHj94P6TzQS24KH38y1si2CMrUsF',
   );
   const {state, dispatch} = useContext(GlobalContext);
-  const [tokens, setTokens] = useLocalStorage('tokens', {});
   const [loading, setLoading] = useState({
     value: false,
     message: '',
   });
 
-  // const addContact = () => {
-  //   if (name && address) {
-  //     const newContact = {
-  //       id: new Date().getTime().toString() + Math.random().toString(),
-  //       name,
-  //       address,
-  //       username: `${name.split(' ')[0]}.solace.money`,
-  //     };
-  //     dispatch(addNewContact(newContact));
-  //     navigation.navigate('Send');
-  //   } else {
-  //     Alert.alert('Please enter all the details');
-  //   }
-  // };
-
   const addGuardian = async () => {
+    const tokens: Tokens = await StorageGetItem('tokens');
     const sdk = state.sdk!;
     const walletName = state.user?.solaceName!;
     const solaceWalletAddress = sdk.wallet.toString();
@@ -161,7 +138,7 @@ const AddGuardian: React.FC<Props> = ({navigation}) => {
           message: 'You need to login again',
           type: 'info',
         });
-        await EncryptedStorage.removeItem('tokens');
+        await StorageDeleteItem('tokens');
         dispatch(setAccountStatus(AccountStatus.EXISITING));
       }
       throw e;

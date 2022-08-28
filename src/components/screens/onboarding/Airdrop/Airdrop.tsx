@@ -7,11 +7,15 @@ import {
 } from 'react-native';
 import React, {useContext, useState} from 'react';
 import styles from './styles';
-import {GlobalContext, NETWORK} from '../../../../state/contexts/GlobalContext';
-import useLocalStorage from '../../../../hooks/useLocalStorage';
+import {
+  GlobalContext,
+  NETWORK,
+  Tokens,
+} from '../../../../state/contexts/GlobalContext';
 import {KeyPair, SolaceSDK} from 'solace-sdk';
 import {showMessage} from 'react-native-flash-message';
 import {airdrop} from '../../../../utils/relayer';
+import {StorageGetItem} from '../../../../utils/storage';
 
 export type Props = {
   navigation: any;
@@ -19,7 +23,6 @@ export type Props = {
 
 const AirdropScreen: React.FC<Props> = ({navigation}) => {
   const {state} = useContext(GlobalContext);
-  const [tokens] = useLocalStorage('tokens', {});
   const [loading, setLoading] = useState({
     value: false,
     message: 'request now',
@@ -28,6 +31,13 @@ const AirdropScreen: React.FC<Props> = ({navigation}) => {
   const handleClick = async () => {
     try {
       const privateKey = state.user?.ownerPrivateKey!;
+      const tokens: Tokens = await StorageGetItem('tokens');
+      if (!tokens) {
+        showMessage({
+          message: 'Please login...',
+          type: 'info',
+        });
+      }
       console.log(privateKey);
       const keypair = KeyPair.fromSecretKey(
         Uint8Array.from(privateKey.split(',').map(e => +e)),

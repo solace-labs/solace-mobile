@@ -6,7 +6,7 @@ import {
   Image,
   ActivityIndicator,
 } from 'react-native';
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import styles from './styles';
 import {
   setAccountStatus,
@@ -17,26 +17,22 @@ import {
   AccountStatus,
   GlobalContext,
 } from '../../../../state/contexts/GlobalContext';
-import useLocalStorage from '../../../../hooks/useLocalStorage';
 import {GoogleApi} from '../../../../utils/google_apis';
 import {showMessage} from 'react-native-flash-message';
+import {
+  SOLACE_NAME_FILENAME,
+  PRIVATE_KEY_FILENAME,
+} from '../../../../utils/constants';
 export type Props = {
   navigation: any;
 };
 
 const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
   const {state, dispatch} = useContext(GlobalContext);
-  const [storedUser, setStoredUser] = useLocalStorage('user', {});
-  const [created, setCreated] = useState(false);
   const [loading, setLoading] = useState({
     value: false,
     message: 'retrieve now',
   });
-
-  const setToLocalStorage = useCallback(async () => {
-    await setStoredUser(state.user);
-    dispatch(setAccountStatus(AccountStatus.EXISITING));
-  }, [setStoredUser, state.user, dispatch]);
 
   const retrieveFromGoogleDrive = async () => {
     try {
@@ -48,20 +44,19 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
       await googleApi.signIn();
       await googleApi.setDrive();
       dispatch(setGoogleApi(googleApi));
-
       const secretKeyExists = await googleApi.checkFileExists(
-        'solace_pk.solace',
+        PRIVATE_KEY_FILENAME,
       );
       const solaceNameExists = await googleApi.checkFileExists(
-        'solace_n.solace',
+        SOLACE_NAME_FILENAME,
       );
 
       if (secretKeyExists && solaceNameExists) {
         const encryptedSecretKey = await googleApi.getFileData(
-          'solace_pk.solace',
+          PRIVATE_KEY_FILENAME,
         );
         const encryptedSolaceName = await googleApi.getFileData(
-          'solace_n.solace',
+          SOLACE_NAME_FILENAME,
         );
         console.log({
           encryptedSecretKey,
@@ -83,7 +78,6 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
           type: 'success',
         });
         setTimeout(() => {
-          // navigation.navigate('Passcode');
           navigation.reset({
             index: 0,
             routes: [{name: 'Passcode'}],
@@ -115,15 +109,8 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
   };
 
   const recoverUsingGuardians = () => {
-    // navigation.navigate('GuardianRecovery');
     dispatch(setAccountStatus(AccountStatus.RECOVERY));
   };
-
-  useEffect(() => {
-    if (created) {
-      setToLocalStorage();
-    }
-  }, [created, setToLocalStorage]);
 
   return (
     <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
