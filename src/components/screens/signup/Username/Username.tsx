@@ -1,16 +1,15 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  ScrollView,
-  ActivityIndicator,
-} from 'react-native';
+import {View} from 'react-native';
 import React, {useContext, useState} from 'react';
 import styles from './styles';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+
 import {GlobalContext} from '../../../../state/contexts/GlobalContext';
 import {setUser} from '../../../../state/actions/global';
+import SolaceButton from '../../../common/SolaceUI/SolaceButton/SolaceButton';
+import SolaceContainer from '../../../common/SolaceUI/SolaceContainer/SolaceContainer';
+import SolaceText from '../../../common/SolaceUI/SolaceText/SolaceText';
+import SolaceInput from '../../../common/SolaceUI/SolaceInput/SolaceInput';
+import Header from '../../../common/Header/Header';
 
 export type Props = {
   navigation: any;
@@ -25,7 +24,6 @@ export enum Status {
 
 const UsernameScreen: React.FC<Props> = ({navigation}) => {
   const [username, setUsername] = useState('');
-  const [borderColor, setBorderColor] = useState('#fff3');
   const [isLoading, setIsLoading] = useState(false);
   const [usernameAvailable, setUsernameAvailable] = useState(false);
   const [status, setStatus] = useState({
@@ -58,7 +56,7 @@ const UsernameScreen: React.FC<Props> = ({navigation}) => {
         });
       }
       setIsLoading(false);
-    }, 200);
+    }, 2000);
   };
 
   const handleUsernameSubmit = async () => {
@@ -98,81 +96,53 @@ const UsernameScreen: React.FC<Props> = ({navigation}) => {
     return (
       <View style={styles.subTextContainer}>
         <AntDesign name={name} style={[styles.subIcon, {color}]} />
-        <Text style={styles.subText}>{status.text}</Text>
+        <SolaceText
+          variant="light"
+          weight="semibold"
+          size="sm"
+          style={{paddingLeft: 4}}>
+          {status.text}
+        </SolaceText>
       </View>
     );
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
-      <View style={styles.container}>
-        <View style={styles.textContainer}>
-          <Text style={styles.heading}>your solace username</Text>
-          <Text style={styles.subHeading}>
-            choose a username that others can use to send you money
-          </Text>
-          <TextInput
-            style={[styles.textInput, {borderColor}]}
-            placeholder="username"
-            placeholderTextColor="#fff6"
-            value={username}
-            autoCorrect={false}
-            autoCapitalize={'none'}
-            onFocus={() => setBorderColor('#fff6')}
-            onBlur={() => setBorderColor('#fff3')}
-            onChangeText={text => handleChange(text)}
-          />
-          {isLoading ? (
-            <View style={styles.subTextContainer}>
-              <ActivityIndicator size="small" />
-            </View>
-          ) : (
-            getIcon()
-          )}
-        </View>
-        {!usernameAvailable ? (
-          <TouchableOpacity
-            disabled={username.trim().length === 0 || isLoading}
-            onPress={() => {
-              checkUsernameAvailability();
-            }}
-            style={styles.buttonStyle}>
-            <Text
-              style={[
-                styles.buttonTextStyle,
-                {
-                  color:
-                    username.trim().length === 0 || isLoading
-                      ? 'gray'
-                      : 'black',
-                },
-              ]}>
-              {isLoading ? 'checking...' : 'check'}
-            </Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            disabled={username.trim().length === 0 || isLoading}
-            onPress={() => {
-              handleUsernameSubmit();
-            }}
-            style={styles.buttonStyle}>
-            <Text
-              style={[
-                styles.buttonTextStyle,
-                {
-                  color:
-                    username.trim().length === 0 || isLoading
-                      ? 'gray'
-                      : 'black',
-                },
-              ]}>
-              next
-            </Text>
-          </TouchableOpacity>
+    <SolaceContainer>
+      <View style={styles.textContainer}>
+        <Header
+          heading="your solace username"
+          subHeading={'choose a username that others can use to send you money'}
+        />
+        <SolaceInput
+          placeholder="username"
+          mt={16}
+          value={username}
+          onChangeText={text => handleChange(text)}
+        />
+        {getIcon()}
+      </View>
+      <View style={{flex: 1}}>
+        {isLoading && (
+          <SolaceText type="secondary" weight="bold" variant="light">
+            checking...
+          </SolaceText>
         )}
       </View>
-    </ScrollView>
+      <SolaceButton
+        mt={16}
+        loading={isLoading}
+        disabled={username.trim().length === 0 || isLoading}
+        onPress={() => {
+          usernameAvailable
+            ? handleUsernameSubmit()
+            : checkUsernameAvailability();
+        }}>
+        <SolaceText type="secondary" weight="bold" variant="dark">
+          {usernameAvailable ? 'next' : 'check'}
+        </SolaceText>
+      </SolaceButton>
+    </SolaceContainer>
   );
 };
 

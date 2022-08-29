@@ -1,14 +1,13 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  TextInput,
-} from 'react-native';
+import {View, TextInput} from 'react-native';
 import React, {useContext, useEffect, useRef, useState} from 'react';
-import styles from './styles';
 import {GlobalContext} from '../../../../state/contexts/GlobalContext';
 import {showMessage} from 'react-native-flash-message';
+import PasscodeContainer, {
+  PASSCODE_LENGTH,
+} from '../../../common/PasscodeContainer/PasscodeContainer';
+import SolaceButton from '../../../common/SolaceUI/SolaceButton/SolaceButton';
+import SolaceContainer from '../../../common/SolaceUI/SolaceContainer/SolaceContainer';
+import SolaceText from '../../../common/SolaceUI/SolaceText/SolaceText';
 
 export type Props = {
   navigation: any;
@@ -16,96 +15,39 @@ export type Props = {
 
 const ConfirmPasscodeScreen: React.FC<Props> = ({navigation}) => {
   const [code, setCode] = useState('');
-  const textInputRef = useRef(null);
   const {state} = useContext(GlobalContext);
-  const MAX_LENGTH = 6;
 
-  const tempArray = new Array(MAX_LENGTH).fill(0);
+  const filled = code.length === PASSCODE_LENGTH;
 
-  const handleOnPress = () => {
-    const textInput = textInputRef.current! as TextInput;
-    textInput.focus();
-  };
-
-  useEffect(() => {
-    const textInput = textInputRef.current! as TextInput;
-    textInput.focus();
-  }, []);
-
-  const checkPinReady = async () => {
-    if (code.length === MAX_LENGTH) {
-      if (state.user && state.user.pin === code) {
-        navigation.navigate('Login');
-      } else {
-        showMessage({
-          message: 'Passcode did not match',
-          type: 'danger',
-        });
-      }
+  const checkPinReady = () => {
+    if (filled && state.user && state.user.pin === code) {
+      navigation.navigate('Login');
     } else {
       showMessage({
-        message: 'Enter passcode',
-        type: 'info',
+        message: 'Passcode did not match',
+        type: 'danger',
       });
     }
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
-      <View style={styles.container}>
-        <View style={styles.textContainer}>
-          <Text style={styles.heading}>re-enter the same passcode</Text>
-          <TouchableOpacity
-            onPress={() => handleOnPress()}
-            onBlur={() => handleOnPress()}
-            style={{
-              flexDirection: 'row',
-              marginTop: 50,
-              justifyContent: 'center',
-            }}>
-            {tempArray.map((_, index) => {
-              const digit = code[index] || ' ';
-              const isComplete = code.length - index > 0;
-              return (
-                <View
-                  key={index}
-                  style={{
-                    width: 14,
-                    height: 14,
-                    marginLeft: 16,
-                    marginRight: 16,
-                    borderRadius: 8,
-                    overflow: 'hidden',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: isComplete ? 'white' : '#9999A5',
-                  }}
-                />
-                // {/* <Text style={{color: 'black'}}>{digit}</Text> */}
-                // </View>
-              );
-            })}
-          </TouchableOpacity>
-          <View>
-            <TextInput
-              ref={textInputRef}
-              style={styles.hiddenInput}
-              value={code}
-              maxLength={MAX_LENGTH}
-              onChangeText={setCode}
-              returnKeyType="done"
-              keyboardType="number-pad"
-              textContentType="oneTimeCode"
-            />
-          </View>
-        </View>
-        <TouchableOpacity
-          onPress={() => checkPinReady()}
-          style={styles.buttonStyle}>
-          <Text style={styles.buttonTextStyle}>next</Text>
-        </TouchableOpacity>
+    <SolaceContainer>
+      <View style={{flex: 1}}>
+        <SolaceText variant="white" size="lg" weight="semibold" align="center">
+          re-enter the same passcode
+        </SolaceText>
+        <PasscodeContainer code={code} setCode={setCode} />
       </View>
-    </ScrollView>
+      <SolaceButton
+        disabled={!filled}
+        onPress={() => {
+          checkPinReady();
+        }}>
+        <SolaceText type="secondary" weight="bold" variant="dark">
+          next
+        </SolaceText>
+      </SolaceButton>
+    </SolaceContainer>
   );
 };
 
