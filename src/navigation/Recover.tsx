@@ -9,7 +9,7 @@ const Stack = createNativeStackNavigator();
 const RecoverStack = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Recover"
+      initialRouteName="Login"
       screenOptions={{headerShown: false}}>
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="GuardianRecovery" component={GuardianRecovery} />
