@@ -1,31 +1,25 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  Image,
-  ActivityIndicator,
-} from 'react-native';
+import {View} from 'react-native';
 import React, {useCallback, useContext, useEffect, useState} from 'react';
-import styles from './styles';
 import {
   setAccountStatus,
-  setGoogleApi,
   setSDK,
   setUser,
 } from '../../../../state/actions/global';
 import {
   AccountStatus,
   GlobalContext,
-  NETWORK,
-  PROGRAM_ADDRESS,
+  Tokens,
 } from '../../../../state/contexts/GlobalContext';
-import useLocalStorage from '../../../../hooks/useLocalStorage';
 import {KeyPair, PublicKey, SolaceSDK} from 'solace-sdk';
-import {encryptKey} from '../../../../utils/aes_encryption';
-import {GoogleApi} from '../../../../utils/google_apis';
 import {showMessage} from 'react-native-flash-message';
-import {airdrop, getMeta, relayTransaction} from '../../../../utils/relayer';
+import {getMeta, relayTransaction} from '../../../../utils/relayer';
+import {StorageGetItem, StorageSetItem} from '../../../../utils/storage';
+import {NETWORK, PROGRAM_ADDRESS} from '../../../../utils/constants';
+import SolaceContainer from '../../../common/SolaceUI/SolaceContainer/SolaceContainer';
+import SolaceLoader from '../../../common/SolaceUI/SolaceLoader/SolaceLoader';
+import SolaceButton from '../../../common/SolaceUI/SolaceButton/SolaceButton';
+import SolaceText from '../../../common/SolaceUI/SolaceText/SolaceText';
+import Header from '../../../common/Header/Header';
 
 const enum status {
   AIRDROP_REQUESTED = 'AIRDROP_REQUESTED',
@@ -39,11 +33,6 @@ const enum status {
 
 const CreateWalletScreen: React.FC = () => {
   const {state, dispatch} = useContext(GlobalContext);
-  const [storedUser, setStoredUser] = useLocalStorage('user', {});
-  const [tokens, setTokens] = useLocalStorage('tokens', {});
-  const [created, setCreated] = useState(false);
-  const [currentStatus, setCurrentStatus] = useState(status.AIRDROP_REQUESTED);
-  const [airdropConfirmed, setAirdropConfirmed] = useState(false);
   const [loading, setLoading] = useState({
     value: false,
     message: 'create',
@@ -54,12 +43,13 @@ const CreateWalletScreen: React.FC = () => {
    */
   const setToLocalStorage = useCallback(async () => {
     console.log('SETTING TO LOCALSTORAGE', state.user);
-    await setStoredUser(state.user);
+    await StorageSetItem('user', state.user);
     dispatch(setAccountStatus(AccountStatus.EXISITING));
-  }, [setStoredUser, state.user, dispatch]);
+  }, [state.user, dispatch]);
 
   const handleClick = async () => {
     try {
+      const tokens: Tokens = await StorageGetItem('tokens');
       const privateKey = state.user?.ownerPrivateKey!;
       console.log(privateKey);
       const keypair = KeyPair.fromSecretKey(
@@ -84,7 +74,6 @@ const CreateWalletScreen: React.FC = () => {
       const awsCognito = state.awsCognito!;
       await awsCognito.updateAttribute('address', sdk.wallet.toString());
       dispatch(setSDK(sdk));
-      // sdk.owner;
       dispatch(setUser({...state.user, isWalletCreated: true}));
       showMessage({
         message: 'wallet created',
@@ -94,7 +83,8 @@ const CreateWalletScreen: React.FC = () => {
         message: 'created',
         value: false,
       });
-      setCreated(true);
+      await StorageSetItem('user', state.user);
+      dispatch(setAccountStatus(AccountStatus.EXISITING));
     } catch (e) {
       console.log('MAIN ERROR: ', e);
     }
@@ -182,7 +172,9 @@ const CreateWalletScreen: React.FC = () => {
       // console.log({randomname});
       console.log({username});
       const tx = await sdk.createFromName(username, payer);
+      console.log({tx});
       const res = await relayTransaction(tx, accessToken);
+      console.log('ERS', res);
       showMessage({
         message: 'confirming transaction',
       });
@@ -190,47 +182,39 @@ const CreateWalletScreen: React.FC = () => {
         sdk,
         transactionId: res.data,
       };
-    } catch (e) {
+    } catch (e: any) {
       setLoading({
         message: 'create',
         value: false,
       });
       showMessage({
-        message: 'there is already a account with this username',
+        message: e.message,
       });
       throw e;
     }
   };
 
-  useEffect(() => {
-    if (created) {
-      setToLocalStorage();
-    }
-  }, [created, setToLocalStorage]);
-
   return (
-    <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
-      <View style={styles.container}>
-        <View style={styles.textContainer}>
-          <Text style={styles.heading}>create wallet</Text>
-          <Text style={styles.subHeading}>
-            store your encrypted key in google drive so you can recover your
-            wallet if you lose your device
-          </Text>
-        </View>
-
-        {loading.value && <ActivityIndicator size="small" />}
-
-        <TouchableOpacity
-          disabled={loading.value}
-          onPress={() => {
-            handleClick();
-          }}
-          style={styles.buttonStyle}>
-          <Text style={styles.buttonTextStyle}>{loading.message}</Text>
-        </TouchableOpacity>
+    <SolaceContainer>
+      <View style={{flex: 1}}>
+        <Header
+          heading="create wallet"
+          subHeading="store your encrypted key in google drive so you can recover your wallet if you lose your device"
+        />
+        {loading.value && <SolaceLoader text={loading.message} />}
       </View>
-    </ScrollView>
+
+      <SolaceButton
+        onPress={() => {
+          handleClick();
+        }}
+        loading={loading.value}
+        disabled={loading.value}>
+        <SolaceText type="secondary" weight="bold" variant="dark">
+          {loading.message}
+        </SolaceText>
+      </SolaceButton>
+    </SolaceContainer>
   );
 };
 

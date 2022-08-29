@@ -1,29 +1,31 @@
-import {View, Text, ScrollView, Image, ActivityIndicator} from 'react-native';
-import React, {useContext, useEffect} from 'react';
-import styles from './styles';
-import {GlobalContext} from '../../../../state/contexts/GlobalContext';
+import {View, Image, ActivityIndicator, StyleSheet} from 'react-native';
+import React from 'react';
+import SolaceContainer from '../../../common/SolaceUI/SolaceContainer/SolaceContainer';
+import SolaceText from '../../../common/SolaceUI/SolaceText/SolaceText';
 
-export type Props = {
-  navigation: any;
-};
-
-const Loading: React.FC<Props> = ({navigation}) => {
-  const {state, dispatch} = useContext(GlobalContext);
-
-  useEffect(() => {}, []);
-
+const Loading = () => {
   return (
-    <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
+    <SolaceContainer>
       <View style={styles.container}>
-        <View style={styles.imageContainer}>
-          <Image
-            source={require('../../../../../assets/images/solace/solace-icon.png')}
-          />
-          <Text style={styles.logo}>Solace</Text>
-          <ActivityIndicator size="small" />
-        </View>
+        <Image
+          source={require('../../../../../assets/images/solace/solace-icon.png')}
+        />
+        <SolaceText mt={16} variant="white" size="xl" weight="semibold">
+          solace
+        </SolaceText>
       </View>
-    </ScrollView>
+      <View style={{flex: 1}}>
+        <ActivityIndicator size="small" />
+      </View>
+    </SolaceContainer>
   );
 };
 export default Loading;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});

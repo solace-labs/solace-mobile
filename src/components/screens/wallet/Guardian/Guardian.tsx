@@ -9,6 +9,7 @@ import GuardianTab from '../../../wallet/GuardianTab/GuardianTab';
 import {Contact} from '../../../wallet/ContactItem/ContactItem';
 import GuardianSecondTab from '../../../wallet/GuardianSecondTab/GuardianSecondTab';
 import {PublicKey, SolaceSDK} from 'solace-sdk';
+import {showMessage} from 'react-native-flash-message';
 
 export type Props = {
   navigation: any;
@@ -25,29 +26,46 @@ const Guardian: React.FC<Props> = ({navigation}) => {
     pending: PublicKeyType[];
   }>({approved: [], pending: []});
   const [guarding, setGuarding] = useState<PublicKeyType[]>([]);
-  // console.log(guardians);
 
   const getGuardians = async () => {
     console.log('here');
     setLoading(true);
-    const sdk = state.sdk!;
-    const {
-      pendingGuardians,
-      approvedGuardians,
-      guarding: whoIProtect,
-    } = await sdk.fetchWalletData();
-    console.log({pendingGuardians, approvedGuardians, guarding});
-    setGuardians({
-      approved: approvedGuardians,
-      pending: pendingGuardians,
-    });
-    setGuarding(whoIProtect);
-    setLoading(false);
+    try {
+      const sdk = state.sdk!;
+      if (!sdk) {
+        showMessage({
+          message: 'wallet not setup properly. logout',
+          type: 'danger',
+        });
+      }
+      console.log('SDK', sdk);
+      // const data = await sdk.fetchWalletData();
+      // console.log({data});
+      const {
+        pendingGuardians,
+        approvedGuardians,
+        guarding: whoIProtect,
+      } = await sdk.fetchWalletData();
+      console.log({pendingGuardians, approvedGuardians, guarding});
+      setGuardians({
+        approved: approvedGuardians,
+        pending: pendingGuardians,
+      });
+      setGuarding(whoIProtect);
+      setLoading(false);
+    } catch (e) {
+      showMessage({
+        message: 'some error fetching guardians',
+        type: 'danger',
+      });
+      console.log('Error during fetching guardian: ', e);
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    const willFocusSubscription = navigation.addListener('focus', () => {
-      getGuardians();
+    const willFocusSubscription = navigation.addListener('focus', async () => {
+      await getGuardians();
     });
     return willFocusSubscription;
   }, [navigation]);

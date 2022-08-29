@@ -1,10 +1,8 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import GoogleDriveScreen from '../components/screens/retrieve/GoogleDrive/GoogleDrive';
-import PasscodeScreen from '../components/screens/retrieve/Passcode/Passcode';
-import GuardianRecovery from '../components/screens/retrieve/GuardianRecovery/GuardianRecovery';
-import RecoverScreen from '../components/screens/retrieve/Recover/Recover';
-import Login from '../components/screens/retrieve/Login/Login';
+import GuardianRecovery from '../components/screens/recover/GuardianRecovery/GuardianRecovery';
+import RecoverScreen from '../components/screens/recover/Recover/Recover';
+import Login from '../components/screens/recover/Login/Login';
 
 const Stack = createNativeStackNavigator();
 

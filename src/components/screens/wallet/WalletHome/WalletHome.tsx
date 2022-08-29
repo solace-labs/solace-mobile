@@ -8,16 +8,9 @@ import {
   AccountStatus,
   GlobalContext,
 } from '../../../../state/contexts/GlobalContext';
-import {
-  changeUserName,
-  setAccountStatus,
-  setUser,
-} from '../../../../state/actions/global';
-import AssetScreen from '../Asset/Asset';
+import {setAccountStatus, setUser} from '../../../../state/actions/global';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {SolaceSDK} from 'solace-sdk';
-import useLocalStorage from '../../../../hooks/useLocalStorage';
-import {accountSize} from '@project-serum/anchor/dist/cjs/coder';
+import {StorageClearAll} from '../../../../utils/storage';
 
 export type Props = {
   navigation: any;
@@ -69,7 +62,6 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
   ];
 
   const [username, setUsername] = useState('');
-  const [storedUser, setStoredUser] = useLocalStorage('user', {});
 
   const {
     state: {user},
@@ -91,8 +83,8 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
     getInitialData();
   }, [dispatch]);
 
-  const logout = () => {
-    setStoredUser({});
+  const logout = async () => {
+    await StorageClearAll();
     dispatch(setUser({}));
     dispatch(setAccountStatus(AccountStatus.NEW));
   };
@@ -181,9 +173,7 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
           <TouchableOpacity
             style={styles.buttonContainer}
             // onPress={() => AsyncStorage.removeItem('user')}>
-            onPress={() => {
-              setStoredUser(undefined);
-            }}>
+          >
             <View style={styles.iconBackground}>
               <AntDesign name="arrowdown" size={20} color="black" />
             </View>

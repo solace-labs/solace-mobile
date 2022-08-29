@@ -1,16 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  ScrollView,
-  Pressable,
-  ActivityIndicator,
-  Alert,
-} from 'react-native';
-import React, {useCallback, useContext, useEffect, useState} from 'react';
-import styles from './styles';
+import {View, ActivityIndicator} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   AccountStatus,
   GlobalContext,
@@ -20,10 +10,14 @@ import {
   setAwsCognito,
   setUser,
 } from '../../../../state/actions/global';
-import {useTogglePasswordVisibility} from '../../../../hooks/useTogglePasswordVisibility';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {AwsCognito} from '../../../../utils/aws_cognito';
 import {showMessage} from 'react-native-flash-message';
+import SolaceButton from '../../../common/SolaceUI/SolaceButton/SolaceButton';
+import SolaceContainer from '../../../common/SolaceUI/SolaceContainer/SolaceContainer';
+import SolaceInput from '../../../common/SolaceUI/SolaceInput/SolaceInput';
+import SolacePasswordInput from '../../../common/SolaceUI/SolacePasswordInput/SolacePasswordInput';
+import SolaceText from '../../../common/SolaceUI/SolaceText/SolaceText';
+import Header from '../../../common/Header/Header';
 
 export type Props = {
   navigation: any;
@@ -31,7 +25,7 @@ export type Props = {
 
 const EmailScreen: React.FC<Props> = ({navigation}) => {
   const [email, setEmail] = useState({
-    value: 'ankit.negi@onpar.in',
+    value: '',
     isValid: false,
   });
   const [password, setPassword] = useState({
@@ -46,8 +40,6 @@ const EmailScreen: React.FC<Props> = ({navigation}) => {
   const [active, setActive] = useState('email');
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const {passwordVisibility, rightIcon, handlePasswordVisibility} =
-    useTogglePasswordVisibility();
 
   useEffect(() => {
     validateEmail(email.value);
@@ -182,116 +174,67 @@ const EmailScreen: React.FC<Props> = ({navigation}) => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
-      <View style={styles.container}>
-        <View style={styles.textContainer}>
-          <Text style={styles.heading}>
-            enter{' '}
-            {active === 'email'
+    <SolaceContainer>
+      <View style={{flex: 1}}>
+        <Header
+          heading={`enter ${
+            active === 'email'
               ? 'email'
               : active === 'password'
               ? 'password'
-              : 'otp'}
-          </Text>
-          <Text style={styles.subHeading}>
-            we’ll notify you of important or suspicious activity on your wallet
-          </Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder="email address"
-            placeholderTextColor="#fff6"
-            value={email.value}
-            onChangeText={text => validateEmail(text)}
-            onFocus={() => setActive('email')}
-            autoCapitalize={'none'}
-            autoCorrect={false}
+              : 'otp'
+          }`}
+          subHeading={
+            'we’ll notify you of important or suspicious activity on your wallet'
+          }
+        />
+        <SolaceInput
+          placeholder="email address"
+          onFocus={() => setActive('email')}
+          mt={16}
+          value={email.value}
+          onChangeText={text => validateEmail(text)}
+        />
+        <SolacePasswordInput
+          placeholder="password"
+          value={password.value}
+          onFocus={() => setActive('password')}
+          onChangeText={text => validatePassword(text)}
+          mt={16}
+        />
+        {!password.isValid && (
+          <SolaceText type="secondary" size="sm" variant="normal" align="left">
+            must be at least 8 characters long, contain at least one lowercase
+            letter, one uppercase letter, one number, and one special character
+          </SolaceText>
+        )}
+        {isOtpSent && (
+          <SolaceInput
+            placeholder="enter 6 digit otp"
+            onFocus={() => setActive('otp')}
+            keyboardType="number-pad"
+            mt={16}
+            value={otp.value}
+            onChangeText={text => validateOtp(text)}
           />
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.textInput}
-              placeholder="enter password"
-              placeholderTextColor="#fff6"
-              value={password.value}
-              secureTextEntry={passwordVisibility}
-              onChangeText={text => validatePassword(text)}
-              autoCapitalize={'none'}
-              onFocus={() => setActive('password')}
-              autoCorrect={false}
-            />
-            <Pressable
-              onPress={handlePasswordVisibility}
-              style={styles.eyeIcon}>
-              <MaterialCommunityIcons name={rightIcon} size={22} color="gray" />
-            </Pressable>
+        )}
+        {isLoading && (
+          <View style={{flex: 1}}>
+            <ActivityIndicator size="small" color="#fff" />
           </View>
-          {!password.isValid && (
-            <Text style={styles.passwordHint}>
-              must be at least 8 characters long, contain at least one lowercase
-              letter, one uppercase letter, one number, and one special
-              character
-            </Text>
-          )}
-          {isOtpSent && (
-            <TextInput
-              style={styles.textInput}
-              placeholder="enter 6 digit otp"
-              placeholderTextColor="#fff6"
-              value={otp.value}
-              onChangeText={text => validateOtp(text)}
-              autoCapitalize={'none'}
-              keyboardType="number-pad"
-              onFocus={() => setActive('otp')}
-              autoCorrect={false}
-            />
-          )}
-          {isLoading && (
-            <View style={{marginTop: 20}}>
-              <ActivityIndicator size="small" color="#fff" />
-            </View>
-          )}
-        </View>
-
-        {isOtpSent ? (
-          <TouchableOpacity
-            disabled={isDisable()}
-            onPress={() => {
-              handleVerifyOtp();
-            }}
-            style={styles.buttonStyle}>
-            <Text
-              style={[
-                styles.buttonTextStyle,
-                {
-                  color: isDisable() ? '#9999a5' : 'black',
-                },
-              ]}>
-              {isLoading
-                ? 'verfying...'
-                : otp.isVerified
-                ? 'verified'
-                : 'verify otp'}
-            </Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            disabled={isDisable()}
-            onPress={() => {
-              handleMailSubmit();
-            }}
-            style={styles.buttonStyle}>
-            <Text
-              style={[
-                styles.buttonTextStyle,
-                {
-                  color: isDisable() ? '#9999a5' : 'black',
-                },
-              ]}>
-              {isLoading ? 'sending...' : 'send otp'}
-            </Text>
-          </TouchableOpacity>
         )}
       </View>
-    </ScrollView>
+      <SolaceButton
+        onPress={() => {
+          isOtpSent ? handleVerifyOtp() : handleMailSubmit();
+        }}
+        loading={isLoading}
+        disabled={isDisable()}>
+        <SolaceText type="secondary" weight="bold" variant="dark">
+          {isOtpSent ? 'verify otp' : 'send otp'}
+        </SolaceText>
+      </SolaceButton>
+    </SolaceContainer>
   );
 };
 

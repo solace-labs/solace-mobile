@@ -3,7 +3,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import FingerprintScreen from '../components/screens/auth/Figerprint/Fingerprint';
 import MainPasscodeScreen from '../components/screens/auth/MainPasscode/MainPasscode';
 import LoginScreen from '../components/screens/auth/LoginScreen/Login';
-import Loading from '../components/screens/auth/Loading/Loading';
+import Loading from '../components/screens/auth/Loading/AuthLoading';
 
 const Stack = createNativeStackNavigator();
 const AuthStack = () => {

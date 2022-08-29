@@ -13,7 +13,6 @@ const SignUpStack = () => {
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Username" component={UsernameScreen} />
       <Stack.Screen name="Email" component={EmailScreen} />
-      {/* <Stack.Screen name="CheckMail" component={CheckMailScreen} /> */}
     </Stack.Navigator>
   );
 };

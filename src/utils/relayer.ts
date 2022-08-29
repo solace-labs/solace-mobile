@@ -1,13 +1,12 @@
 import axios from 'axios';
 import {KeyPair, PublicKey, SolaceSDK} from 'solace-sdk';
-// import {relayTransaction as rlTransaction} from 'solace-sdk/relayer';
 import {
+  DEFAULT_PRIVATE_KEY,
   LAMPORTS_PER_SOL,
-  myPrivateKey,
   NETWORK,
-} from '../state/contexts/GlobalContext';
-
-const baseUrl = 'https://rxc9xav4nk.execute-api.ap-south-1.amazonaws.com';
+  RELAYER_BASE_URL,
+} from './constants';
+import {relayTransaction as rlTransaction} from 'solace-sdk/relayer';
 
 interface RequestGuardianshipBody {
   guardianAddress: string;
@@ -21,9 +20,12 @@ interface RequestGuardianshipBody {
  */
 export const getMeta = async (accessToken: string) => {
   return (
-    await axios.get<{feePayer: any; clusterUrl: string}>(`${baseUrl}/meta`, {
-      headers: {Authorization: accessToken},
-    })
+    await axios.get<{feePayer: any; clusterUrl: string}>(
+      `${RELAYER_BASE_URL}/meta`,
+      {
+        headers: {Authorization: accessToken},
+      },
+    )
   ).data;
 };
 
@@ -42,7 +44,7 @@ export const airdrop = async (publicKey: string, accessToken: string) => {
       );
     }
     const res = await axios.post(
-      `${baseUrl}/airdrop`,
+      `${RELAYER_BASE_URL}/airdrop`,
       {
         publicKey,
       },
@@ -63,11 +65,15 @@ export const airdrop = async (publicKey: string, accessToken: string) => {
  * @returns
  */
 export const relayTransaction = async (tx: any, accessToken: string) => {
+  console.log('RELAYING');
   if (NETWORK === 'local') {
-    // const keypair = KeyPair.fromSecretKey(Uint8Array.from(myPrivateKey));
-    // return await rlTransaction(tx, keypair);
+    const keypair = KeyPair.fromSecretKey(Uint8Array.from(DEFAULT_PRIVATE_KEY));
+    console.log('DONE RELAYING');
+    const res = await rlTransaction(tx, keypair);
+    console.log('RES', res);
+    return res;
   }
-  const res = await axios.post(`${baseUrl}/relay`, tx, {
+  const res = await axios.post(`${RELAYER_BASE_URL}/relay`, tx, {
     headers: {Authorization: accessToken},
   });
   return res.data;
@@ -83,7 +89,7 @@ export const requestGuardian = async (
   data: RequestGuardianshipBody,
   accessToken: string,
 ) => {
-  return await axios.post(`${baseUrl}/guardian/request`, data, {
+  return await axios.post(`${RELAYER_BASE_URL}/guardian/request`, data, {
     headers: {Authorization: accessToken},
   });
 };

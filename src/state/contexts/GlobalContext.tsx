@@ -1,23 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {use} from 'chai';
 import React, {
   createContext,
   Dispatch,
   useCallback,
   useEffect,
   useReducer,
-  useState,
 } from 'react';
-import {unstable_batchedUpdates} from 'react-native';
 import {Contact} from '../../components/wallet/ContactItem/ContactItem';
-import useLocalStorage from '../../hooks/useLocalStorage';
 import {setAccountStatus, setUser} from '../actions/global';
 import globalReducer from '../reducers/global';
 import {KeyPair, SolaceSDK} from 'solace-sdk';
 import {AwsCognito} from '../../utils/aws_cognito';
 import {GoogleApi} from '../../utils/google_apis';
-import {getMeta} from '../../utils/relayer';
+import {NETWORK, PROGRAM_ADDRESS} from '../../utils/constants';
+import {StorageGetItem} from '../../utils/storage';
 
 type InitialStateType = {
   accountStatus: AccountStatus;
@@ -37,18 +33,11 @@ export type RetrieveData = {
   decryptedSolaceName?: any;
 };
 
-// export const PROGRAM_ADDRESS = '8FRYfiEcSPFuJd27jkKaPBwFCiXDFYrnfwqgH9JFjS2U';
-export const PROGRAM_ADDRESS = '3CvPZTk1PYMs6JzgiVNFtsAeijSNwbhrQTMYeFQKWpFw';
-export const NETWORK = 'local';
-export const LAMPORTS_PER_SOL = 1000000000;
-
-export const myPrivateKey = [
-  64, 49, 21, 122, 173, 218, 147, 45, 207, 84, 138, 105, 6, 50, 18, 81, 174,
-  246, 20, 171, 195, 135, 70, 222, 225, 154, 217, 74, 218, 186, 191, 197, 49,
-  170, 69, 11, 200, 3, 223, 9, 39, 74, 201, 163, 68, 222, 53, 183, 52, 220, 243,
-  79, 228, 240, 168, 172, 218, 155, 91, 56, 123, 136, 222, 143,
-];
-export const myPublicKey = '4LsZkGUwZax7x3qdNubwb9czWk2TJNysrVjzc2pGF91p';
+export type Tokens = {
+  accesstoken: string;
+  idtoken: string;
+  refreshtoken: string;
+};
 
 export type User = {
   email: string;
@@ -57,6 +46,7 @@ export type User = {
   publicKey?: string;
   isWalletCreated: boolean;
   pin: string;
+  inRecovery?: boolean;
 };
 
 export enum AccountStatus {
@@ -96,23 +86,26 @@ export const GlobalContext = createContext<{
 
 const GlobalProvider = ({children}: {children: any}) => {
   const [state, dispatch] = useReducer(globalReducer, initialState);
-  const [storedUser, setStoredUser] = useLocalStorage('user', undefined);
-  const [tokens] = useLocalStorage('tokens');
 
-  const checkInRecoverMode = useCallback(() => {
-    console.log('in');
-    return (
-      storedUser &&
+  const checkInRecoverMode = useCallback(async () => {
+    const storedUser: User = await StorageGetItem('user');
+    return (storedUser &&
       storedUser.inRecovery &&
       storedUser.solaceName &&
-      storedUser.ownerPrivateKey
-    );
-  }, [storedUser]);
+      storedUser.ownerPrivateKey) as boolean;
+  }, []);
+
+  const isUserValid = useCallback(async () => {
+    const storedUser: User = await StorageGetItem('user');
+    return (storedUser &&
+      storedUser.pin &&
+      storedUser.solaceName &&
+      storedUser.ownerPrivateKey &&
+      storedUser.isWalletCreated) as boolean;
+  }, []);
 
   const checkRecovery = useCallback(async () => {
-    // const accessToken = tokens.accesstoken;
-    console.log({tokens});
-    // getMeta(accessToken);
+    const storedUser: User = await StorageGetItem('user');
     const privateKey = storedUser.ownerPrivateKey! as string;
     const solaceName = storedUser.solaceName!;
     console.log('checking recovery', privateKey);
@@ -127,31 +120,25 @@ const GlobalProvider = ({children}: {children: any}) => {
     });
     const res = await sdk.fetchWalletData();
     console.log(res);
-  }, [storedUser]);
+  }, []);
 
-  const isUserValid = useCallback(() => {
-    return (
-      storedUser &&
-      storedUser.pin &&
-      storedUser.solaceName &&
-      storedUser.ownerPrivateKey &&
-      storedUser.isWalletCreated
-    );
-  }, [storedUser]);
-
-  useEffect(() => {
+  const init = useCallback(async () => {
+    const storedUser: User = await StorageGetItem('user');
     console.log({storedUser});
-    if (checkInRecoverMode()) {
-      console.log('inside recover');
+    const inRecoveryMode = await checkInRecoverMode();
+    if (inRecoveryMode) {
       checkRecovery();
-    } else if (isUserValid()) {
-      // if (isUserValid()) {
+    } else if (await isUserValid()) {
       dispatch(setUser(storedUser));
       dispatch(setAccountStatus(AccountStatus.EXISITING));
     } else {
-      dispatch(setAccountStatus(AccountStatus.NEW));
+      dispatch(setAccountStatus(AccountStatus.RECOVERY));
     }
-  }, [storedUser]);
+  }, [checkInRecoverMode, checkRecovery, isUserValid]);
+
+  useEffect(() => {
+    init();
+  }, []);
 
   return (
     <GlobalContext.Provider value={{state, dispatch}}>

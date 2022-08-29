@@ -3,9 +3,7 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  Image,
   TextInput,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
 import React, {useContext, useState} from 'react';
@@ -16,61 +14,53 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {
   AccountStatus,
   GlobalContext,
+  Tokens,
 } from '../../../../state/contexts/GlobalContext';
-import {
-  addNewContact,
-  setAccountStatus,
-  setSDK,
-} from '../../../../state/actions/global';
-import {KeyPair, PublicKey, SolaceSDK} from 'solace-sdk';
+import {setAccountStatus} from '../../../../state/actions/global';
+import {PublicKey, SolaceSDK} from 'solace-sdk';
 import {
   getMeta,
   relayTransaction,
   requestGuardian,
 } from '../../../../utils/relayer';
-import useLocalStorage from '../../../../hooks/useLocalStorage';
 import {showMessage} from 'react-native-flash-message';
-import EncryptedStorage from 'react-native-encrypted-storage';
-import {NavigationProp} from '@react-navigation/native';
+import {StorageDeleteItem, StorageGetItem} from '../../../../utils/storage';
+import {getFeePayer} from '../../../../utils/apis';
+import {AwsCognito} from '../../../../utils/aws_cognito';
+import {CognitoRefreshToken} from 'amazon-cognito-identity-js';
 
 export type Props = {
   navigation: any;
 };
 
 const AddGuardian: React.FC<Props> = ({navigation}) => {
-  const [name, setName] = useState('');
   const [address, setAddress] = useState(
     'GNgMfSSJ4NjSuu1EdHj94P6TzQS24KH38y1si2CMrUsF',
   );
   const {state, dispatch} = useContext(GlobalContext);
-  const [tokens, setTokens] = useLocalStorage('tokens', {});
   const [loading, setLoading] = useState({
     value: false,
     message: '',
   });
 
-  // const addContact = () => {
-  //   if (name && address) {
-  //     const newContact = {
-  //       id: new Date().getTime().toString() + Math.random().toString(),
-  //       name,
-  //       address,
-  //       username: `${name.split(' ')[0]}.solace.money`,
-  //     };
-  //     dispatch(addNewContact(newContact));
-  //     navigation.navigate('Send');
-  //   } else {
-  //     Alert.alert('Please enter all the details');
-  //   }
-  // };
-
   const addGuardian = async () => {
+    const tokens: Tokens = await StorageGetItem('tokens');
     const sdk = state.sdk!;
     const walletName = state.user?.solaceName!;
     const solaceWalletAddress = sdk.wallet.toString();
     const accessToken = tokens.accesstoken;
     try {
-      const feePayer = new PublicKey(await getFeePayer(accessToken));
+      let feePayerResponse = await getFeePayer(accessToken);
+      if (feePayerResponse === 'ACCESS_TOKEN_EXPIRED') {
+        const awsCognito = new AwsCognito();
+        await awsCognito.setCognitoUser(walletName);
+        const res: any = await awsCognito.refreshSession(
+          new CognitoRefreshToken({RefreshToken: tokens.refreshtoken}),
+        );
+        console.log('NEW TOKENS: ', res);
+        feePayerResponse = await getFeePayer(res.accessToken);
+      }
+      const feePayer = new PublicKey(feePayerResponse);
       const guardianPublicKey = new PublicKey(address);
       const tx = await sdk.addGuardian(guardianPublicKey, feePayer);
       const res = await relayTransaction(tx, accessToken);
@@ -142,31 +132,23 @@ const AddGuardian: React.FC<Props> = ({navigation}) => {
     }
   };
 
-  const getFeePayer = async (accessToken: string) => {
-    setLoading({
-      message: 'getting fee payer...',
-      value: true,
-    });
-    try {
-      const response = await getMeta(accessToken);
-      return response.feePayer;
-    } catch (e: any) {
-      setLoading({
-        message: 'failed. retry again',
-        value: false,
-      });
-      console.log('FEE PAYER', e.status);
-      if (e.message === 'Request failed with status code 401') {
-        showMessage({
-          message: 'You need to login again',
-          type: 'info',
-        });
-        await EncryptedStorage.removeItem('tokens');
-        dispatch(setAccountStatus(AccountStatus.EXISITING));
-      }
-      throw e;
-    }
-  };
+  // const getFeePayer = async (accessToken: string) => {
+  //   try {
+  //     const response = await getMeta(accessToken);
+  //     return response.feePayer;
+  //   } catch (e: any) {
+  //     console.log('FEE PAYER', e.status);
+  //     if (e.message === 'Request failed with status code 401') {
+  //       showMessage({
+  //         message: 'You need to login again',
+  //         type: 'info',
+  //       });
+  //       await StorageDeleteItem('tokens');
+  //       dispatch(setAccountStatus(AccountStatus.EXISITING));
+  //     }
+  //     throw e;
+  //   }
+  // };
 
   return (
     <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>

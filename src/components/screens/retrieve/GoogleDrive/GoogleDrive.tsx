@@ -1,13 +1,5 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  Image,
-  ActivityIndicator,
-} from 'react-native';
-import React, {useCallback, useContext, useEffect, useState} from 'react';
-import styles from './styles';
+import {View, Image} from 'react-native';
+import React, {useContext, useState} from 'react';
 import {
   setAccountStatus,
   setGoogleApi,
@@ -17,26 +9,27 @@ import {
   AccountStatus,
   GlobalContext,
 } from '../../../../state/contexts/GlobalContext';
-import useLocalStorage from '../../../../hooks/useLocalStorage';
 import {GoogleApi} from '../../../../utils/google_apis';
 import {showMessage} from 'react-native-flash-message';
+import {
+  SOLACE_NAME_FILENAME,
+  PRIVATE_KEY_FILENAME,
+} from '../../../../utils/constants';
+import SolaceContainer from '../../../common/SolaceUI/SolaceContainer/SolaceContainer';
+import Header from '../../../common/Header/Header';
+import SolaceLoader from '../../../common/SolaceUI/SolaceLoader/SolaceLoader';
+import SolaceButton from '../../../common/SolaceUI/SolaceButton/SolaceButton';
+import SolaceText from '../../../common/SolaceUI/SolaceText/SolaceText';
 export type Props = {
   navigation: any;
 };
 
 const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
   const {state, dispatch} = useContext(GlobalContext);
-  const [storedUser, setStoredUser] = useLocalStorage('user', {});
-  const [created, setCreated] = useState(false);
   const [loading, setLoading] = useState({
     value: false,
     message: 'retrieve now',
   });
-
-  const setToLocalStorage = useCallback(async () => {
-    await setStoredUser(state.user);
-    dispatch(setAccountStatus(AccountStatus.EXISITING));
-  }, [setStoredUser, state.user, dispatch]);
 
   const retrieveFromGoogleDrive = async () => {
     try {
@@ -48,20 +41,19 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
       await googleApi.signIn();
       await googleApi.setDrive();
       dispatch(setGoogleApi(googleApi));
-
       const secretKeyExists = await googleApi.checkFileExists(
-        'solace_pk.solace',
+        PRIVATE_KEY_FILENAME,
       );
       const solaceNameExists = await googleApi.checkFileExists(
-        'solace_n.solace',
+        SOLACE_NAME_FILENAME,
       );
 
       if (secretKeyExists && solaceNameExists) {
         const encryptedSecretKey = await googleApi.getFileData(
-          'solace_pk.solace',
+          PRIVATE_KEY_FILENAME,
         );
         const encryptedSolaceName = await googleApi.getFileData(
-          'solace_n.solace',
+          SOLACE_NAME_FILENAME,
         );
         console.log({
           encryptedSecretKey,
@@ -83,7 +75,6 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
           type: 'success',
         });
         setTimeout(() => {
-          // navigation.navigate('Passcode');
           navigation.reset({
             index: 0,
             routes: [{name: 'Passcode'}],
@@ -115,54 +106,42 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
   };
 
   const recoverUsingGuardians = () => {
-    // navigation.navigate('GuardianRecovery');
     dispatch(setAccountStatus(AccountStatus.RECOVERY));
   };
 
-  useEffect(() => {
-    if (created) {
-      setToLocalStorage();
-    }
-  }, [created, setToLocalStorage]);
+  const imageStyle = {
+    width: 70,
+    height: 70,
+    marginBottom: 5,
+  };
 
   return (
-    <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
-      <View style={styles.container}>
-        <View style={styles.textContainer}>
-          <Image
-            source={require('../../../../../assets/images/solace/google-drive.png')}
-            style={styles.image}
-          />
-          <Text style={styles.heading}>retrieve your wallet</Text>
-          <Text style={styles.subHeading}>
-            retrieve your encrypted key from google drive so you can access your
-            wallet
-          </Text>
-        </View>
-
-        {loading.value && <ActivityIndicator size="small" />}
-
-        {loading.message === 'recover by guardians?' ? (
-          <TouchableOpacity
-            disabled={loading.value}
-            onPress={() => {
-              recoverUsingGuardians();
-            }}
-            style={styles.buttonStyle}>
-            <Text style={styles.buttonTextStyle}>{loading.message}</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            disabled={loading.value}
-            onPress={() => {
-              retrieveFromGoogleDrive();
-            }}
-            style={styles.buttonStyle}>
-            <Text style={styles.buttonTextStyle}>{loading.message}</Text>
-          </TouchableOpacity>
-        )}
+    <SolaceContainer>
+      <View style={{flex: 1}}>
+        <Image
+          source={require('../../../../../assets/images/solace/google-drive.png')}
+          style={imageStyle}
+        />
+        <Header
+          heading="retrieve your wallet"
+          subHeading="retrieve your encrypted key from google drive so you can access your wallet"
+        />
+        {loading.value && <SolaceLoader text={loading.message} />}
       </View>
-    </ScrollView>
+
+      <SolaceButton
+        onPress={() => {
+          loading.message === 'recover by guardians?'
+            ? recoverUsingGuardians()
+            : retrieveFromGoogleDrive();
+        }}
+        loading={loading.value}
+        disabled={loading.value}>
+        <SolaceText type="secondary" weight="bold" variant="dark">
+          {loading.message}
+        </SolaceText>
+      </SolaceButton>
+    </SolaceContainer>
   );
 };
 
