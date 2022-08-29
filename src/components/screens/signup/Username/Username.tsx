@@ -1,6 +1,5 @@
-import {View} from 'react-native';
+import {StyleProp, TextStyle, View, ViewStyle} from 'react-native';
 import React, {useContext, useState} from 'react';
-import styles from './styles';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import {GlobalContext} from '../../../../state/contexts/GlobalContext';
@@ -10,6 +9,7 @@ import SolaceContainer from '../../../common/SolaceUI/SolaceContainer/SolaceCont
 import SolaceText from '../../../common/SolaceUI/SolaceText/SolaceText';
 import SolaceInput from '../../../common/SolaceUI/SolaceInput/SolaceInput';
 import Header from '../../../common/Header/Header';
+import SolaceLoader from '../../../common/SolaceUI/SolaceLoader/SolaceLoader';
 
 export type Props = {
   navigation: any;
@@ -93,9 +93,21 @@ const UsernameScreen: React.FC<Props> = ({navigation}) => {
         name = 'checkcircleo';
         color = 'green';
     }
+
+    const containerStyle: StyleProp<ViewStyle> = {
+      flexDirection: 'row',
+      marginTop: 8,
+      alignItems: 'center',
+    };
+    const iconStyle: StyleProp<TextStyle> = {
+      color,
+      fontSize: 16,
+      fontWeight: 'bold',
+    };
+
     return (
-      <View style={styles.subTextContainer}>
-        <AntDesign name={name} style={[styles.subIcon, {color}]} />
+      <View style={containerStyle}>
+        <AntDesign name={name} style={iconStyle} />
         <SolaceText
           variant="light"
           weight="semibold"
@@ -109,7 +121,7 @@ const UsernameScreen: React.FC<Props> = ({navigation}) => {
 
   return (
     <SolaceContainer>
-      <View style={styles.textContainer}>
+      <View style={{flex: 1}}>
         <Header
           heading="your solace username"
           subHeading={'choose a username that others can use to send you money'}
@@ -121,13 +133,7 @@ const UsernameScreen: React.FC<Props> = ({navigation}) => {
           onChangeText={text => handleChange(text)}
         />
         {getIcon()}
-      </View>
-      <View style={{flex: 1}}>
-        {isLoading && (
-          <SolaceText type="secondary" weight="bold" variant="light">
-            checking...
-          </SolaceText>
-        )}
+        {isLoading && <SolaceLoader text="checking..." />}
       </View>
       <SolaceButton
         mt={16}

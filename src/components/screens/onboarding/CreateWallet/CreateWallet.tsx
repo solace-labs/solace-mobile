@@ -1,12 +1,5 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  ActivityIndicator,
-} from 'react-native';
+import {View} from 'react-native';
 import React, {useCallback, useContext, useEffect, useState} from 'react';
-import styles from './styles';
 import {
   setAccountStatus,
   setSDK,

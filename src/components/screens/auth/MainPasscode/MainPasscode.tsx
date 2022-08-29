@@ -1,15 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  TextInput,
-  Image,
-  ActivityIndicator,
-} from 'react-native';
-import React, {useContext, useEffect, useRef, useState} from 'react';
-import styles from './styles';
+import {View, Image, ActivityIndicator, StyleSheet} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   AccountStatus,
   GlobalContext,
@@ -20,58 +11,34 @@ import {KeyPair, SolaceSDK} from 'solace-sdk';
 import {showMessage} from 'react-native-flash-message';
 import {StorageGetItem} from '../../../../utils/storage';
 import {NETWORK, PROGRAM_ADDRESS} from '../../../../utils/constants';
+import SolaceContainer from '../../../common/SolaceUI/SolaceContainer/SolaceContainer';
+import SolaceText from '../../../common/SolaceUI/SolaceText/SolaceText';
+import PasscodeContainer, {
+  PASSCODE_LENGTH,
+} from '../../../common/PasscodeContainer/PasscodeContainer';
+import SolaceLoader from '../../../common/SolaceUI/SolaceLoader/SolaceLoader';
 
-export type Props = {
-  navigation: any;
-};
-
-const MainPasscodeScreen: React.FC<Props> = ({navigation}) => {
+const MainPasscodeScreen = () => {
   const [code, setCode] = useState('');
-  const textInputRef = useRef(null);
-  const MAX_LENGTH = 6;
-
   const {state, dispatch} = useContext(GlobalContext);
   const [loading, setLoading] = useState({
     value: false,
     message: '',
   });
 
-  const tempArray = new Array(MAX_LENGTH).fill(0);
-
-  const focusMainInput = () => {
-    const textInput = textInputRef.current! as TextInput;
-    textInput.focus();
-  };
-
-  const handleOnPress = () => {
-    focusMainInput();
-  };
-
-  useEffect(() => {
-    focusMainInput();
-  }, []);
-
-  const retrieveAccount = async () => {
+  const retrieveAccount = async (user: User) => {
     try {
-      const user: User = await StorageGetItem('user');
-      if (!user) {
-        showMessage({
-          message: 'User not found',
-          type: 'info',
-        });
-        return;
-      }
       console.log('RETRIEVE ACCOUNT', user);
+      setLoading({
+        value: true,
+        message: 'logging you in',
+      });
       const privateKey = state.user?.ownerPrivateKey!;
       const solaceName = state.user?.solaceName!;
       console.log({privateKey});
       const keypair = KeyPair.fromSecretKey(
         Uint8Array.from(privateKey.split(',').map(e => +e)),
       );
-      setLoading({
-        value: true,
-        message: 'logging you in',
-      });
       const sdk = await SolaceSDK.retrieveFromName(solaceName, {
         network: NETWORK,
         owner: keypair,
@@ -98,111 +65,68 @@ const MainPasscodeScreen: React.FC<Props> = ({navigation}) => {
     }
   };
 
+  const filled = code.length === PASSCODE_LENGTH;
+
   const checkPinReady = async () => {
     const user: User = await StorageGetItem('user');
     if (!user) {
+      dispatch(setAccountStatus(AccountStatus.NEW));
       showMessage({
-        message: 'User not found',
-        type: 'info',
+        message: 'user not found',
+        type: 'danger',
       });
       return;
     }
-    if (code.length === MAX_LENGTH) {
-      if (user && code === user.pin) {
-        await retrieveAccount();
-      } else {
-        showMessage({
-          message: 'incorrect passcode',
-          type: 'danger',
-        });
-        setCode('');
-        focusMainInput();
-      }
+    if (user && code === user.pin) {
+      await retrieveAccount(user);
+    } else {
+      showMessage({
+        message: 'incorrect passcode',
+        type: 'danger',
+      });
+      setCode('');
     }
   };
 
   useEffect(() => {
-    checkPinReady();
+    if (filled) {
+      checkPinReady();
+    }
   }, [code]);
 
   return (
-    <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
+    <SolaceContainer>
       <View style={styles.container}>
-        <View style={styles.headingContainer}>
-          <Image
-            source={require('../../../../../assets/images/solace/solace-icon.png')}
-            style={styles.image}
-          />
-          <Text style={styles.username}>solace</Text>
-        </View>
-        <View style={styles.textContainer}>
-          <Text style={styles.heading}>enter passcode</Text>
-          <TouchableOpacity
-            onPress={() => handleOnPress()}
-            onBlur={() => handleOnPress()}
-            style={styles.passcodeContainer}>
-            {tempArray.map((_, index) => {
-              const isComplete = code.length - index > 0;
-              return (
-                <View
-                  key={index}
-                  style={[
-                    styles.passcode,
-                    {
-                      backgroundColor: isComplete ? 'white' : '#9999A5',
-                    },
-                  ]}
-                />
-              );
-            })}
-          </TouchableOpacity>
-          {/* <TouchableOpacity onPress={() => navigation.navigate('Fingerprint')}>
-            <Text style={styles.fingerprint}>use fingerprint</Text>
-          </TouchableOpacity> */}
-
-          {loading.value && (
-            <View
-              style={{
-                marginTop: 5,
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <ActivityIndicator size="small" />
-              <Text
-                style={{
-                  fontSize: 12,
-                  color: 'white',
-                  marginLeft: 5,
-                  fontFamily: 'SpaceMono-Regular',
-                }}>
-                {loading.message}
-              </Text>
-            </View>
-          )}
-
-          <View>
-            <TextInput
-              ref={textInputRef}
-              style={styles.hiddenInput}
-              value={code}
-              maxLength={MAX_LENGTH}
-              onChangeText={setCode}
-              returnKeyType="done"
-              keyboardType="number-pad"
-              textContentType="oneTimeCode"
-            />
-          </View>
-        </View>
-        {/* <TouchableOpacity
-          onPress={() => checkPinReady()}
-          style={styles.buttonStyle}>
-          <Text style={styles.buttonTextStyle}>next</Text>
-        </TouchableOpacity> */}
+        <Image
+          source={require('../../../../../assets/images/solace/solace-icon.png')}
+        />
+        <SolaceText mt={16} variant="white" size="xl" weight="semibold">
+          solace
+        </SolaceText>
       </View>
-    </ScrollView>
+      <View style={{flex: 1}}>
+        <SolaceText variant="white" size="lg" weight="semibold">
+          enter passcode
+        </SolaceText>
+        <PasscodeContainer code={code} setCode={setCode} />
+        {loading.value && (
+          <SolaceLoader
+            style={{justifyContent: 'flex-start'}}
+            text={loading.message}>
+            <ActivityIndicator style={{paddingLeft: 8}} size="small" />
+          </SolaceLoader>
+        )}
+      </View>
+    </SolaceContainer>
   );
 };
 
 export default MainPasscodeScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});

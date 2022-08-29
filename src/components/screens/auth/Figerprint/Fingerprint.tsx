@@ -1,16 +1,7 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  TextInput,
-  TextInputComponent,
-  Pressable,
-  Alert,
-  Image,
-} from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
-import styles from './styles';
+import {View, TouchableOpacity, Image, StyleSheet} from 'react-native';
+import React from 'react';
+import SolaceContainer from '../../../common/SolaceUI/SolaceContainer/SolaceContainer';
+import SolaceText from '../../../common/SolaceUI/SolaceText/SolaceText';
 
 export type Props = {
   navigation: any;
@@ -18,33 +9,44 @@ export type Props = {
 
 const FingerprintScreen: React.FC<Props> = ({navigation}) => {
   return (
-    <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
+    <SolaceContainer>
       <View style={styles.container}>
-        <View style={styles.headingContainer}>
-          <Image
-            source={require('../../../../../assets/images/solace/solace-icon.png')}
-            style={styles.image}
-          />
-          <Text style={styles.username}>solace</Text>
-        </View>
-        <View style={styles.textContainer}>
-          <Image
-            source={require('../../../../../assets/images/solace/light-fingerprint.png')}
-            style={styles.fingerprint}
-          />
-          <Text style={styles.heading}>unlock with fingerprint</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('MainPasscode')}>
-            <Text style={styles.fingerprintText}>use passcode</Text>
-          </TouchableOpacity>
-        </View>
-        {/* <TouchableOpacity
-          onPress={() => navigation.navigate('Wallet')}
-          style={styles.buttonStyle}>
-          <Text style={styles.buttonTextStyle}>next</Text>
-        </TouchableOpacity> */}
+        <Image
+          source={require('../../../../../assets/images/solace/solace-icon.png')}
+        />
+        <SolaceText mt={16} variant="white" size="xl" weight="semibold">
+          solace
+        </SolaceText>
       </View>
-    </ScrollView>
+      <View style={[styles.container, {justifyContent: 'flex-start'}]}>
+        <Image
+          source={require('../../../../../assets/images/solace/light-fingerprint.png')}
+          style={{width: 40, height: 40}}
+        />
+        <SolaceText mt={20} weight="semibold" size="lg">
+          unlock with fingerprint
+        </SolaceText>
+        <TouchableOpacity onPress={() => navigation.navigate('MainPasscode')}>
+          <SolaceText
+            mt={20}
+            size="md"
+            type="secondary"
+            weight="bold"
+            variant="normal">
+            use passcode
+          </SolaceText>
+        </TouchableOpacity>
+      </View>
+    </SolaceContainer>
   );
 };
 
 export default FingerprintScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});

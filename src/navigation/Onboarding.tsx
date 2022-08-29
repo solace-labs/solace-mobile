@@ -11,7 +11,7 @@ const Stack = createNativeStackNavigator();
 const OnboardingStack = () => {
   return (
     <Stack.Navigator
-      initialRouteName="CreateWallet"
+      initialRouteName="Passcode"
       screenOptions={{headerShown: false}}>
       <Stack.Screen name="Passcode" component={PasscodeScreen} />
       <Stack.Screen name="ConfirmPasscode" component={ConfirmPasscodeScreen} />

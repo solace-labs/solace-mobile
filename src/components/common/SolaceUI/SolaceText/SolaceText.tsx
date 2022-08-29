@@ -17,7 +17,7 @@ type SecondaryTextProps = {
   weight?: SecondaryWeight;
 };
 
-type SolaceTextProps = {
+export type SolaceTextProps = {
   style?: StyleProp<TextStyle>;
   variant?: Variant;
   fullWidth?: boolean;
@@ -71,7 +71,7 @@ const SolaceText: FC<Props> = ({
   };
 
   const defaultStyles = {textAlign: align, fontSize: Styles.fontSize[size]};
-  const marginStyles = {marginBottom: mb, marginTop: mb};
+  const marginStyles = {marginBottom: mb, marginTop: mt};
 
   return (
     <Text

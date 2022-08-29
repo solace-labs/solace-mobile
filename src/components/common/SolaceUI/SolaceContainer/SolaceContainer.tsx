@@ -27,16 +27,16 @@ const SolaceContainer: FC<Props> = ({
     paddingTop: 50,
     flex: 1,
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'pink',
+    // borderWidth: 1,
+    // borderColor: 'pink',
   };
 
   const container: StyleProp<ViewStyle> = {
     flex: 1,
     width: '90%',
     paddingVertical: 24,
-    borderWidth: 1,
-    borderColor: 'white',
+    // borderWidth: 1,
+    // borderColor: 'white',
   };
 
   return (

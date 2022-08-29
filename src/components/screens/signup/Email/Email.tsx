@@ -214,7 +214,7 @@ const EmailScreen: React.FC<Props> = ({navigation}) => {
             onFocus={() => setActive('otp')}
             keyboardType="number-pad"
             mt={16}
-            value={email.value}
+            value={otp.value}
             onChangeText={text => validateOtp(text)}
           />
         )}

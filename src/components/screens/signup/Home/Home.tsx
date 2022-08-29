@@ -1,6 +1,5 @@
-import {View, Image} from 'react-native';
+import {View, Image, StyleSheet} from 'react-native';
 import React, {useContext} from 'react';
-import styles from './styles';
 import {
   AccountStatus,
   GlobalContext,
@@ -16,9 +15,10 @@ export type Props = {
 
 const HomeScreen: React.FC<Props> = ({navigation}) => {
   const {state, dispatch} = useContext(GlobalContext);
+
   return (
     <SolaceContainer>
-      <View style={styles.imageContainer}>
+      <View style={styles.imageContainerStyle}>
         <Image
           source={require('../../../../../assets/images/solace/solace-icon.png')}
         />
@@ -26,7 +26,7 @@ const HomeScreen: React.FC<Props> = ({navigation}) => {
           solace
         </SolaceText>
       </View>
-      <View style={styles.buttonContainer}>
+      <View style={styles.buttonContainerStyle}>
         <SolaceButton onPress={() => navigation.navigate('Username')}>
           <SolaceText type="secondary" variant="dark" weight="bold">
             create new wallet
@@ -45,3 +45,17 @@ const HomeScreen: React.FC<Props> = ({navigation}) => {
   );
 };
 export default HomeScreen;
+
+const styles = StyleSheet.create({
+  buttonContainerStyle: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    width: '100%',
+  },
+  imageContainerStyle: {
+    flex: 1,
+    justifyContent: 'center',
+    width: '100%',
+    alignItems: 'center',
+  },
+});

@@ -1,16 +1,23 @@
-import React, {FC} from 'react';
-import {View} from 'react-native';
-import SolaceText from '../SolaceText/SolaceText';
+import React, {FC, ReactNode} from 'react';
+import {StyleProp, View, ViewStyle} from 'react-native';
+import SolaceText, {SolaceTextProps} from '../SolaceText/SolaceText';
 
 type Props = {
   text: string;
+  children: ReactNode;
+  style: StyleProp<ViewStyle>;
 };
 
-const SolaceLoader: FC<Props> = ({text}) => {
+const SolaceLoader: FC<Props> = ({text, children, style, ...textProps}) => {
   return (
-    <View style={{flex: 1, justifyContent: 'center'}}>
-      <SolaceText variant="normal" type="secondary">
+    <View
+      style={[
+        {flex: 1, justifyContent: 'center', alignItems: 'center'},
+        style,
+      ]}>
+      <SolaceText variant="normal" type="secondary" {...textProps}>
         {text}
+        {children}
       </SolaceText>
     </View>
   );
