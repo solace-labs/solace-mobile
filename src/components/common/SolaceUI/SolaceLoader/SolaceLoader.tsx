@@ -1,11 +1,11 @@
 import React, {FC, ReactNode} from 'react';
 import {StyleProp, View, ViewStyle} from 'react-native';
-import SolaceText, {SolaceTextProps} from '../SolaceText/SolaceText';
+import SolaceText from '../SolaceText/SolaceText';
 
 type Props = {
   text: string;
-  children: ReactNode;
-  style: StyleProp<ViewStyle>;
+  children?: ReactNode;
+  style?: StyleProp<ViewStyle>;
 };
 
 const SolaceLoader: FC<Props> = ({text, children, style, ...textProps}) => {
@@ -13,7 +13,7 @@ const SolaceLoader: FC<Props> = ({text, children, style, ...textProps}) => {
     <View
       style={[
         {flex: 1, justifyContent: 'center', alignItems: 'center'},
-        style,
+        style || {},
       ]}>
       <SolaceText variant="normal" type="secondary" {...textProps}>
         {text}

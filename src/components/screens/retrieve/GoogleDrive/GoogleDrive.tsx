@@ -1,13 +1,5 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  Image,
-  ActivityIndicator,
-} from 'react-native';
+import {View, Image} from 'react-native';
 import React, {useContext, useState} from 'react';
-import styles from './styles';
 import {
   setAccountStatus,
   setGoogleApi,
@@ -23,6 +15,11 @@ import {
   SOLACE_NAME_FILENAME,
   PRIVATE_KEY_FILENAME,
 } from '../../../../utils/constants';
+import SolaceContainer from '../../../common/SolaceUI/SolaceContainer/SolaceContainer';
+import Header from '../../../common/Header/Header';
+import SolaceLoader from '../../../common/SolaceUI/SolaceLoader/SolaceLoader';
+import SolaceButton from '../../../common/SolaceUI/SolaceButton/SolaceButton';
+import SolaceText from '../../../common/SolaceUI/SolaceText/SolaceText';
 export type Props = {
   navigation: any;
 };
@@ -112,44 +109,39 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
     dispatch(setAccountStatus(AccountStatus.RECOVERY));
   };
 
+  const imageStyle = {
+    width: 70,
+    height: 70,
+    marginBottom: 5,
+  };
+
   return (
-    <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
-      <View style={styles.container}>
-        <View style={styles.textContainer}>
-          <Image
-            source={require('../../../../../assets/images/solace/google-drive.png')}
-            style={styles.image}
-          />
-          <Text style={styles.heading}>retrieve your wallet</Text>
-          <Text style={styles.subHeading}>
-            retrieve your encrypted key from google drive so you can access your
-            wallet
-          </Text>
-        </View>
-
-        {loading.value && <ActivityIndicator size="small" />}
-
-        {loading.message === 'recover by guardians?' ? (
-          <TouchableOpacity
-            disabled={loading.value}
-            onPress={() => {
-              recoverUsingGuardians();
-            }}
-            style={styles.buttonStyle}>
-            <Text style={styles.buttonTextStyle}>{loading.message}</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            disabled={loading.value}
-            onPress={() => {
-              retrieveFromGoogleDrive();
-            }}
-            style={styles.buttonStyle}>
-            <Text style={styles.buttonTextStyle}>{loading.message}</Text>
-          </TouchableOpacity>
-        )}
+    <SolaceContainer>
+      <View style={{flex: 1}}>
+        <Image
+          source={require('../../../../../assets/images/solace/google-drive.png')}
+          style={imageStyle}
+        />
+        <Header
+          heading="retrieve your wallet"
+          subHeading="retrieve your encrypted key from google drive so you can access your wallet"
+        />
+        {loading.value && <SolaceLoader text={loading.message} />}
       </View>
-    </ScrollView>
+
+      <SolaceButton
+        onPress={() => {
+          loading.message === 'recover by guardians?'
+            ? recoverUsingGuardians()
+            : retrieveFromGoogleDrive();
+        }}
+        loading={loading.value}
+        disabled={loading.value}>
+        <SolaceText type="secondary" weight="bold" variant="dark">
+          {loading.message}
+        </SolaceText>
+      </SolaceButton>
+    </SolaceContainer>
   );
 };
 

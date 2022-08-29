@@ -133,8 +133,7 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
         />
         <Header
           heading="secure your wallet"
-          subHeading="store your encrypted key in google drive so you can recover your
-          wallet if you lose your device"
+          subHeading="store your encrypted key in google drive so you can recover your wallet if you lose your device"
         />
         {loading.value && <SolaceLoader text={loading.message} />}
       </View>
