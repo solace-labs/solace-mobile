@@ -35,12 +35,12 @@ const PasscodeScreen: React.FC<Props> = ({navigation}) => {
   };
 
   const decryptStoredData = async () => {
-    const {encryptedSecretKey, encryptedSolaceName} = state.retrieveData!;
-    setLoading({
-      message: 'logging you in...',
-      value: true,
-    });
     try {
+      const {encryptedSecretKey, encryptedSolaceName} = state.retrieveData!;
+      setLoading({
+        message: 'logging you in...',
+        value: true,
+      });
       const secretKey = await decryptSecretKey(encryptedSecretKey, code);
       const solaceName = await decryptSecretKey(encryptedSolaceName, code);
       const user = {

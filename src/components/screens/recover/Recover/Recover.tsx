@@ -1,32 +1,35 @@
-import {View, Text, ScrollView, Image} from 'react-native';
+import {View, Image, StyleProp, ImageStyle} from 'react-native';
 import React from 'react';
-import styles from './styles';
+import SolaceContainer from '../../../common/SolaceUI/SolaceContainer/SolaceContainer';
+import Header from '../../../common/Header/Header';
+import SolaceText from '../../../common/SolaceUI/SolaceText/SolaceText';
 export type Props = {
   navigation: any;
 };
 
 const RecoverScreen: React.FC<Props> = ({navigation}) => {
+  const imageStyle: StyleProp<ImageStyle> = {
+    flex: 1,
+    width: '100%',
+    resizeMode: 'contain',
+  };
+
   return (
-    <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
-      <View style={styles.container}>
-        <View style={styles.textContainer}>
-          {/* <Image
-            source={require('../../../../../assets/images/solace/google-drive.png')}
-            style={styles.image}
-          /> */}
-          <Text style={styles.heading}>recovering your wallet</Text>
-          <Text style={styles.subHeading}>
-            please request your guardians to approve your solace wallet
-            recovery. in the mean time, your funds will be protected by the
-          </Text>
-          <Text style={styles.safeMode}>safe mode</Text>
-          <Image
-            source={require('../../../../../assets/images/solace/secrurity.png')}
-            style={styles.contactImage}
-          />
-        </View>
+    <SolaceContainer>
+      <View style={{flex: 1}}>
+        <Header
+          heading="recovering your wallet"
+          subHeading="please request your guardians to approve your solace wallet recovery. in the mean time, your funds will be protected by the"
+        />
+        <SolaceText type="secondary" weight="bold" align="left">
+          safe mode
+        </SolaceText>
+        <Image
+          source={require('../../../../../assets/images/solace/secrurity.png')}
+          style={imageStyle}
+        />
       </View>
-    </ScrollView>
+    </SolaceContainer>
   );
 };
 

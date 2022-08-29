@@ -132,7 +132,7 @@ const GlobalProvider = ({children}: {children: any}) => {
       dispatch(setUser(storedUser));
       dispatch(setAccountStatus(AccountStatus.EXISITING));
     } else {
-      dispatch(setAccountStatus(AccountStatus.RETRIEVE));
+      dispatch(setAccountStatus(AccountStatus.RECOVERY));
     }
   }, [checkInRecoverMode, checkRecovery, isUserValid]);
 

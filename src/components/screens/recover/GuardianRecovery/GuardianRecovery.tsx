@@ -1,30 +1,22 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  ActivityIndicator,
-} from 'react-native';
+import {View} from 'react-native';
 import React, {useContext, useState} from 'react';
-import styles from './styles';
+import {showMessage} from 'react-native-flash-message';
+import {PublicKey, SolaceSDK} from 'solace-sdk';
+
 import {GlobalContext, Tokens} from '../../../../state/contexts/GlobalContext';
 import {setSDK, setUser} from '../../../../state/actions/global';
-import {PublicKey, SolaceSDK} from 'solace-sdk';
 import {airdrop, getMeta, relayTransaction} from '../../../../utils/relayer';
-import {showMessage} from 'react-native-flash-message';
 import {NETWORK, PROGRAM_ADDRESS} from '../../../../utils/constants';
 import {StorageGetItem, StorageSetItem} from '../../../../utils/storage';
+import SolaceContainer from '../../../common/SolaceUI/SolaceContainer/SolaceContainer';
+import SolaceLoader from '../../../common/SolaceUI/SolaceLoader/SolaceLoader';
+import SolaceButton from '../../../common/SolaceUI/SolaceButton/SolaceButton';
+import SolaceText from '../../../common/SolaceUI/SolaceText/SolaceText';
+import Header from '../../../common/Header/Header';
 
 export type Props = {
   navigation: any;
 };
-
-export enum Status {
-  INFO = 'info',
-  WARNING = 'warning',
-  ERROR = 'error',
-  SUCCESS = 'success',
-}
 
 const GuardianRecovery: React.FC<Props> = ({navigation}) => {
   const [loading, setLoading] = useState({
@@ -187,25 +179,25 @@ const GuardianRecovery: React.FC<Props> = ({navigation}) => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
-      <View style={styles.container}>
-        <View style={styles.textContainer}>
-          <Text style={styles.heading}>your solace username</Text>
-          <Text style={styles.subHeading}>
-            recover your solace account by guardians approval
-          </Text>
-        </View>
-        {loading.value && <ActivityIndicator size="small" />}
-        <TouchableOpacity
-          disabled={loading.value}
-          onPress={() => {
-            handleRecovery();
-          }}
-          style={styles.buttonStyle}>
-          <Text style={styles.buttonTextStyle}>{loading.message}</Text>
-        </TouchableOpacity>
+    <SolaceContainer>
+      <View style={{flex: 1}}>
+        <Header
+          heading="recover?"
+          subHeading="recover your solace account by guardians approval"
+        />
+        {loading.value && <SolaceLoader text={loading.message} />}
       </View>
-    </ScrollView>
+      <SolaceButton
+        onPress={() => {
+          handleRecovery();
+        }}
+        loading={loading.value}
+        disabled={loading.value}>
+        <SolaceText type="secondary" weight="bold" variant="dark">
+          {loading.message}
+        </SolaceText>
+      </SolaceButton>
+    </SolaceContainer>
   );
 };
 
