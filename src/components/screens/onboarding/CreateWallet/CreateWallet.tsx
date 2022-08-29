@@ -15,14 +15,13 @@ import {
 import {
   AccountStatus,
   GlobalContext,
-  NETWORK,
-  PROGRAM_ADDRESS,
   Tokens,
 } from '../../../../state/contexts/GlobalContext';
 import {KeyPair, PublicKey, SolaceSDK} from 'solace-sdk';
 import {showMessage} from 'react-native-flash-message';
 import {getMeta, relayTransaction} from '../../../../utils/relayer';
 import {StorageGetItem, StorageSetItem} from '../../../../utils/storage';
+import {NETWORK, PROGRAM_ADDRESS} from '../../../../utils/constants';
 
 const enum status {
   AIRDROP_REQUESTED = 'AIRDROP_REQUESTED',
@@ -176,7 +175,9 @@ const CreateWalletScreen: React.FC = () => {
       // console.log({randomname});
       console.log({username});
       const tx = await sdk.createFromName(username, payer);
+      console.log({tx});
       const res = await relayTransaction(tx, accessToken);
+      console.log('ERS', res);
       showMessage({
         message: 'confirming transaction',
       });
@@ -184,13 +185,13 @@ const CreateWalletScreen: React.FC = () => {
         sdk,
         transactionId: res.data,
       };
-    } catch (e) {
+    } catch (e: any) {
       setLoading({
         message: 'create',
         value: false,
       });
       showMessage({
-        message: 'there is already a account with this username',
+        message: e.message,
       });
       throw e;
     }

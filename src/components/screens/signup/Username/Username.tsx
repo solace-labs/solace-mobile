@@ -105,20 +105,6 @@ const UsernameScreen: React.FC<Props> = ({navigation}) => {
 
   return (
     <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
-      {/* {isLoading ? (
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}>
-          <ActivityIndicator size="large" />
-          <Text style={{color: 'white', fontFamily: 'SpaceMono-Bold'}}>
-            setting your username
-          </Text>
-        </View>
-      ) : ( */}
       <View style={styles.container}>
         <View style={styles.textContainer}>
           <Text style={styles.heading}>your solace username</Text>
@@ -186,7 +172,6 @@ const UsernameScreen: React.FC<Props> = ({navigation}) => {
           </TouchableOpacity>
         )}
       </View>
-      {/* )} */}
     </ScrollView>
   );
 };

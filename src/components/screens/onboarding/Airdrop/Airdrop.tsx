@@ -7,15 +7,12 @@ import {
 } from 'react-native';
 import React, {useContext, useState} from 'react';
 import styles from './styles';
-import {
-  GlobalContext,
-  NETWORK,
-  Tokens,
-} from '../../../../state/contexts/GlobalContext';
+import {GlobalContext, Tokens} from '../../../../state/contexts/GlobalContext';
 import {KeyPair, SolaceSDK} from 'solace-sdk';
 import {showMessage} from 'react-native-flash-message';
 import {airdrop} from '../../../../utils/relayer';
 import {StorageGetItem} from '../../../../utils/storage';
+import {NETWORK} from '../../../../utils/constants';
 
 export type Props = {
   navigation: any;

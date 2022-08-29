@@ -89,23 +89,19 @@ const GlobalProvider = ({children}: {children: any}) => {
 
   const checkInRecoverMode = useCallback(async () => {
     const storedUser: User = await StorageGetItem('user');
-    return (
-      storedUser &&
+    return (storedUser &&
       storedUser.inRecovery &&
       storedUser.solaceName &&
-      storedUser.ownerPrivateKey
-    );
+      storedUser.ownerPrivateKey) as boolean;
   }, []);
 
   const isUserValid = useCallback(async () => {
     const storedUser: User = await StorageGetItem('user');
-    return (
-      storedUser &&
+    return (storedUser &&
       storedUser.pin &&
       storedUser.solaceName &&
       storedUser.ownerPrivateKey &&
-      storedUser.isWalletCreated
-    );
+      storedUser.isWalletCreated) as boolean;
   }, []);
 
   const checkRecovery = useCallback(async () => {
@@ -126,7 +122,7 @@ const GlobalProvider = ({children}: {children: any}) => {
     console.log(res);
   }, []);
 
-  const init = async () => {
+  const init = useCallback(async () => {
     const storedUser: User = await StorageGetItem('user');
     console.log({storedUser});
     const inRecoveryMode = await checkInRecoverMode();
@@ -138,7 +134,7 @@ const GlobalProvider = ({children}: {children: any}) => {
     } else {
       dispatch(setAccountStatus(AccountStatus.NEW));
     }
-  };
+  }, [checkInRecoverMode, checkRecovery, isUserValid]);
 
   useEffect(() => {
     init();

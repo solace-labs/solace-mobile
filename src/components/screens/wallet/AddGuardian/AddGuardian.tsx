@@ -25,6 +25,9 @@ import {
 } from '../../../../utils/relayer';
 import {showMessage} from 'react-native-flash-message';
 import {StorageDeleteItem, StorageGetItem} from '../../../../utils/storage';
+import {getFeePayer} from '../../../../utils/apis';
+import {AwsCognito} from '../../../../utils/aws_cognito';
+import {CognitoRefreshToken} from 'amazon-cognito-identity-js';
 
 export type Props = {
   navigation: any;
@@ -47,7 +50,17 @@ const AddGuardian: React.FC<Props> = ({navigation}) => {
     const solaceWalletAddress = sdk.wallet.toString();
     const accessToken = tokens.accesstoken;
     try {
-      const feePayer = new PublicKey(await getFeePayer(accessToken));
+      let feePayerResponse = await getFeePayer(accessToken);
+      if (feePayerResponse === 'ACCESS_TOKEN_EXPIRED') {
+        const awsCognito = new AwsCognito();
+        await awsCognito.setCognitoUser(walletName);
+        const res: any = await awsCognito.refreshSession(
+          new CognitoRefreshToken({RefreshToken: tokens.refreshtoken}),
+        );
+        console.log('NEW TOKENS: ', res);
+        feePayerResponse = await getFeePayer(res.accessToken);
+      }
+      const feePayer = new PublicKey(feePayerResponse);
       const guardianPublicKey = new PublicKey(address);
       const tx = await sdk.addGuardian(guardianPublicKey, feePayer);
       const res = await relayTransaction(tx, accessToken);
@@ -119,31 +132,23 @@ const AddGuardian: React.FC<Props> = ({navigation}) => {
     }
   };
 
-  const getFeePayer = async (accessToken: string) => {
-    setLoading({
-      message: 'getting fee payer...',
-      value: true,
-    });
-    try {
-      const response = await getMeta(accessToken);
-      return response.feePayer;
-    } catch (e: any) {
-      setLoading({
-        message: 'failed. retry again',
-        value: false,
-      });
-      console.log('FEE PAYER', e.status);
-      if (e.message === 'Request failed with status code 401') {
-        showMessage({
-          message: 'You need to login again',
-          type: 'info',
-        });
-        await StorageDeleteItem('tokens');
-        dispatch(setAccountStatus(AccountStatus.EXISITING));
-      }
-      throw e;
-    }
-  };
+  // const getFeePayer = async (accessToken: string) => {
+  //   try {
+  //     const response = await getMeta(accessToken);
+  //     return response.feePayer;
+  //   } catch (e: any) {
+  //     console.log('FEE PAYER', e.status);
+  //     if (e.message === 'Request failed with status code 401') {
+  //       showMessage({
+  //         message: 'You need to login again',
+  //         type: 'info',
+  //       });
+  //       await StorageDeleteItem('tokens');
+  //       dispatch(setAccountStatus(AccountStatus.EXISITING));
+  //     }
+  //     throw e;
+  //   }
+  // };
 
   return (
     <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>

@@ -1,5 +1,6 @@
 // import * as Aes from 'react-native-aes-crypto';
 import {NativeModules, Platform} from 'react-native';
+import {SOLACE_COST, SOLACE_SALT} from './constants';
 
 const Aes = NativeModules.Aes;
 
@@ -25,13 +26,13 @@ export const decryptData = (encryptedData: any, key: string) =>
   Aes.decrypt(encryptedData.cipher, key, encryptedData.iv, 'aes-256-cbc');
 
 export const encryptKey = async (secretKey: string, pin: string) => {
-  const key = await generateKey(pin, 'salt', 5000, 256);
+  const key = await generateKey(pin, SOLACE_SALT, SOLACE_COST, 256);
   const encryptedData = await encryptData(secretKey, key);
   return encryptedData;
 };
 
 export const decryptKey = async (encryptedData: any, pin: string) => {
-  const key = await generateKey(pin, 'salt', 5000, 256);
+  const key = await generateKey(pin, SOLACE_SALT, SOLACE_COST, 256);
   const decryptedData = await decryptData(encryptedData, key);
   return decryptedData;
 };

@@ -8,7 +8,7 @@ import {
   ICognitoUserAttributeData,
   ISignUpResult,
 } from 'amazon-cognito-identity-js';
-import {resolveConfig} from 'prettier';
+import {COGNITO_CLIENT_ID, COGNITO_USERPOOL_ID} from './constants';
 
 export class AwsCognito {
   userPool: CognitoUserPool;
@@ -16,8 +16,8 @@ export class AwsCognito {
 
   constructor() {
     this.userPool = new CognitoUserPool({
-      UserPoolId: 'ap-south-1_8Ylepg5f1',
-      ClientId: '5p5t8mcggrifoftsc6ufe4467l',
+      UserPoolId: COGNITO_USERPOOL_ID,
+      ClientId: COGNITO_CLIENT_ID,
     });
   }
 

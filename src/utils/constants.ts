@@ -1,3 +1,4 @@
+/** Solace sdk constants */
 export const NETWORK: 'testnet' | 'local' = 'testnet';
 export const PROGRAM_ADDRESS =
   NETWORK === 'testnet'
@@ -12,7 +13,25 @@ export const DEFAULT_PRIVATE_KEY = [
 ];
 export const DEFAULT_PUBLIC_KEY =
   '4LsZkGUwZax7x3qdNubwb9czWk2TJNysrVjzc2pGF91p';
-export const PRIVATE_KEY_FILENAME = 'solace_pk.solace';
-export const SOLACE_NAME_FILENAME = 'solace_n.solace';
+
+/** Relayer constants */
 export const RELAYER_BASE_URL =
   'https://rxc9xav4nk.execute-api.ap-south-1.amazonaws.com';
+
+/** Cognito constants */
+export const COGNITO_USERPOOL_ID = 'ap-south-1_8Ylepg5f1';
+export const COGNITO_CLIENT_ID = '5p5t8mcggrifoftsc6ufe4467l';
+
+/** Google api for login and google drive constants */
+export const GOOGLE_WEB_CLIENT_ID =
+  '757682918669-642g9pqab06h33pl8i2tqjegi60a91ms.apps.googleusercontent.com';
+export const GOOGLE_IOS_CLIENT_ID =
+  '757682918669-r08gca3sbdn42o0onj5etmh86pp21qj6.apps.googleusercontent.com';
+
+/** Filename for google drive storage of encrypted data */
+export const PRIVATE_KEY_FILENAME = 'solace_pk.solace';
+export const SOLACE_NAME_FILENAME = 'solace_n.solace';
+
+/** Encryption */
+export const SOLACE_SALT = 'solace-salt';
+export const SOLACE_COST = 5000;

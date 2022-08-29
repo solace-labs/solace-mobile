@@ -6,7 +6,7 @@ import {
   NETWORK,
   RELAYER_BASE_URL,
 } from './constants';
-// import {relayTransaction as rlTransaction} from 'solace-sdk/relayer';
+import {relayTransaction as rlTransaction} from 'solace-sdk/relayer';
 
 interface RequestGuardianshipBody {
   guardianAddress: string;
@@ -65,9 +65,13 @@ export const airdrop = async (publicKey: string, accessToken: string) => {
  * @returns
  */
 export const relayTransaction = async (tx: any, accessToken: string) => {
+  console.log('RELAYING');
   if (NETWORK === 'local') {
     const keypair = KeyPair.fromSecretKey(Uint8Array.from(DEFAULT_PRIVATE_KEY));
-    // return await rlTransaction(tx, keypair);
+    console.log('DONE RELAYING');
+    const res = await rlTransaction(tx, keypair);
+    console.log('RES', res);
+    return res;
   }
   const res = await axios.post(`${RELAYER_BASE_URL}/relay`, tx, {
     headers: {Authorization: accessToken},
