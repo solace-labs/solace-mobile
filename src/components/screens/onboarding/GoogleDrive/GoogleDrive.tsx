@@ -1,24 +1,22 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  Image,
-  ActivityIndicator,
-} from 'react-native';
+import {View, Image} from 'react-native';
 import React, {useContext, useState} from 'react';
-import styles from './styles';
+import {showMessage} from 'react-native-flash-message';
+import {SolaceSDK} from 'solace-sdk';
+
 import {setGoogleApi, setUser} from '../../../../state/actions/global';
 import {GlobalContext} from '../../../../state/contexts/GlobalContext';
-import {SolaceSDK} from 'solace-sdk';
 import {encryptKey} from '../../../../utils/aes_encryption';
 import {GoogleApi} from '../../../../utils/google_apis';
-import {showMessage} from 'react-native-flash-message';
 import {StorageSetItem} from '../../../../utils/storage';
 import {
   SOLACE_NAME_FILENAME,
   PRIVATE_KEY_FILENAME,
 } from '../../../../utils/constants';
+import SolaceLoader from '../../../common/SolaceUI/SolaceLoader/SolaceLoader';
+import SolaceButton from '../../../common/SolaceUI/SolaceButton/SolaceButton';
+import SolaceText from '../../../common/SolaceUI/SolaceText/SolaceText';
+import SolaceContainer from '../../../common/SolaceUI/SolaceContainer/SolaceContainer';
+import Header from '../../../common/Header/Header';
 
 export type Props = {
   navigation: any;
@@ -120,33 +118,38 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
     }
   };
 
+  const imageStyle = {
+    width: 70,
+    height: 70,
+    marginBottom: 5,
+  };
+
   return (
-    <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
-      <View style={styles.container}>
-        <View style={styles.textContainer}>
-          <Image
-            source={require('../../../../../assets/images/solace/google-drive.png')}
-            style={styles.image}
-          />
-          <Text style={styles.heading}>secure your wallet</Text>
-          <Text style={styles.subHeading}>
-            store your encrypted key in google drive so you can recover your
-            wallet if you lose your device
-          </Text>
-        </View>
-
-        {loading.value && <ActivityIndicator size="small" />}
-
-        <TouchableOpacity
-          disabled={loading.value}
-          onPress={() => {
-            handleClick();
-          }}
-          style={styles.buttonStyle}>
-          <Text style={styles.buttonTextStyle}>{loading.message}</Text>
-        </TouchableOpacity>
+    <SolaceContainer>
+      <View style={{flex: 1}}>
+        <Image
+          source={require('../../../../../assets/images/solace/google-drive.png')}
+          style={imageStyle}
+        />
+        <Header
+          heading="secure your wallet"
+          subHeading="store your encrypted key in google drive so you can recover your
+          wallet if you lose your device"
+        />
+        {loading.value && <SolaceLoader text={loading.message} />}
       </View>
-    </ScrollView>
+
+      <SolaceButton
+        onPress={() => {
+          handleClick();
+        }}
+        loading={loading.value}
+        disabled={loading.value}>
+        <SolaceText type="secondary" weight="bold" variant="dark">
+          {loading.message}
+        </SolaceText>
+      </SolaceButton>
+    </SolaceContainer>
   );
 };
 

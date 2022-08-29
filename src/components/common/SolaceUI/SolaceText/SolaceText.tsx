@@ -1,6 +1,5 @@
-import React, {FC, ReactNode} from 'react';
-import {Text} from 'react-native';
-import type {StyleProp, TextProps, TextStyle} from 'react-native';
+import React, {FC, ReactNode, RefObject} from 'react';
+import {StyleProp, Text, TextProps, TextStyle} from 'react-native';
 import {Colors} from '../../../../utils/colors';
 import {Styles} from '../../../../utils/styles';
 
@@ -24,6 +23,7 @@ type SolaceTextProps = {
   fullWidth?: boolean;
   children?: ReactNode;
   italic?: boolean;
+  forwardRef?: RefObject<Text>;
   align?: 'right' | 'left' | 'center';
   size?: keyof typeof Styles.fontSize;
   mt?: number;
@@ -37,6 +37,7 @@ const SolaceText: FC<Props> = ({
   children,
   weight = 'regular',
   italic = false,
+  forwardRef,
   type = 'primary',
   variant = 'white',
   align = 'center',
@@ -74,6 +75,7 @@ const SolaceText: FC<Props> = ({
 
   return (
     <Text
+      ref={forwardRef}
       style={[typeStyle(), variantStyle(), marginStyles, defaultStyles, style]}
       {...textProps}>
       {children}

@@ -1,22 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  ScrollView,
-  Pressable,
-  ActivityIndicator,
-} from 'react-native';
+import {View} from 'react-native';
 import React, {useContext, useState} from 'react';
-import styles from './styles';
 import {GlobalContext} from '../../../../state/contexts/GlobalContext';
 import {setAwsCognito, setUser} from '../../../../state/actions/global';
-import {useTogglePasswordVisibility} from '../../../../hooks/useTogglePasswordVisibility';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {AwsCognito} from '../../../../utils/aws_cognito';
 import {showMessage} from 'react-native-flash-message';
 import {StorageSetItem} from '../../../../utils/storage';
+import SolaceContainer from '../../../common/SolaceUI/SolaceContainer/SolaceContainer';
+import Header from '../../../common/Header/Header';
+import SolaceInput from '../../../common/SolaceUI/SolaceInput/SolaceInput';
+import SolacePasswordInput from '../../../common/SolaceUI/SolacePasswordInput/SolacePasswordInput';
+import SolaceText from '../../../common/SolaceUI/SolaceText/SolaceText';
+import SolaceButton from '../../../common/SolaceUI/SolaceButton/SolaceButton';
+import SolaceLoader from '../../../common/SolaceUI/SolaceLoader/SolaceLoader';
 
 export type Props = {
   navigation: any;
@@ -33,9 +29,6 @@ const Login: React.FC<Props> = ({navigation}) => {
   });
   const [active, setActive] = useState('username');
   const [isLoading, setIsLoading] = useState(false);
-  const {passwordVisibility, rightIcon, handlePasswordVisibility} =
-    useTogglePasswordVisibility();
-
   const {state, dispatch} = useContext(GlobalContext);
 
   const validateUsername = (text: string) => {
@@ -48,18 +41,10 @@ const Login: React.FC<Props> = ({navigation}) => {
   const validatePassword = (text: string) => {
     let reg =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&#]{8,}$/;
-    if (reg.test(text) === false) {
-      setPassword({
-        value: text,
-        isValid: false,
-      });
-      return false;
-    } else {
-      setPassword({
-        value: text,
-        isValid: true,
-      });
-    }
+    setPassword({
+      value: text,
+      isValid: reg.test(text),
+    });
   };
 
   const handleSignIn = async () => {
@@ -89,14 +74,13 @@ const Login: React.FC<Props> = ({navigation}) => {
         index: 0,
         routes: [{name: 'GoogleDrive'}],
       });
-      return;
     } catch (e: any) {
       showMessage({
         message: e.message,
         type: 'danger',
       });
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const isDisable = () => {
@@ -104,65 +88,41 @@ const Login: React.FC<Props> = ({navigation}) => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
-      <View style={styles.container}>
-        <View style={styles.textContainer}>
-          <Text style={styles.heading}>
-            enter {active === 'username' ? 'solace username' : 'password'}
-          </Text>
-          <Text style={styles.subHeading}>sign in to your account</Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder="username"
-            placeholderTextColor="#fff6"
-            value={username.value}
-            onChangeText={text => validateUsername(text)}
-            onFocus={() => setActive('username')}
-            autoCapitalize={'none'}
-            autoCorrect={false}
-          />
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.textInput}
-              placeholder="enter password"
-              placeholderTextColor="#fff6"
-              value={password.value}
-              secureTextEntry={passwordVisibility}
-              onChangeText={text => validatePassword(text)}
-              autoCapitalize={'none'}
-              onFocus={() => setActive('password')}
-              autoCorrect={false}
-            />
-            <Pressable
-              onPress={handlePasswordVisibility}
-              style={styles.eyeIcon}>
-              <MaterialCommunityIcons name={rightIcon} size={22} color="gray" />
-            </Pressable>
-          </View>
-          {isLoading && (
-            <View style={{marginTop: 20}}>
-              <ActivityIndicator size="small" color="#fff" />
-            </View>
-          )}
-        </View>
-        <TouchableOpacity
-          disabled={isDisable()}
-          onPress={() => {
-            handleSignIn();
-          }}
-          style={styles.buttonStyle}>
-          <Text
-            style={[
-              styles.buttonTextStyle,
-              {
-                color: isDisable() ? '#9999a5' : 'black',
-              },
-            ]}>
-            {isLoading ? 'signing in...' : 'sign in'}
-          </Text>
-        </TouchableOpacity>
+    <SolaceContainer>
+      <View style={{flex: 1}}>
+        <Header
+          heading={`enter ${
+            active === 'username' ? 'solace username' : 'password'
+          }`}
+          subHeading="sign in to your account"
+        />
+        <SolaceInput
+          placeholder="username"
+          onFocus={() => setActive('username')}
+          mt={16}
+          value={username.value}
+          onChangeText={text => validateUsername(text)}
+        />
+        <SolacePasswordInput
+          placeholder="password"
+          value={password.value}
+          onFocus={() => setActive('password')}
+          onChangeText={text => validatePassword(text)}
+          mt={16}
+        />
+        {isLoading && <SolaceLoader text="signing in..." />}
       </View>
-    </ScrollView>
+      <SolaceButton
+        onPress={() => {
+          handleSignIn();
+        }}
+        loading={isLoading}
+        disabled={isDisable()}>
+        <SolaceText type="secondary" weight="bold" variant="dark">
+          sign in
+        </SolaceText>
+      </SolaceButton>
+    </SolaceContainer>
   );
 };
 

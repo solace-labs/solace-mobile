@@ -1,7 +1,8 @@
-import {View, TextInput} from 'react-native';
-import React, {useContext, useEffect, useRef, useState} from 'react';
-import {GlobalContext} from '../../../../state/contexts/GlobalContext';
+import {View} from 'react-native';
+import React, {useContext, useState} from 'react';
 import {showMessage} from 'react-native-flash-message';
+
+import {GlobalContext} from '../../../../state/contexts/GlobalContext';
 import PasscodeContainer, {
   PASSCODE_LENGTH,
 } from '../../../common/PasscodeContainer/PasscodeContainer';
@@ -19,7 +20,7 @@ const ConfirmPasscodeScreen: React.FC<Props> = ({navigation}) => {
 
   const filled = code.length === PASSCODE_LENGTH;
 
-  const checkPinReady = () => {
+  const confirmPin = () => {
     if (filled && state.user && state.user.pin === code) {
       navigation.navigate('Login');
     } else {
@@ -41,7 +42,7 @@ const ConfirmPasscodeScreen: React.FC<Props> = ({navigation}) => {
       <SolaceButton
         disabled={!filled}
         onPress={() => {
-          checkPinReady();
+          confirmPin();
         }}>
         <SolaceText type="secondary" weight="bold" variant="dark">
           next

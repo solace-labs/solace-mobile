@@ -22,6 +22,11 @@ import {showMessage} from 'react-native-flash-message';
 import {getMeta, relayTransaction} from '../../../../utils/relayer';
 import {StorageGetItem, StorageSetItem} from '../../../../utils/storage';
 import {NETWORK, PROGRAM_ADDRESS} from '../../../../utils/constants';
+import SolaceContainer from '../../../common/SolaceUI/SolaceContainer/SolaceContainer';
+import SolaceLoader from '../../../common/SolaceUI/SolaceLoader/SolaceLoader';
+import SolaceButton from '../../../common/SolaceUI/SolaceButton/SolaceButton';
+import SolaceText from '../../../common/SolaceUI/SolaceText/SolaceText';
+import Header from '../../../common/Header/Header';
 
 const enum status {
   AIRDROP_REQUESTED = 'AIRDROP_REQUESTED',
@@ -35,7 +40,6 @@ const enum status {
 
 const CreateWalletScreen: React.FC = () => {
   const {state, dispatch} = useContext(GlobalContext);
-  const [created, setCreated] = useState(false);
   const [loading, setLoading] = useState({
     value: false,
     message: 'create',
@@ -77,7 +81,6 @@ const CreateWalletScreen: React.FC = () => {
       const awsCognito = state.awsCognito!;
       await awsCognito.updateAttribute('address', sdk.wallet.toString());
       dispatch(setSDK(sdk));
-      // sdk.owner;
       dispatch(setUser({...state.user, isWalletCreated: true}));
       showMessage({
         message: 'wallet created',
@@ -87,7 +90,8 @@ const CreateWalletScreen: React.FC = () => {
         message: 'created',
         value: false,
       });
-      setCreated(true);
+      await StorageSetItem('user', state.user);
+      dispatch(setAccountStatus(AccountStatus.EXISITING));
     } catch (e) {
       console.log('MAIN ERROR: ', e);
     }
@@ -197,35 +201,27 @@ const CreateWalletScreen: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    if (created) {
-      setToLocalStorage();
-    }
-  }, [created, setToLocalStorage]);
-
   return (
-    <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
-      <View style={styles.container}>
-        <View style={styles.textContainer}>
-          <Text style={styles.heading}>create wallet</Text>
-          <Text style={styles.subHeading}>
-            store your encrypted key in google drive so you can recover your
-            wallet if you lose your device
-          </Text>
-        </View>
-
-        {loading.value && <ActivityIndicator size="small" />}
-
-        <TouchableOpacity
-          disabled={loading.value}
-          onPress={() => {
-            handleClick();
-          }}
-          style={styles.buttonStyle}>
-          <Text style={styles.buttonTextStyle}>{loading.message}</Text>
-        </TouchableOpacity>
+    <SolaceContainer>
+      <View style={{flex: 1}}>
+        <Header
+          heading="create wallet"
+          subHeading="store your encrypted key in google drive so you can recover your wallet if you lose your device"
+        />
+        {loading.value && <SolaceLoader text={loading.message} />}
       </View>
-    </ScrollView>
+
+      <SolaceButton
+        onPress={() => {
+          handleClick();
+        }}
+        loading={loading.value}
+        disabled={loading.value}>
+        <SolaceText type="secondary" weight="bold" variant="dark">
+          {loading.message}
+        </SolaceText>
+      </SolaceButton>
+    </SolaceContainer>
   );
 };
 

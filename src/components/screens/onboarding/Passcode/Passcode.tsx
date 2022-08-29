@@ -20,7 +20,7 @@ const PasscodeScreen: React.FC<Props> = ({navigation}) => {
 
   const filled = code.length === PASSCODE_LENGTH;
 
-  const checkPinReady = () => {
+  const checkPin = () => {
     if (filled) {
       dispatch(setUser({...state.user, pin: code}));
       navigation.navigate('ConfirmPasscode');
@@ -38,7 +38,7 @@ const PasscodeScreen: React.FC<Props> = ({navigation}) => {
       <SolaceButton
         disabled={!filled}
         onPress={() => {
-          checkPinReady();
+          checkPin();
         }}>
         <SolaceText type="secondary" weight="bold" variant="dark">
           next

@@ -1,18 +1,16 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  ActivityIndicator,
-} from 'react-native';
+import {View, ActivityIndicator} from 'react-native';
 import React, {useContext, useState} from 'react';
-import styles from './styles';
 import {GlobalContext, Tokens} from '../../../../state/contexts/GlobalContext';
 import {KeyPair, SolaceSDK} from 'solace-sdk';
 import {showMessage} from 'react-native-flash-message';
 import {airdrop} from '../../../../utils/relayer';
 import {StorageGetItem} from '../../../../utils/storage';
 import {NETWORK} from '../../../../utils/constants';
+import SolaceContainer from '../../../common/SolaceUI/SolaceContainer/SolaceContainer';
+import Header from '../../../common/Header/Header';
+import SolaceLoader from '../../../common/SolaceUI/SolaceLoader/SolaceLoader';
+import SolaceButton from '../../../common/SolaceUI/SolaceButton/SolaceButton';
+import SolaceText from '../../../common/SolaceUI/SolaceText/SolaceText';
 
 export type Props = {
   navigation: any;
@@ -31,8 +29,8 @@ const AirdropScreen: React.FC<Props> = ({navigation}) => {
       const tokens: Tokens = await StorageGetItem('tokens');
       if (!tokens) {
         showMessage({
-          message: 'Please login...',
-          type: 'info',
+          message: 'please login again',
+          type: 'default',
         });
       }
       console.log(privateKey);
@@ -145,28 +143,26 @@ const AirdropScreen: React.FC<Props> = ({navigation}) => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
-      <View style={styles.container}>
-        <View style={styles.textContainer}>
-          <Text style={styles.heading}>request airdrop</Text>
-          <Text style={styles.subHeading}>
-            store your encrypted key in google drive so you can recover your
-            wallet if you lose your device
-          </Text>
-        </View>
-
-        {loading.value && <ActivityIndicator size="small" />}
-
-        <TouchableOpacity
-          disabled={loading.value}
-          onPress={() => {
-            handleClick();
-          }}
-          style={styles.buttonStyle}>
-          <Text style={styles.buttonTextStyle}>{loading.message}</Text>
-        </TouchableOpacity>
+    <SolaceContainer>
+      <View style={{flex: 1}}>
+        <Header
+          heading="request airdrop"
+          subHeading="store your encrypted key in google drive so you can recover your wallet if you lose your device"
+        />
+        {loading.value && <SolaceLoader text={loading.message} />}
       </View>
-    </ScrollView>
+
+      <SolaceButton
+        onPress={() => {
+          handleClick();
+        }}
+        loading={loading.value}
+        disabled={loading.value}>
+        <SolaceText type="secondary" weight="bold" variant="dark">
+          {loading.message}
+        </SolaceText>
+      </SolaceButton>
+    </SolaceContainer>
   );
 };
 

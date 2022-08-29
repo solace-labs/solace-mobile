@@ -12,7 +12,7 @@ const Header: FC<Props> = ({heading, subHeading}) => {
       <SolaceText weight="semibold" variant="white" size="xl" align="left">
         {heading}
       </SolaceText>
-      <SolaceText type="secondary" weight="bold" align="left" variant="light">
+      <SolaceText type="secondary" weight="bold" align="left" variant="normal">
         {subHeading}
       </SolaceText>
     </>

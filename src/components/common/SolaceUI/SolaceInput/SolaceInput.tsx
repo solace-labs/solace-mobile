@@ -62,7 +62,7 @@ const SolaceInput: FC<InputProps> = ({
   return (
     <TextInput
       ref={forwardRef}
-      placeholderTextColor={Colors.text.light}
+      placeholderTextColor={Colors.text.normal}
       autoCorrect={false}
       autoCapitalize={'none'}
       style={[
