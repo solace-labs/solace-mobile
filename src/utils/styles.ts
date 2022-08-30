@@ -50,11 +50,13 @@ let styles = {
     },
   },
   fontSize: {
-    xs: 8,
-    sm: 12,
+    xs: 12,
+    sm: 14,
     md: 16,
     lg: 20,
-    xl: 28,
+    xl: 24,
+    '2xl': 28,
+    '3xl': 32,
   },
 };
 

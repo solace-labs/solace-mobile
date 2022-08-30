@@ -1,8 +1,8 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import GuardianRecovery from '../components/screens/recover/GuardianRecovery/GuardianRecovery';
-import RecoverScreen from '../components/screens/recover/Recover/Recover';
-import Login from '../components/screens/recover/Login/Login';
+import GuardianRecovery from '../components/screens/recover/GuardianRecovery';
+import RecoverScreen from '../components/screens/recover/Recover';
+import Login from '../components/screens/recover/Login';
 
 const Stack = createNativeStackNavigator();
 

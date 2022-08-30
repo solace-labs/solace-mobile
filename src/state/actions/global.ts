@@ -1,5 +1,5 @@
 import {SolaceSDK} from 'solace-sdk';
-import {Contact} from '../../components/wallet/ContactItem/ContactItem';
+import {Contact} from '../../components/wallet/ContactItem';
 import {AwsCognito} from '../../utils/aws_cognito';
 import {GoogleApi} from '../../utils/google_apis';
 import {AccountStatus, RetrieveData, User} from '../contexts/GlobalContext';
@@ -64,5 +64,11 @@ export const getContact = (id: string) => {
   return {
     type: 'GET_CONTACT',
     payload: id,
+  };
+};
+
+export const clearData = () => {
+  return {
+    type: 'CLEAR_DATA',
   };
 };

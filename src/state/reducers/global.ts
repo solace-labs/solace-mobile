@@ -1,4 +1,4 @@
-import {AccountStatus} from '../contexts/GlobalContext';
+import {initialState} from '../contexts/GlobalContext';
 
 const reducer = (state: any, action: {type: string; payload: any}) => {
   const {type, payload} = action;
@@ -44,6 +44,8 @@ const reducer = (state: any, action: {type: string; payload: any}) => {
           (contact: any) => contact.id === action.payload,
         ),
       };
+    case 'CLEAR_DATA':
+      return {...initialState};
     default:
       return state;
   }

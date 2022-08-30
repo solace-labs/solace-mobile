@@ -1,7 +1,7 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import GoogleDriveScreen from '../components/screens/retrieve/GoogleDrive/GoogleDrive';
-import PasscodeScreen from '../components/screens/retrieve/Passcode/Passcode';
+import GoogleDriveScreen from '../components/screens/retrieve/GoogleDrive';
+import PasscodeScreen from '../components/screens/retrieve/Passcode';
 
 const Stack = createNativeStackNavigator();
 
