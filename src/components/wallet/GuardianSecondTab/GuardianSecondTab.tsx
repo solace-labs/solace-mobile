@@ -1,86 +1,137 @@
-import {View, Text, TouchableOpacity, Image} from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  Image,
+} from 'react-native';
 import React from 'react';
-import moment from 'moment';
-import styles from './styles';
-import Navigation from '../../../navigation/Navigation';
-import {useNavigation} from '@react-navigation/native';
-import {Contact} from '../ContactItem/ContactItem';
 import {PublicKeyType} from '../../screens/wallet/Guardian/Guardian';
+import {SolaceSDK} from 'solace-sdk';
+import SolaceText from '../../common/SolaceUI/SolaceText/SolaceText';
+import globalStyles from '../../../utils/global_styles';
 
 export type Props = {
   guarding: PublicKeyType[];
 };
 
 const GuardianSecondTab: React.FC<Props> = ({guarding}) => {
-  const navigation: any = useNavigation();
-  const renderGuardian = (guardian: PublicKeyType, index: number) => {
+  const allGuarding = [
+    // SolaceSDK.newKeyPair().publicKey,
+    ...guarding,
+  ];
+
+  if (allGuarding.length === 0) {
     return (
-      <View key={index} style={styles.container}>
-        <View style={styles.item}>
-          <View style={styles.leftSide}>
-            <View style={styles.guardianImageContainer}>
-              <Text style={styles.guardianImageText}>
+      <View style={globalStyles.fullCenter}>
+        <Image
+          source={require('../../../../assets/images/solace/secrurity.png')}
+          style={globalStyles.image}
+        />
+      </View>
+    );
+  }
+
+  const renderGuardian = (
+    guardian: PublicKeyType,
+    index: number,
+    type: 'awaiting' | 'approved',
+  ) => {
+    return (
+      <View key={index}>
+        <View style={guardianStyles.item}>
+          <View style={guardianStyles.leftSide}>
+            <View style={globalStyles.avatar}>
+              <SolaceText weight="bold" size="sm">
                 {guardian
                   .toString()
                   .split(' ')
                   .map(word => word[0])
                   .join('')
                   .toLowerCase()}
-              </Text>
+              </SolaceText>
             </View>
             <View>
-              <Text style={styles.securityText}>
-                {guardian.toString().slice(0, 25)}...
-              </Text>
-              <Text style={[styles.responseText, {color: '#D27D00'}]}>
-                {/* awaiting response */}
-              </Text>
+              <SolaceText align="left" type="secondary" weight="bold" size="sm">
+                {guardian.toString().slice(0, 10)}...
+              </SolaceText>
+              <SolaceText
+                type="secondary"
+                size="sm"
+                weight="bold"
+                align="left"
+                variant={type}>
+                {type === 'approved' ? 'approved' : 'awaiting response'}
+              </SolaceText>
             </View>
           </View>
-          <View style={styles.rightSide}>
+          <View style={guardianStyles.rightSide}>
             <TouchableOpacity>
-              <Text style={styles.acceptButton}>tap to confirm</Text>
+              <SolaceText
+                type="secondary"
+                weight="bold"
+                size="sm"
+                variant="link">
+                confirm
+              </SolaceText>
             </TouchableOpacity>
           </View>
         </View>
       </View>
     );
   };
+
   return (
-    <View style={styles.container}>
-      {guarding.length > 0 ? (
-        <View style={styles.guardiansContainer}>
-          <View style={styles.container}>
-            <View style={styles.item}>
-              <View style={styles.leftSide}>
-                <View style={styles.guardianImageContainer}>
-                  <Text style={styles.guardianImageText}>S</Text>
-                </View>
-                <View>
-                  <Text style={styles.securityText}>solace security</Text>
-                  <Text style={styles.dateText}>coming soon...</Text>
-                </View>
-              </View>
+    <ScrollView bounces={true}>
+      <View style={{marginTop: 8}}>
+        {/* <View style={guardianStyles.item}>
+          <View style={guardianStyles.leftSide}>
+            <View style={globalStyles.avatar}>
+              <SolaceText weight="bold" size="sm">
+                S
+              </SolaceText>
+            </View>
+            <View>
+              <SolaceText align="left" type="secondary" weight="bold" size="sm">
+                solace security
+              </SolaceText>
+              <SolaceText
+                type="secondary"
+                size="sm"
+                weight="bold"
+                align="left"
+                variant="normal">
+                coming soon...
+              </SolaceText>
             </View>
           </View>
-          {guarding.map((guardian, index) => {
-            return renderGuardian(guardian, index);
-          })}
-        </View>
-      ) : (
-        <View style={styles.imageContainer}>
-          <Image
-            source={require('../../../../assets/images/solace/secrurity.png')}
-            style={styles.contactImage}
-          />
-          {/* <Text style={styles.buttonText}>
-            you need 1 guardian approval for solace wallet recovery or to
-            approve an untrusted transaction
-          </Text> */}
-        </View>
-      )}
-    </View>
+        </View> */}
+        {allGuarding.map((guardian, index) => {
+          return renderGuardian(guardian, index, 'awaiting');
+        })}
+      </View>
+    </ScrollView>
   );
 };
 
 export default GuardianSecondTab;
+
+export const guardianStyles = StyleSheet.create({
+  item: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginVertical: 12,
+  },
+  leftSide: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
+  rightSide: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
+});

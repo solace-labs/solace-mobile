@@ -13,7 +13,7 @@ const Stack = createNativeStackNavigator();
 const WalletStack = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Home"
+      initialRouteName="Wallet"
       screenOptions={{headerShown: false}}>
       <Stack.Screen name="Wallet" component={WalletHomeScreen} />
       <Stack.Screen name="Send" component={SendScreen} />

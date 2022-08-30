@@ -21,20 +21,20 @@ export type Props = {
   navigation: any;
 };
 
-const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
-  const DATA = [
-    {
-      id: 1,
-      date: new Date(),
-      username: 'ashwin.solace.money',
-    },
-    {
-      id: 2,
-      date: new Date(),
-      username: 'ankit.solace.money',
-    },
-  ];
+export const DATA = [
+  {
+    id: 1,
+    date: new Date(),
+    username: 'ashwin.solace.money',
+  },
+  {
+    id: 2,
+    date: new Date(),
+    username: 'ankit.solace.money',
+  },
+];
 
+const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
   const [username, setUsername] = useState('user');
 
   const {
@@ -119,7 +119,7 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
           />
         </View>
       </View>
-      <WalletActivity />
+      <WalletActivity data={[]} />
     </SolaceContainer>
   );
 };

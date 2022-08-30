@@ -1,8 +1,30 @@
-import React from 'react';
-import {View, TouchableOpacity, Image, StyleSheet} from 'react-native';
+import React, {FC} from 'react';
+import {
+  View,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  ScrollView,
+} from 'react-native';
 import SolaceText from '../../common/SolaceUI/SolaceText/SolaceText';
+import {DATA} from '../../screens/wallet/WalletHome/WalletHome';
+import Transaction from '../Transaction/Transaction';
 
-const WalletActivity = () => {
+type Props = {
+  data: typeof DATA;
+};
+
+const WalletActivity: FC<Props> = ({data}) => {
+  if (data.length > 0) {
+    return (
+      <ScrollView>
+        {data.map((item: any) => {
+          return <Transaction key={item.id} item={item} />;
+        })}
+      </ScrollView>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -40,11 +62,6 @@ const WalletActivity = () => {
         </SolaceText>{' '}
         to view your transaction history
       </SolaceText>
-      {/* <ScrollView>
-          {DATA.map((item: any) => {
-            return <Transaction key={item.id} item={item} />;
-          })}
-        </ScrollView> */}
     </View>
   );
 };

@@ -17,7 +17,11 @@ let theme = {
     normal: '#9999A5',
     dark: '#27272a',
     black: '#000000',
-    solanaGreen: '#14f195',
+    'solana-green': '#14f195',
+    approved: '#00ac64',
+    pending: '#d27d00',
+    link: '#0066cc',
+    awaiting: '#d27d00',
   },
 };
 // if (colorScheme === 'dark') {

@@ -66,7 +66,7 @@ const Guardian: React.FC<Props> = ({navigation}) => {
 
   useEffect(() => {
     const willFocusSubscription = navigation.addListener('focus', async () => {
-      await getGuardians();
+      // await getGuardians();
     });
     return willFocusSubscription;
   }, [navigation]);

@@ -1,7 +1,8 @@
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, TouchableOpacity} from 'react-native';
 import React from 'react';
-import styles from './styles';
 import {useNavigation} from '@react-navigation/native';
+import SolaceText from '../../common/SolaceUI/SolaceText/SolaceText';
+import globalStyles from '../../../utils/global_styles';
 
 export type Contact = {
   id: string;
@@ -17,22 +18,22 @@ export type Props = {
 const ContactItem: React.FC<Props> = ({contact}) => {
   const navigation: any = useNavigation();
   return (
-    <View style={styles.container}>
+    <View style={{marginVertical: 10}}>
       <TouchableOpacity
-        style={styles.item}
+        style={globalStyles.rowCenter}
         onPress={() => navigation.navigate('Contact', {id: contact.id})}>
-        <View style={styles.imageContainer}>
-          <Text style={styles.imageText}>
+        <View style={globalStyles.avatar}>
+          <SolaceText type="secondary" weight="bold">
             {contact.name
               .split(' ')
               .map(word => word[0])
               .join('')
               .toLowerCase()}
-          </Text>
+          </SolaceText>
         </View>
-        <View>
-          <Text style={styles.username}>{contact.name}</Text>
-        </View>
+        <SolaceText size="sm" type="secondary" weight="bold" align="left">
+          {contact.name}
+        </SolaceText>
       </TouchableOpacity>
     </View>
   );

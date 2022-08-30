@@ -72,7 +72,7 @@ const AddContactScreen: React.FC<Props> = ({navigation}) => {
           <SolaceText type="secondary" weight="bold" variant="normal">
             network
           </SolaceText>
-          <SolaceText type="secondary" weight="bold" variant="solanaGreen">
+          <SolaceText type="secondary" weight="bold" variant="solana-green">
             solana
           </SolaceText>
         </View>

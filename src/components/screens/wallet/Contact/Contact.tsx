@@ -8,6 +8,7 @@ import TopNavbar from '../../../common/TopNavbar/TopNavbar';
 import WalletActivity from '../../../wallet/WalletActivity/WalletActivity';
 import SolaceText from '../../../common/SolaceUI/SolaceText/SolaceText';
 import SolaceIcon from '../../../common/SolaceUI/SolaceIcon/SolaceIcon';
+import globalStyles from '../../../../utils/global_styles';
 
 export type Props = {
   navigation: any;
@@ -43,9 +44,9 @@ const ContactScreen: React.FC<Props> = ({route, navigation}) => {
         </SolaceText>
         <View style={styles.container}>
           <TouchableOpacity
-            style={styles.item}
+            style={globalStyles.rowCenter}
             onPress={() => navigation.navigate('Asset')}>
-            <View style={styles.imageContainer}>
+            <View style={globalStyles.avatar}>
               <Image
                 source={require('../../../../../assets/images/solace/solana-icon.png')}
                 style={styles.image}
@@ -72,7 +73,7 @@ const ContactScreen: React.FC<Props> = ({route, navigation}) => {
           </TouchableOpacity>
         </View>
       </View>
-      <WalletActivity />
+      <WalletActivity data={[]} />
     </SolaceContainer>
   );
 };
@@ -88,17 +89,6 @@ const styles = StyleSheet.create({
   },
   container: {
     marginTop: 20,
-  },
-  item: {flexDirection: 'row', alignItems: 'center'},
-  imageContainer: {
-    height: 40,
-    width: 40,
-    backgroundColor: '#9999A5',
-    borderRadius: 20,
-    overflow: 'hidden',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
   },
   image: {
     width: 40,
