@@ -1,10 +1,13 @@
-import {View, Text, TouchableOpacity, ScrollView, Image} from 'react-native';
+import {View, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import React, {useContext, useEffect} from 'react';
-import styles from './styles';
 
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import {GlobalContext} from '../../../../state/contexts/GlobalContext';
 import {getContact} from '../../../../state/actions/global';
+import SolaceContainer from '../../../common/SolaceUI/SolaceContainer/SolaceContainer';
+import TopNavbar from '../../../common/TopNavbar/TopNavbar';
+import WalletActivity from '../../../wallet/WalletActivity/WalletActivity';
+import SolaceText from '../../../common/SolaceUI/SolaceText/SolaceText';
+import SolaceIcon from '../../../common/SolaceUI/SolaceIcon/SolaceIcon';
 
 export type Props = {
   navigation: any;
@@ -19,77 +22,86 @@ const ContactScreen: React.FC<Props> = ({route, navigation}) => {
     dispatch(getContact(id));
   }, [dispatch, route?.params?.id]);
 
+  const handleGoBack = () => {
+    navigation.goBack();
+  };
+
   return (
-    <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
-      <View style={styles.headerContainer}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <AntDesign name="back" style={styles.icon} />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.subHeadingContainer}>
-        <Text style={styles.mainText}>
-          {state.contact ? state.contact?.name : 'john doe'}
-        </Text>
-        <Text style={styles.editText}>edit</Text>
-      </View>
-      <View style={[styles.subHeadingContainer, {marginTop: 20}]}>
-        <Text style={styles.subHeadingText}>select address</Text>
-      </View>
-      <View style={styles.container}>
-        <TouchableOpacity
-          style={styles.item}
-          onPress={() => navigation.navigate('Asset')}>
-          <View style={styles.imageContainer}>
-            <Image
-              source={require('../../../../../assets/images/solace/solana-icon.png')}
-              style={styles.image}
-            />
-          </View>
-          <View>
-            <Text style={styles.username}>
+    <SolaceContainer>
+      <TopNavbar startIcon="back" text="" startClick={handleGoBack} />
+      <View style={{flex: 1}}>
+        <View style={styles.subHeadingContainer}>
+          <SolaceText size="lg" weight="semibold">
+            {state.contact ? state.contact?.name : 'john doe'}
+          </SolaceText>
+          <SolaceText type="secondary" variant="normal" weight="bold">
+            edit
+          </SolaceText>
+        </View>
+        <SolaceText align="left" mt={16}>
+          select address
+        </SolaceText>
+        <View style={styles.container}>
+          <TouchableOpacity
+            style={styles.item}
+            onPress={() => navigation.navigate('Asset')}>
+            <View style={styles.imageContainer}>
+              <Image
+                source={require('../../../../../assets/images/solace/solana-icon.png')}
+                style={styles.image}
+              />
+            </View>
+            <SolaceText
+              size="md"
+              type="secondary"
+              weight="bold"
+              variant="light">
               {state.contact ? state.contact.username : 'john.solace.money'}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-      <View style={[styles.container, {marginTop: 10}]}>
-        <TouchableOpacity
-          style={styles.item}
-          // onPress={() => navigation.navigate('Contact', {id: contact.id})}>
-        >
-          <View
-            style={[styles.imageContainer, {backgroundColor: 'transparant'}]}>
-            <AntDesign
-              name="plus"
-              style={[styles.icon, {color: '#9999a5', fontSize: 20}]}
-            />
-          </View>
-          <View>
-            <Text style={styles.editText}>add address</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.transactionContainer}>
-        <View style={styles.transactionHeader}>
-          <Text style={styles.transactionHeading}>wallet activity</Text>
+            </SolaceText>
+          </TouchableOpacity>
         </View>
-        <View style={styles.transactionImage}>
-          <Text style={styles.buttonText}>
-            visit <Text style={styles.secondaryText}>solscan</Text> to view your
-            transaction history
-          </Text>
-          <Image
-            source={require('../../../../../assets/images/solace/contact-screen.png')}
-            style={styles.contactImage}
-          />
-          {/* <Text style={styles.buttonText}>
-            visit <Text style={styles.secondaryText}>solscan</Text> to view your
-            transaction history
-          </Text> */}
+        <View style={[styles.container, {marginTop: 10}]}>
+          <TouchableOpacity
+            style={{flexDirection: 'row', alignItems: 'center'}}
+            // onPress={() => navigation.navigate('Contact', {id: contact.id})}>
+          >
+            <SolaceIcon name="plus" type="dark" />
+            <SolaceText type="secondary" variant="normal" weight="bold">
+              add address
+            </SolaceText>
+          </TouchableOpacity>
         </View>
       </View>
-    </ScrollView>
+      <WalletActivity />
+    </SolaceContainer>
   );
 };
 
 export default ContactScreen;
+
+const styles = StyleSheet.create({
+  subHeadingContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  container: {
+    marginTop: 20,
+  },
+  item: {flexDirection: 'row', alignItems: 'center'},
+  imageContainer: {
+    height: 40,
+    width: 40,
+    backgroundColor: '#9999A5',
+    borderRadius: 20,
+    overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  image: {
+    width: 40,
+    resizeMode: 'contain',
+  },
+});

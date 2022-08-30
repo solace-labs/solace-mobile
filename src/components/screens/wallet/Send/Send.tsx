@@ -1,82 +1,99 @@
 import {
   View,
-  Text,
   TouchableOpacity,
-  ScrollView,
   Image,
-  TextInput,
+  StyleSheet,
+  ScrollView,
 } from 'react-native';
 import React, {useContext} from 'react';
-import styles from './styles';
 
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import {GlobalContext} from '../../../../state/contexts/GlobalContext';
 import ContactItem from '../../../wallet/ContactItem/ContactItem';
+import SolaceContainer from '../../../common/SolaceUI/SolaceContainer/SolaceContainer';
+import TopNavbar from '../../../common/TopNavbar/TopNavbar';
+import SolaceCustomInput from '../../../common/SolaceUI/SolaceCustomInput/SolaceCustomInput';
+import SolaceText from '../../../common/SolaceUI/SolaceText/SolaceText';
+import SolaceIcon from '../../../common/SolaceUI/SolaceIcon/SolaceIcon';
 
 export type Props = {
   navigation: any;
 };
 
 const SendScreen: React.FC<Props> = ({navigation}) => {
-  const {state, dispatch} = useContext(GlobalContext);
+  const {state} = useContext(GlobalContext);
+
+  const handleGoBack = () => {
+    navigation.goBack();
+  };
+
+  const handleAdd = () => {
+    navigation.navigate('AddContact');
+  };
+
+  const contacts = state.contacts!;
+  const showContacts = contacts.length > 0;
 
   return (
-    <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
-      <View style={styles.headerContainer}>
-        <View style={styles.leftHeader}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <AntDesign name="back" style={styles.icon} />
-          </TouchableOpacity>
-          <Text style={styles.mainText}>send</Text>
-        </View>
-        <View style={styles.rightHeader}>
-          <TouchableOpacity onPress={() => navigation.navigate('AddContact')}>
-            <AntDesign name="plus" style={styles.icon} />
-          </TouchableOpacity>
-        </View>
+    <SolaceContainer>
+      <TopNavbar
+        startIcon="back"
+        endIcon="plus"
+        text="send"
+        startClick={handleGoBack}
+        endClick={handleAdd}
+      />
+      <View style={{marginTop: 8}}>
+        <SolaceCustomInput
+          placeholder="username or address"
+          iconName="search1"
+        />
+        <TouchableOpacity style={styles.sendGiftContainer}>
+          <SolaceIcon name="gift" type="dark" />
+          <SolaceText type="secondary" weight="bold" variant="normal">
+            send a gift
+          </SolaceText>
+        </TouchableOpacity>
       </View>
-      <View style={styles.inputContainer}>
-        <AntDesign name="search1" style={styles.searchIcon} />
-        <View style={styles.inputWrap}>
-          <TextInput
-            autoCapitalize="none"
-            autoComplete="off"
-            autoCorrect={false}
-            style={styles.textInput}
-            placeholderTextColor="#9999a5"
-            placeholder="username or address"
-          />
-        </View>
-        <View style={styles.sendGiftContainer}>
-          <AntDesign name="gift" style={styles.giftIcon} />
-          <Text style={styles.buttonText}>send a gift</Text>
-        </View>
-      </View>
-      {state?.contacts?.length! > 0 ? (
-        <View style={styles.contactContainer}>
-          {state?.contacts?.map((contact, index) => {
+      {showContacts ? (
+        <ScrollView bounces={true} style={{margin: 8}}>
+          {contacts.map(contact => {
             return <ContactItem contact={contact} key={contact.username} />;
           })}
-        </View>
+        </ScrollView>
       ) : (
-        <View style={styles.sendContainer}>
-          <View style={styles.imageContainer}>
-            <Image
-              source={require('../../../../../assets/images/solace/send-money.png')}
-              style={styles.contactImage}
-            />
-            <Text style={styles.buttonText}>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('AddContact')}>
-                <Text style={styles.secondaryText}>add a contact</Text>
-              </TouchableOpacity>{' '}
-              to send to Solace or Solana addresses
-            </Text>
-          </View>
+        <View style={{flex: 1}}>
+          <Image
+            source={require('../../../../../assets/images/solace/send-money.png')}
+            style={{
+              width: '100%',
+              height: 240,
+              resizeMode: 'contain',
+            }}
+          />
+          <SolaceText type="secondary" size="sm">
+            <SolaceText
+              onPress={handleAdd}
+              type="secondary"
+              size="sm"
+              variant="white"
+              style={{textDecorationLine: 'underline'}}
+              weight="bold">
+              add a contact
+            </SolaceText>{' '}
+            to send to solace or solana addresses
+          </SolaceText>
         </View>
       )}
-    </ScrollView>
+    </SolaceContainer>
   );
 };
 
 export default SendScreen;
+
+const styles = StyleSheet.create({
+  sendGiftContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 8,
+  },
+});

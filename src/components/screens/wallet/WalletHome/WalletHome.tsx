@@ -1,16 +1,21 @@
-import {View, Text, TouchableOpacity, ScrollView, Image} from 'react-native';
+import {View, Image, StyleSheet} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import styles from './styles';
 import {
   AccountStatus,
   GlobalContext,
 } from '../../../../state/contexts/GlobalContext';
-import {setAccountStatus, setUser} from '../../../../state/actions/global';
+import {
+  clearData,
+  setAccountStatus,
+  setUser,
+} from '../../../../state/actions/global';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {StorageClearAll} from '../../../../utils/storage';
+import SolaceContainer from '../../../common/SolaceUI/SolaceContainer/SolaceContainer';
+import SolaceIcon from '../../../common/SolaceUI/SolaceIcon/SolaceIcon';
+import SolaceText from '../../../common/SolaceUI/SolaceText/SolaceText';
+import WalletActivity from '../../../wallet/WalletActivity/WalletActivity';
 
 export type Props = {
   navigation: any;
@@ -28,40 +33,9 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
       date: new Date(),
       username: 'ankit.solace.money',
     },
-    {
-      id: 3,
-      date: new Date(),
-      username: 'ashwin.solace.money',
-    },
-    {
-      id: 4,
-      date: new Date(),
-      username: 'ankit.solace.money',
-    },
-    {
-      id: 5,
-      date: new Date(),
-      username: 'ashwin.solace.money',
-    },
-    {
-      id: 6,
-      date: new Date(),
-      username: 'ankit.solace.money',
-    },
-    {
-      id: 7,
-      date: new Date(),
-      username: 'ashwin.solace.money',
-    },
-    {
-      id: 8,
-      date: new Date(),
-      username: 'ankit.solace.money',
-    },
-    {id: 9, username: 'sethi.solace.money', date: new Date()},
   ];
 
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState('user');
 
   const {
     state: {user},
@@ -85,128 +59,100 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
 
   const logout = async () => {
     await StorageClearAll();
-    dispatch(setUser({}));
+    dispatch(clearData());
     dispatch(setAccountStatus(AccountStatus.NEW));
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
-      <View style={styles.headerIcons}>
-        <View>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Guardian')}
-            style={styles.iconContainer}>
-            <AntDesign name="lock" style={styles.icon} />
-          </TouchableOpacity>
-        </View>
-        <View>
-          <TouchableOpacity
-            onPress={() => logout()}
-            style={styles.iconContainer}>
-            <AntDesign name="logout" style={styles.icon} />
-          </TouchableOpacity>
-        </View>
+    <SolaceContainer>
+      <View style={styles.header}>
+        <SolaceIcon
+          onPress={() => navigation.navigate('Guardian')}
+          type="normal"
+          variant="antdesign"
+          name="lock"
+        />
+        <SolaceIcon
+          onPress={() => logout()}
+          type="normal"
+          variant="antdesign"
+          name="logout"
+        />
       </View>
-      <View style={styles.headingContainer}>
+      <View style={styles.logoContainer}>
         <Image
           source={require('../../../../../assets/images/solace/solace-icon.png')}
           style={styles.image}
         />
-        <Text style={styles.username}>
+        {/* <Text style={styles.username}>
           {user?.solaceName ? user.solaceName : username}.solace.money
-        </Text>
+        </Text> */}
+        <SolaceText weight="semibold" size="md">
+          {user?.solaceName ? user.solaceName : username}.solace.money
+        </SolaceText>
       </View>
-      <View style={styles.headingContainer}>
-        <Text style={styles.price}>$0.04</Text>
+      <View style={styles.mainContainer}>
+        <SolaceText size="xl" weight="bold">
+          $0.04
+        </SolaceText>
         <View style={styles.buttonsContainer}>
-          <TouchableOpacity
-            style={styles.buttonContainer}
-            onPress={() => handleSend()}>
-            <View style={styles.iconBackground}>
-              <AntDesign name="arrowup" size={20} color="black" />
-            </View>
-            <Text style={styles.buttonText}>send</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.buttonContainer}
-            onPress={async () => {
-              // const keypair = SolaceSDK.newKeyPair();
-              // // const sdk = new SolaceSDK({
-              // //   owner: keypair,
-              // //   network: 'local',
-              // //   programAddress: '3CvPZTk1PYMs6JzgiVNFtsAeijSNwbhrQTMYeFQKWpFw',
-              // // });
-              // // Request airdrop
-              // console.log('requesting airdrop');
-              // const LAMPORTS_PER_SOL = 1000000000;
-              // const tx = await SolaceSDK.localConnection.requestAirdrop(
-              //   keypair.publicKey,
-              //   1 * LAMPORTS_PER_SOL,
-              // );
-              // await SolaceSDK.localConnection.confirmTransaction(tx);
-              // console.log('airdrop confirmed');
-              // // Check if the name is valid with my API
-              // // await sdk.createWalletWithName(keypair, 'name', false);
-              // // const s = await SolaceSDK.createFromName(username, keypair);
-              // const sdk = await SolaceSDK.createFromName(username, {
-              //   owner: keypair,
-              //   network: 'local',
-              //   programAddress: '3CvPZTk1PYMs6JzgiVNFtsAeijSNwbhrQTMYeFQKWpFw',
-              // });
-              // console.log({sdk});
-              // SolaceSDK.retrieveFromName(username, {
-              //   owner: keypair,
-              //   programAddress: '3CvPZTk1PYMs6JzgiVNFtsAeijSNwbhrQTMYeFQKWpFw',
-              //   network: 'local',
-              // });
-              // console.log('NEW WALLET', sdk.wallet);
-            }}>
-            <View style={styles.iconBackground}>
-              <MaterialCommunityIcons
-                name="line-scan"
-                size={20}
-                color="black"
-              />
-            </View>
-            <Text style={styles.buttonText}>scan</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.buttonContainer}
-            // onPress={() => AsyncStorage.removeItem('user')}>
-          >
-            <View style={styles.iconBackground}>
-              <AntDesign name="arrowdown" size={20} color="black" />
-            </View>
-            <Text style={styles.buttonText}>recieve</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      <View style={styles.walletContainer}>
-        <View style={styles.walletHeader}>
-          <Text style={styles.heading}>wallet activity</Text>
-          <TouchableOpacity>
-            {/* <Text style={styles.sideHeading}>see more</Text> */}
-            <Text style={styles.sideHeading}>unavailable</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.imageContainer}>
-          <Image
-            source={require('../../../../../assets/images/solace/contact-screen.png')}
-            style={styles.contactImage}
+          <SolaceIcon
+            onPress={() => handleSend()}
+            type="light"
+            name="arrowup"
+            variant="antdesign"
+            subText="send"
           />
-          <Text style={styles.buttonText}>
-            visit <Text style={styles.secondaryText}>solscan</Text> to view your
-            transaction history
-          </Text>
+          <SolaceIcon
+            onPress={() => {}}
+            type="light"
+            name="line-scan"
+            variant="mci"
+            subText="scan"
+          />
+          <SolaceIcon
+            onPress={() => {}}
+            type="light"
+            name="arrowdown"
+            variant="antdesign"
+            subText="recieve"
+          />
         </View>
-        {/* <ScrollView>
-          {DATA.map((item: any) => {
-            return <Transaction key={item.id} item={item} />;
-          })}
-        </ScrollView> */}
       </View>
-    </ScrollView>
+      <WalletActivity />
+    </SolaceContainer>
   );
 };
 
 export default WalletHomeScreen;
+
+const styles = StyleSheet.create({
+  header: {
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  logoContainer: {
+    flex: 0.3,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  mainContainer: {
+    flex: 0.7,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonsContainer: {
+    width: '70%',
+    flexDirection: 'row',
+    marginTop: 20,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  image: {
+    height: 35,
+    resizeMode: 'contain',
+    overflow: 'hidden',
+    marginBottom: 12,
+  },
+});

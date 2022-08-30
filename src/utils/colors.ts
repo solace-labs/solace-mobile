@@ -17,6 +17,7 @@ let theme = {
     normal: '#9999A5',
     dark: '#27272a',
     black: '#000000',
+    solanaGreen: '#14f195',
   },
 };
 // if (colorScheme === 'dark') {

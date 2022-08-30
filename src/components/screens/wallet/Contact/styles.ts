@@ -11,7 +11,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginVertical: 20,
     alignItems: 'center',
-    width: '90%',
   },
   icon: {
     color: 'white',
@@ -33,7 +32,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: 20,
-    width: '90%',
   },
   editText: {
     color: '#9999a5',
@@ -48,7 +46,6 @@ const styles = StyleSheet.create({
   },
   container: {
     marginTop: 20,
-    width: '90%',
   },
   username: {
     color: 'white',
@@ -70,7 +67,6 @@ const styles = StyleSheet.create({
   transactionContainer: {
     flex: 1,
     marginTop: 80,
-    width: '90%',
   },
   transactionHeader: {
     flexDirection: 'row',

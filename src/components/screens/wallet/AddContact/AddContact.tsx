@@ -1,20 +1,15 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  Image,
-  TextInput,
-  Alert,
-} from 'react-native';
+import {View} from 'react-native';
 import React, {useContext, useState} from 'react';
-import styles from './styles';
 
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {GlobalContext} from '../../../../state/contexts/GlobalContext';
 import {addNewContact} from '../../../../state/actions/global';
 import {showMessage} from 'react-native-flash-message';
+import SolaceContainer from '../../../common/SolaceUI/SolaceContainer/SolaceContainer';
+import SolaceButton from '../../../common/SolaceUI/SolaceButton/SolaceButton';
+import SolaceText from '../../../common/SolaceUI/SolaceText/SolaceText';
+import TopNavbar from '../../../common/TopNavbar/TopNavbar';
+import SolaceInput from '../../../common/SolaceUI/SolaceInput/SolaceInput';
+import SolaceCustomInput from '../../../common/SolaceUI/SolaceCustomInput/SolaceCustomInput';
 
 export type Props = {
   navigation: any;
@@ -43,55 +38,54 @@ const AddContactScreen: React.FC<Props> = ({navigation}) => {
     }
   };
 
+  const handleGoBack = () => {
+    navigation.goBack();
+  };
+
   return (
-    <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
-      <View style={styles.headerContainer}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <AntDesign name="back" style={styles.icon} />
-        </TouchableOpacity>
-        <Text style={styles.mainText}>save contact</Text>
-      </View>
-      <View style={styles.inputContainer}>
-        <TextInput
-          autoCapitalize="none"
-          autoComplete="off"
-          autoCorrect={false}
+    <SolaceContainer>
+      <TopNavbar
+        startIcon="back"
+        text="save contact"
+        startClick={handleGoBack}
+      />
+      <View style={{flex: 1, marginTop: 16}}>
+        <SolaceInput
+          mb={16}
           value={name}
           onChangeText={setName}
-          style={styles.textInput}
-          placeholderTextColor="#9999a5"
           placeholder="name"
         />
-        <View style={styles.inputWrap}>
-          <TextInput
-            autoCapitalize="none"
-            autoComplete="off"
-            value={address}
-            onChangeText={setAddress}
-            autoCorrect={false}
-            style={[styles.textInput, styles.textInputAddress]}
-            placeholderTextColor="#9999a5"
-            placeholder="solace or solana address"
-          />
-          <MaterialCommunityIcons name="line-scan" style={styles.scanIcon} />
+        <SolaceCustomInput
+          iconName="line-scan"
+          placeholder="address"
+          iconType="mci"
+          value={address}
+          onChangeText={setAddress}
+        />
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginTop: 20,
+          }}>
+          <SolaceText type="secondary" weight="bold" variant="normal">
+            network
+          </SolaceText>
+          <SolaceText type="secondary" weight="bold" variant="solanaGreen">
+            solana
+          </SolaceText>
         </View>
       </View>
-      <View style={styles.networkContainer}>
-        <Text style={styles.secondText}>network</Text>
-        <Text style={styles.solanaText}>solana</Text>
-      </View>
-      <View style={styles.endContainer}>
-        <TouchableOpacity
-          disabled={!name || !address}
-          onPress={() => addContact()}
-          style={[
-            styles.buttonStyle,
-            {backgroundColor: !name || !address ? 'lightgray' : 'white'},
-          ]}>
-          <Text style={styles.buttonTextStyle}>save contact</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+      <SolaceButton
+        onPress={addContact}
+        // loading={loading.value}
+        disabled={!address || !name}>
+        <SolaceText type="secondary" weight="bold" variant="dark">
+          save contact
+        </SolaceText>
+      </SolaceButton>
+    </SolaceContainer>
   );
 };
 

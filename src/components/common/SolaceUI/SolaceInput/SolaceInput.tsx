@@ -4,7 +4,7 @@ import type {StyleProp} from 'react-native';
 import {Colors} from '../../../../utils/colors';
 import {Styles} from '../../../../utils/styles';
 
-export interface InputProps extends TextInputProps {
+export interface SolaceInputProps extends TextInputProps {
   style?: StyleProp<TextStyle>;
   variant?: 'dark' | 'normal' | 'light';
   fullWidth?: boolean;
@@ -14,7 +14,7 @@ export interface InputProps extends TextInputProps {
   mb?: number;
 }
 
-const SolaceInput: FC<InputProps> = ({
+const SolaceInput: FC<SolaceInputProps> = ({
   style,
   fullWidth = true,
   variant = 'light',
@@ -71,6 +71,7 @@ const SolaceInput: FC<InputProps> = ({
         marginStyles,
         defaultStyle,
         focusStyle,
+        style,
         hidden ? {display: 'none'} : {},
       ]}
       {...inputProps}

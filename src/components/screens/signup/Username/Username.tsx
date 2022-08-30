@@ -96,7 +96,7 @@ const UsernameScreen: React.FC<Props> = ({navigation}) => {
 
     const containerStyle: StyleProp<ViewStyle> = {
       flexDirection: 'row',
-      marginTop: 8,
+      marginTop: 12,
       alignItems: 'center',
     };
     const iconStyle: StyleProp<TextStyle> = {
@@ -112,7 +112,7 @@ const UsernameScreen: React.FC<Props> = ({navigation}) => {
           variant="light"
           weight="semibold"
           size="sm"
-          style={{paddingLeft: 4}}>
+          style={{paddingLeft: 8}}>
           {status.text}
         </SolaceText>
       </View>

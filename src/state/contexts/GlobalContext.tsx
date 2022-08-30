@@ -60,7 +60,7 @@ export enum AccountStatus {
   RETRIEVE = 'RETRIEVE',
 }
 
-const initialState = {
+export const initialState = {
   accountStatus: AccountStatus.LOADING,
   user: {
     email: '',
@@ -86,6 +86,7 @@ export const GlobalContext = createContext<{
 
 const GlobalProvider = ({children}: {children: any}) => {
   const [state, dispatch] = useReducer(globalReducer, initialState);
+  console.log({state});
 
   const checkInRecoverMode = useCallback(async () => {
     const storedUser: User = await StorageGetItem('user');
@@ -132,7 +133,7 @@ const GlobalProvider = ({children}: {children: any}) => {
       dispatch(setUser(storedUser));
       dispatch(setAccountStatus(AccountStatus.EXISITING));
     } else {
-      dispatch(setAccountStatus(AccountStatus.RECOVERY));
+      dispatch(setAccountStatus(AccountStatus.ACTIVE));
     }
   }, [checkInRecoverMode, checkRecovery, isUserValid]);
 

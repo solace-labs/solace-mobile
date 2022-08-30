@@ -66,3 +66,9 @@ export const getContact = (id: string) => {
     payload: id,
   };
 };
+
+export const clearData = () => {
+  return {
+    type: 'CLEAR_DATA',
+  };
+};

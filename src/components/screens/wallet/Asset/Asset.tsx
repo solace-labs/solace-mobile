@@ -1,15 +1,11 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  TextInput,
-} from 'react-native';
+import {View, TouchableOpacity, TextInput, StyleSheet} from 'react-native';
 import React, {useContext, useState} from 'react';
-import styles from './styles';
 
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import {GlobalContext} from '../../../../state/contexts/GlobalContext';
+import SolaceContainer from '../../../common/SolaceUI/SolaceContainer/SolaceContainer';
+import SolaceButton from '../../../common/SolaceUI/SolaceButton/SolaceButton';
+import SolaceText from '../../../common/SolaceUI/SolaceText/SolaceText';
+import TopNavbar from '../../../common/TopNavbar/TopNavbar';
 
 export type Props = {
   navigation: any;
@@ -18,51 +14,71 @@ export type Props = {
 const AssetScreen: React.FC<Props> = ({navigation}) => {
   const [amount, setAmount] = useState('0');
   const {dispatch} = useContext(GlobalContext);
+  const handleGoBack = () => {
+    navigation.goBack();
+  };
 
   return (
-    <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
-      <View style={styles.headerContainer}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <AntDesign name="back" style={styles.icon} />
-        </TouchableOpacity>
-        <Text style={styles.mainText}>select an assest</Text>
+    <SolaceContainer>
+      <TopNavbar
+        startIcon="back"
+        text="select an asset"
+        startClick={handleGoBack}
+      />
+      <View style={{flex: 1}}>
+        <View style={styles.row}>
+          <SolaceText size="3xl" weight="semibold">
+            SOL
+          </SolaceText>
+          <TextInput
+            autoCapitalize="none"
+            autoComplete="off"
+            autoCorrect={false}
+            value={amount}
+            keyboardType="decimal-pad"
+            onChangeText={setAmount}
+            style={styles.assetAmount}
+            placeholderTextColor="#9999a5"
+            placeholder="0"
+          />
+        </View>
+        <View style={[styles.row, {marginTop: 10}]}>
+          <SolaceText type="secondary" variant="normal" weight="bold">
+            30.2 SOL available
+          </SolaceText>
+          <SolaceText type="secondary" variant="normal" weight="bold">
+            $600.2
+          </SolaceText>
+        </View>
+        <View style={[styles.row, {marginTop: 10, justifyContent: 'flex-end'}]}>
+          <TouchableOpacity>
+            <SolaceText type="secondary">use max</SolaceText>
+          </TouchableOpacity>
+        </View>
       </View>
-      <View style={styles.row}>
-        <Text style={styles.assetName}>SOL</Text>
-        <TextInput
-          autoCapitalize="none"
-          autoComplete="off"
-          autoCorrect={false}
-          value={amount}
-          keyboardType="decimal-pad"
-          onChangeText={setAmount}
-          style={styles.assetAmount}
-          placeholderTextColor="#9999a5"
-          placeholder="0"
-        />
-      </View>
-      <View style={[styles.row, {marginTop: 10}]}>
-        <Text style={styles.secondText}>30.2 SOL available</Text>
-        <Text style={styles.secondText}>$600.2</Text>
-      </View>
-      <View style={[styles.row, {marginTop: 10, justifyContent: 'flex-end'}]}>
-        <TouchableOpacity>
-          <Text style={styles.buttonText}>use max</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.endContainer}>
-        <TouchableOpacity
-          disabled={!amount}
-          // onPress={() => addContact()}
-          style={[
-            styles.buttonStyle,
-            {backgroundColor: !amount ? 'lightgray' : 'white'},
-          ]}>
-          <Text style={styles.buttonTextStyle}>send</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+      <SolaceButton
+        // onPress={addGuardian}
+        // loading={}
+        disabled={!amount}>
+        <SolaceText type="secondary" weight="bold" variant="dark">
+          send
+        </SolaceText>
+      </SolaceButton>
+    </SolaceContainer>
   );
 };
 
 export default AssetScreen;
+
+const styles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  assetAmount: {
+    color: 'white',
+    fontFamily: 'Poppins-SemiBold',
+    fontSize: 32,
+  },
+});

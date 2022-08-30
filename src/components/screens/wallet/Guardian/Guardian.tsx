@@ -1,15 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
-import styles from './styles';
 
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import {GlobalContext} from '../../../../state/contexts/GlobalContext';
 import GuardianTab from '../../../wallet/GuardianTab/GuardianTab';
-import {Contact} from '../../../wallet/ContactItem/ContactItem';
 import GuardianSecondTab from '../../../wallet/GuardianSecondTab/GuardianSecondTab';
-import {PublicKey, SolaceSDK} from 'solace-sdk';
+import {PublicKey} from 'solace-sdk';
 import {showMessage} from 'react-native-flash-message';
+import SolaceContainer from '../../../common/SolaceUI/SolaceContainer/SolaceContainer';
+import SolaceButton from '../../../common/SolaceUI/SolaceButton/SolaceButton';
+import SolaceText from '../../../common/SolaceUI/SolaceText/SolaceText';
+import TopNavbar from '../../../common/TopNavbar/TopNavbar';
 
 export type Props = {
   navigation: any;
@@ -81,22 +82,19 @@ const Guardian: React.FC<Props> = ({navigation}) => {
     }
   };
 
+  const handleGoBack = () => {
+    navigation.goBack();
+  };
+
   return (
-    <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
-      <View style={styles.headerContainer}>
-        <View style={styles.subHeaderContainer}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <AntDesign name="back" style={styles.icon} />
-          </TouchableOpacity>
-          <Text style={styles.mainText}>guardians</Text>
-        </View>
-        <TouchableOpacity>
-          <AntDesign
-            name="infocirlceo"
-            style={[styles.icon, {color: '#9999a5'}]}
-          />
-        </TouchableOpacity>
-      </View>
+    <SolaceContainer>
+      <TopNavbar
+        startIcon="back"
+        endIcon="infocirlceo"
+        text="guardians"
+        startClick={handleGoBack}
+        endClick={() => {}}
+      />
       <View style={styles.tabs}>
         <TouchableOpacity
           style={[
@@ -104,13 +102,16 @@ const Guardian: React.FC<Props> = ({navigation}) => {
             {borderBottomColor: activeTab === 1 ? 'white' : 'transparent'},
           ]}
           onPress={() => setActiveTab(1)}>
-          <Text
-            style={[
-              styles.tabText,
-              {color: activeTab === 1 ? 'white' : '#9999a5'},
-            ]}>
+          <SolaceText
+            variant="white"
+            weight="bold"
+            type="secondary"
+            style={{
+              color: activeTab === 1 ? 'white' : '#9999a5',
+              fontSize: 14,
+            }}>
             my guardians
-          </Text>
+          </SolaceText>
         </TouchableOpacity>
         <TouchableOpacity
           style={[
@@ -118,27 +119,39 @@ const Guardian: React.FC<Props> = ({navigation}) => {
             {borderBottomColor: activeTab === 2 ? 'white' : 'transparent'},
           ]}
           onPress={() => setActiveTab(2)}>
-          <Text
-            style={[
-              styles.tabText,
-              {color: activeTab === 2 ? 'white' : '#9999a5'},
-            ]}>
+          <SolaceText
+            variant="white"
+            weight="bold"
+            type="secondary"
+            style={{
+              color: activeTab === 2 ? 'white' : '#9999a5',
+              fontSize: 14,
+            }}>
             who i protect
-          </Text>
+          </SolaceText>
         </TouchableOpacity>
       </View>
-
-      <View style={styles.mainContainer}>{renderTab()}</View>
-
-      <View style={styles.endContainer}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('AddGuardian')}
-          style={styles.buttonStyle}>
-          <Text style={styles.buttonTextStyle}>add guardian</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+      <View style={{flex: 1}}>{renderTab()}</View>
+      <SolaceButton onPress={() => navigation.navigate('AddGuardian')}>
+        <SolaceText type="secondary" variant="black" weight="bold">
+          add guardian
+        </SolaceText>
+      </SolaceButton>
+    </SolaceContainer>
   );
 };
 
 export default Guardian;
+
+const styles = StyleSheet.create({
+  tabs: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  tab: {
+    borderBottomWidth: 2,
+    paddingVertical: 8,
+    width: '50%',
+    justifyContent: 'center',
+  },
+});

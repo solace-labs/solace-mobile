@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect} from 'react';
 import {StorageGetItem} from '../../../../utils/storage';
-import Loading from '../../loading/Loading/Loading';
+import Loading from '../../loading/Loading';
 
 export type Props = {
   navigation: any;
