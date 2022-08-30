@@ -1,12 +1,12 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import WalletHomeScreen from '../components/screens/wallet/WalletHome/WalletHome';
-import SendScreen from '../components/screens/wallet/Send/Send';
-import AddContactScreen from '../components/screens/wallet/AddContact/AddContact';
-import ContactScreen from '../components/screens/wallet/Contact/Contact';
-import AssetScreen from '../components/screens/wallet/Asset/Asset';
-import AddGuardian from '../components/screens/wallet/AddGuardian/AddGuardian';
-import Guardian from '../components/screens/wallet/Guardian/Guardian';
+import WalletHomeScreen from '../components/screens/wallet/WalletHome';
+import SendScreen from '../components/screens/wallet/Send';
+import AddContactScreen from '../components/screens/wallet/AddContact';
+import ContactScreen from '../components/screens/wallet/Contact';
+import AssetScreen from '../components/screens/wallet/Asset';
+import AddGuardian from '../components/screens/wallet/AddGuardian';
+import Guardian from '../components/screens/wallet/Guardian';
 
 const Stack = createNativeStackNavigator();
 

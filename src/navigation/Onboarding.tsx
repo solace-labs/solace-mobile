@@ -1,11 +1,11 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import PasscodeScreen from '../components/screens/onboarding/Passcode/Passcode';
-import ConfirmPasscodeScreen from '../components/screens/onboarding/ConfirmPasscode/ConfirmPasscode';
-import GoogleDriveScreen from '../components/screens/onboarding/GoogleDrive/GoogleDrive';
-import Login from '../components/screens/onboarding/Login/Login';
-import CreateWalletScreen from '../components/screens/onboarding/CreateWallet/CreateWallet';
-import AirdropScreen from '../components/screens/onboarding/Airdrop/Airdrop';
+import PasscodeScreen from '../components/screens/onboarding/Passcode';
+import ConfirmPasscodeScreen from '../components/screens/onboarding/ConfirmPasscode';
+import GoogleDriveScreen from '../components/screens/onboarding/GoogleDrive';
+import Login from '../components/screens/onboarding/Login';
+import CreateWalletScreen from '../components/screens/onboarding/CreateWallet';
+import AirdropScreen from '../components/screens/onboarding/Airdrop';
 
 const Stack = createNativeStackNavigator();
 const OnboardingStack = () => {

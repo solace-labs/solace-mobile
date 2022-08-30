@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useReducer,
 } from 'react';
-import {Contact} from '../../components/wallet/ContactItem/ContactItem';
+import {Contact} from '../../components/wallet/ContactItem';
 import {setAccountStatus, setUser} from '../actions/global';
 import globalReducer from '../reducers/global';
 import {KeyPair, SolaceSDK} from 'solace-sdk';

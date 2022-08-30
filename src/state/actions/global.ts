@@ -1,5 +1,5 @@
 import {SolaceSDK} from 'solace-sdk';
-import {Contact} from '../../components/wallet/ContactItem/ContactItem';
+import {Contact} from '../../components/wallet/ContactItem';
 import {AwsCognito} from '../../utils/aws_cognito';
 import {GoogleApi} from '../../utils/google_apis';
 import {AccountStatus, RetrieveData, User} from '../contexts/GlobalContext';
