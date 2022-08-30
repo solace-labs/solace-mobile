@@ -6,6 +6,7 @@ import SolaceContainer from '../../../common/SolaceUI/SolaceContainer/SolaceCont
 import SolaceButton from '../../../common/SolaceUI/SolaceButton/SolaceButton';
 import SolaceText from '../../../common/SolaceUI/SolaceText/SolaceText';
 import TopNavbar from '../../../common/TopNavbar/TopNavbar';
+import globalStyles from '../../../../utils/global_styles';
 
 export type Props = {
   navigation: any;
@@ -26,7 +27,7 @@ const AssetScreen: React.FC<Props> = ({navigation}) => {
         startClick={handleGoBack}
       />
       <View style={{flex: 1}}>
-        <View style={styles.row}>
+        <View style={globalStyles.rowCenter}>
           <SolaceText size="3xl" weight="semibold">
             SOL
           </SolaceText>
@@ -42,7 +43,7 @@ const AssetScreen: React.FC<Props> = ({navigation}) => {
             placeholder="0"
           />
         </View>
-        <View style={[styles.row, {marginTop: 10}]}>
+        <View style={[globalStyles.rowCenter, {marginTop: 10}]}>
           <SolaceText type="secondary" variant="normal" weight="bold">
             30.2 SOL available
           </SolaceText>
@@ -50,7 +51,11 @@ const AssetScreen: React.FC<Props> = ({navigation}) => {
             $600.2
           </SolaceText>
         </View>
-        <View style={[styles.row, {marginTop: 10, justifyContent: 'flex-end'}]}>
+        <View
+          style={[
+            globalStyles.rowSpaceBetween,
+            {marginTop: 10, justifyContent: 'flex-end'},
+          ]}>
           <TouchableOpacity>
             <SolaceText type="secondary">use max</SolaceText>
           </TouchableOpacity>
@@ -71,11 +76,6 @@ const AssetScreen: React.FC<Props> = ({navigation}) => {
 export default AssetScreen;
 
 const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
   assetAmount: {
     color: 'white',
     fontFamily: 'Poppins-SemiBold',

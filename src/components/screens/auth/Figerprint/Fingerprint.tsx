@@ -1,7 +1,8 @@
-import {View, TouchableOpacity, Image, StyleSheet} from 'react-native';
+import {View, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
 import SolaceContainer from '../../../common/SolaceUI/SolaceContainer/SolaceContainer';
 import SolaceText from '../../../common/SolaceUI/SolaceText/SolaceText';
+import globalStyles from '../../../../utils/global_styles';
 
 export type Props = {
   navigation: any;
@@ -10,7 +11,7 @@ export type Props = {
 const FingerprintScreen: React.FC<Props> = ({navigation}) => {
   return (
     <SolaceContainer>
-      <View style={styles.container}>
+      <View style={globalStyles.fullCenter}>
         <Image
           source={require('../../../../../assets/images/solace/solace-icon.png')}
         />
@@ -18,7 +19,7 @@ const FingerprintScreen: React.FC<Props> = ({navigation}) => {
           solace
         </SolaceText>
       </View>
-      <View style={[styles.container, {justifyContent: 'flex-start'}]}>
+      <View style={[globalStyles.fullCenter, {justifyContent: 'flex-start'}]}>
         <Image
           source={require('../../../../../assets/images/solace/light-fingerprint.png')}
           style={{width: 40, height: 40}}
@@ -42,11 +43,3 @@ const FingerprintScreen: React.FC<Props> = ({navigation}) => {
 };
 
 export default FingerprintScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});

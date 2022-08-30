@@ -17,6 +17,7 @@ import PasscodeContainer, {
   PASSCODE_LENGTH,
 } from '../../../common/PasscodeContainer/PasscodeContainer';
 import SolaceLoader from '../../../common/SolaceUI/SolaceLoader/SolaceLoader';
+import globalStyles from '../../../../utils/global_styles';
 
 const MainPasscodeScreen = () => {
   const [code, setCode] = useState('');
@@ -96,7 +97,7 @@ const MainPasscodeScreen = () => {
 
   return (
     <SolaceContainer>
-      <View style={styles.container}>
+      <View style={globalStyles.fullCenter}>
         <Image
           source={require('../../../../../assets/images/solace/solace-icon.png')}
         />
@@ -122,11 +123,3 @@ const MainPasscodeScreen = () => {
 };
 
 export default MainPasscodeScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});

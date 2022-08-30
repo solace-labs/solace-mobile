@@ -1,12 +1,13 @@
-import {View, Image, ActivityIndicator, StyleSheet} from 'react-native';
+import {View, Image, ActivityIndicator} from 'react-native';
 import React from 'react';
 import SolaceContainer from '../../common/SolaceUI/SolaceContainer/SolaceContainer';
 import SolaceText from '../../common/SolaceUI/SolaceText/SolaceText';
+import globalStyles from '../../../utils/global_styles';
 
 const Loading = () => {
   return (
     <SolaceContainer>
-      <View style={styles.container}>
+      <View style={globalStyles.fullCenter}>
         <Image
           source={require('../../../../assets/images/solace/solace-icon.png')}
         />
@@ -21,11 +22,3 @@ const Loading = () => {
   );
 };
 export default Loading;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});

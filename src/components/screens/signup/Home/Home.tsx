@@ -1,4 +1,4 @@
-import {View, Image, StyleSheet} from 'react-native';
+import {View, Image} from 'react-native';
 import React, {useContext} from 'react';
 import {
   AccountStatus,
@@ -8,6 +8,7 @@ import {setAccountStatus} from '../../../../state/actions/global';
 import SolaceButton from '../../../common/SolaceUI/SolaceButton/SolaceButton';
 import SolaceContainer from '../../../common/SolaceUI/SolaceContainer/SolaceContainer';
 import SolaceText from '../../../common/SolaceUI/SolaceText/SolaceText';
+import globalStyles from '../../../../utils/global_styles';
 
 export type Props = {
   navigation: any;
@@ -18,7 +19,7 @@ const HomeScreen: React.FC<Props> = ({navigation}) => {
 
   return (
     <SolaceContainer>
-      <View style={styles.imageContainerStyle}>
+      <View style={globalStyles.fullCenter}>
         <Image
           source={require('../../../../../assets/images/solace/solace-icon.png')}
         />
@@ -26,36 +27,20 @@ const HomeScreen: React.FC<Props> = ({navigation}) => {
           solace
         </SolaceText>
       </View>
-      <View style={styles.buttonContainerStyle}>
-        <SolaceButton onPress={() => navigation.navigate('Username')}>
-          <SolaceText type="secondary" variant="dark" weight="bold">
-            create new wallet
-          </SolaceText>
-        </SolaceButton>
-        <SolaceButton
-          mt={16}
-          variant="dark"
-          onPress={() => dispatch(setAccountStatus(AccountStatus.RETRIEVE))}>
-          <SolaceText type="secondary" weight="bold">
-            retrieve your wallet
-          </SolaceText>
-        </SolaceButton>
-      </View>
+      <SolaceButton onPress={() => navigation.navigate('Username')}>
+        <SolaceText type="secondary" variant="dark" weight="bold">
+          create new wallet
+        </SolaceText>
+      </SolaceButton>
+      <SolaceButton
+        mt={16}
+        variant="dark"
+        onPress={() => dispatch(setAccountStatus(AccountStatus.RETRIEVE))}>
+        <SolaceText type="secondary" weight="bold">
+          retrieve your wallet
+        </SolaceText>
+      </SolaceButton>
     </SolaceContainer>
   );
 };
 export default HomeScreen;
-
-const styles = StyleSheet.create({
-  buttonContainerStyle: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    width: '100%',
-  },
-  imageContainerStyle: {
-    flex: 1,
-    justifyContent: 'center',
-    width: '100%',
-    alignItems: 'center',
-  },
-});

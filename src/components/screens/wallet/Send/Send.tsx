@@ -1,10 +1,4 @@
-import {
-  View,
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-  ScrollView,
-} from 'react-native';
+import {View, TouchableOpacity, Image, ScrollView} from 'react-native';
 import React, {useContext} from 'react';
 
 import {GlobalContext} from '../../../../state/contexts/GlobalContext';
@@ -14,6 +8,7 @@ import TopNavbar from '../../../common/TopNavbar/TopNavbar';
 import SolaceCustomInput from '../../../common/SolaceUI/SolaceCustomInput/SolaceCustomInput';
 import SolaceText from '../../../common/SolaceUI/SolaceText/SolaceText';
 import SolaceIcon from '../../../common/SolaceUI/SolaceIcon/SolaceIcon';
+import globalStyles from '../../../../utils/global_styles';
 
 export type Props = {
   navigation: any;
@@ -47,7 +42,7 @@ const SendScreen: React.FC<Props> = ({navigation}) => {
           placeholder="username or address"
           iconName="search1"
         />
-        <TouchableOpacity style={styles.sendGiftContainer}>
+        <TouchableOpacity style={[globalStyles.rowCenter, {marginTop: 8}]}>
           <SolaceIcon name="gift" type="dark" />
           <SolaceText type="secondary" weight="bold" variant="normal">
             send a gift
@@ -89,11 +84,3 @@ const SendScreen: React.FC<Props> = ({navigation}) => {
 };
 
 export default SendScreen;
-
-const styles = StyleSheet.create({
-  sendGiftContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 8,
-  },
-});

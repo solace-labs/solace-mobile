@@ -16,6 +16,7 @@ import SolaceContainer from '../../../common/SolaceUI/SolaceContainer/SolaceCont
 import SolaceIcon from '../../../common/SolaceUI/SolaceIcon/SolaceIcon';
 import SolaceText from '../../../common/SolaceUI/SolaceText/SolaceText';
 import WalletActivity from '../../../wallet/WalletActivity/WalletActivity';
+import globalStyles from '../../../../utils/global_styles';
 
 export type Props = {
   navigation: any;
@@ -65,7 +66,7 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
 
   return (
     <SolaceContainer>
-      <View style={styles.header}>
+      <View style={globalStyles.rowSpaceBetween}>
         <SolaceIcon
           onPress={() => navigation.navigate('Guardian')}
           type="normal"
@@ -79,23 +80,26 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
           name="logout"
         />
       </View>
-      <View style={styles.logoContainer}>
+      <View style={[globalStyles.fullCenter, {flex: 0.3}]}>
         <Image
           source={require('../../../../../assets/images/solace/solace-icon.png')}
-          style={styles.image}
+          style={{
+            height: 35,
+            resizeMode: 'contain',
+            overflow: 'hidden',
+            marginBottom: 12,
+          }}
         />
-        {/* <Text style={styles.username}>
-          {user?.solaceName ? user.solaceName : username}.solace.money
-        </Text> */}
-        <SolaceText weight="semibold" size="md">
+        <SolaceText weight="semibold" size="sm">
           {user?.solaceName ? user.solaceName : username}.solace.money
         </SolaceText>
       </View>
-      <View style={styles.mainContainer}>
+      <View style={[globalStyles.fullCenter, {flex: 0.7}]}>
         <SolaceText size="xl" weight="bold">
           $0.04
         </SolaceText>
-        <View style={styles.buttonsContainer}>
+        <View
+          style={[globalStyles.rowSpaceBetween, {marginTop: 20, width: '70%'}]}>
           <SolaceIcon
             onPress={() => handleSend()}
             type="light"
@@ -125,34 +129,3 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
 };
 
 export default WalletHomeScreen;
-
-const styles = StyleSheet.create({
-  header: {
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  logoContainer: {
-    flex: 0.3,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  mainContainer: {
-    flex: 0.7,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonsContainer: {
-    width: '70%',
-    flexDirection: 'row',
-    marginTop: 20,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  image: {
-    height: 35,
-    resizeMode: 'contain',
-    overflow: 'hidden',
-    marginBottom: 12,
-  },
-});

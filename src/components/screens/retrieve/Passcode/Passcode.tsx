@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {View, Image, ActivityIndicator, StyleSheet} from 'react-native';
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import {View, Image, ActivityIndicator} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   AccountStatus,
   GlobalContext,
@@ -15,6 +15,7 @@ import PasscodeContainer, {
 import SolaceContainer from '../../../common/SolaceUI/SolaceContainer/SolaceContainer';
 import SolaceLoader from '../../../common/SolaceUI/SolaceLoader/SolaceLoader';
 import SolaceText from '../../../common/SolaceUI/SolaceText/SolaceText';
+import globalStyles from '../../../../utils/global_styles';
 
 export type Props = {
   navigation: any;
@@ -85,7 +86,7 @@ const PasscodeScreen: React.FC<Props> = ({navigation}) => {
 
   return (
     <SolaceContainer>
-      <View style={styles.container}>
+      <View style={globalStyles.fullCenter}>
         <Image
           source={require('../../../../../assets/images/solace/solace-icon.png')}
         />
@@ -111,11 +112,3 @@ const PasscodeScreen: React.FC<Props> = ({navigation}) => {
 };
 
 export default PasscodeScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});

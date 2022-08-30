@@ -1,4 +1,4 @@
-import {View, TouchableOpacity, Image, StyleSheet} from 'react-native';
+import {View, TouchableOpacity, Image} from 'react-native';
 import React, {useContext, useEffect} from 'react';
 
 import {GlobalContext} from '../../../../state/contexts/GlobalContext';
@@ -31,7 +31,7 @@ const ContactScreen: React.FC<Props> = ({route, navigation}) => {
     <SolaceContainer>
       <TopNavbar startIcon="back" text="" startClick={handleGoBack} />
       <View style={{flex: 1}}>
-        <View style={styles.subHeadingContainer}>
+        <View style={[globalStyles.rowSpaceBetween, {marginTop: 20}]}>
           <SolaceText size="lg" weight="semibold">
             {state.contact ? state.contact?.name : 'john doe'}
           </SolaceText>
@@ -42,14 +42,17 @@ const ContactScreen: React.FC<Props> = ({route, navigation}) => {
         <SolaceText align="left" mt={16}>
           select address
         </SolaceText>
-        <View style={styles.container}>
+        <View style={{marginTop: 20}}>
           <TouchableOpacity
             style={globalStyles.rowCenter}
             onPress={() => navigation.navigate('Asset')}>
             <View style={globalStyles.avatar}>
               <Image
                 source={require('../../../../../assets/images/solace/solana-icon.png')}
-                style={styles.image}
+                style={{
+                  width: 40,
+                  resizeMode: 'contain',
+                }}
               />
             </View>
             <SolaceText
@@ -61,7 +64,7 @@ const ContactScreen: React.FC<Props> = ({route, navigation}) => {
             </SolaceText>
           </TouchableOpacity>
         </View>
-        <View style={[styles.container, {marginTop: 10}]}>
+        <View style={{marginTop: 20}}>
           <TouchableOpacity
             style={{flexDirection: 'row', alignItems: 'center'}}
             // onPress={() => navigation.navigate('Contact', {id: contact.id})}>
@@ -79,19 +82,3 @@ const ContactScreen: React.FC<Props> = ({route, navigation}) => {
 };
 
 export default ContactScreen;
-
-const styles = StyleSheet.create({
-  subHeadingContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  container: {
-    marginTop: 20,
-  },
-  image: {
-    width: 40,
-    resizeMode: 'contain',
-  },
-});

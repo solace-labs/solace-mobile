@@ -1,11 +1,6 @@
 import React, {FC} from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-  ScrollView,
-} from 'react-native';
+import {View, TouchableOpacity, Image, ScrollView} from 'react-native';
+import globalStyles from '../../../utils/global_styles';
 import SolaceText from '../../common/SolaceUI/SolaceText/SolaceText';
 import {DATA} from '../../screens/wallet/WalletHome/WalletHome';
 import Transaction from '../Transaction/Transaction';
@@ -26,8 +21,8 @@ const WalletActivity: FC<Props> = ({data}) => {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
+    <View style={{flex: 1, justifyContent: 'space-between'}}>
+      <View style={globalStyles.rowSpaceBetween}>
         <SolaceText weight="semibold" size="lg">
           wallet activity
         </SolaceText>
@@ -67,15 +62,3 @@ const WalletActivity: FC<Props> = ({data}) => {
 };
 
 export default WalletActivity;
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'space-between',
-    flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-});
