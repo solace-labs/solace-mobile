@@ -1,6 +1,6 @@
 import React, {FC, ReactNode} from 'react';
 import {StyleProp, View, ViewStyle} from 'react-native';
-import SolaceText from '../SolaceText/SolaceText';
+import SolaceText from './SolaceText';
 
 type Props = {
   text: string;

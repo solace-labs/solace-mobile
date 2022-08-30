@@ -3,8 +3,8 @@ import React, {useContext, useState} from 'react';
 
 import {GlobalContext} from '../../../state/contexts/GlobalContext';
 import {setUser} from '../../../state/actions/global';
-import SolaceContainer from '../../common/solaceui/SolaceContainer/SolaceContainer';
-import SolaceText from '../../common/solaceui/SolaceText/SolaceText';
+import SolaceContainer from '../../common/solaceui/SolaceContainer';
+import SolaceText from '../../common/solaceui/SolaceText';
 import SolaceButton from '../../common/solaceui/SolaceButton';
 import PasscodeContainer, {
   PASSCODE_LENGTH,

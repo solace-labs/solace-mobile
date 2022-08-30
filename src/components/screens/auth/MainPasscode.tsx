@@ -11,12 +11,12 @@ import {KeyPair, SolaceSDK} from 'solace-sdk';
 import {showMessage} from 'react-native-flash-message';
 import {StorageGetItem} from '../../../utils/storage';
 import {NETWORK, PROGRAM_ADDRESS} from '../../../utils/constants';
-import SolaceContainer from '../../common/solaceui/SolaceContainer/SolaceContainer';
-import SolaceText from '../../common/solaceui/SolaceText/SolaceText';
+import SolaceContainer from '../../common/solaceui/SolaceContainer';
+import SolaceText from '../../common/solaceui/SolaceText';
 import PasscodeContainer, {
   PASSCODE_LENGTH,
 } from '../../common/PasscodeContainer';
-import SolaceLoader from '../../common/solaceui/SolaceLoader/SolaceLoader';
+import SolaceLoader from '../../common/solaceui/SolaceLoader';
 import globalStyles from '../../../utils/global_styles';
 
 const MainPasscodeScreen = () => {

@@ -1,8 +1,8 @@
 import React, {FC} from 'react';
 import {Pressable, TextStyle, View} from 'react-native';
 import type {StyleProp, ViewStyle} from 'react-native';
-import SolaceInput, {SolaceInputProps} from '../SolaceInput/SolaceInput';
-import {useTogglePasswordVisibility} from '../../../../hooks/useTogglePasswordVisibility';
+import SolaceInput, {SolaceInputProps} from './SolaceInput';
+import {useTogglePasswordVisibility} from '../../../hooks/useTogglePasswordVisibility';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface PInputProps extends SolaceInputProps {

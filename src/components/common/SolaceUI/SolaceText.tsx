@@ -1,7 +1,7 @@
 import React, {FC, ReactNode, RefObject} from 'react';
 import {StyleProp, Text, TextProps, TextStyle} from 'react-native';
-import {Colors} from '../../../../utils/colors';
-import {Styles} from '../../../../utils/styles';
+import {Colors} from '../../../utils/colors';
+import {Styles} from '../../../utils/styles';
 
 type PrimaryWeight = keyof typeof Styles.fontFamily.primary;
 type SecondaryWeight = keyof typeof Styles.fontFamily.secondary;

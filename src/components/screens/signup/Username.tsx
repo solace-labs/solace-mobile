@@ -5,11 +5,11 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import {GlobalContext} from '../../../state/contexts/GlobalContext';
 import {setUser} from '../../../state/actions/global';
 import SolaceButton from '../../common/solaceui/SolaceButton';
-import SolaceContainer from '../../common/solaceui/SolaceContainer/SolaceContainer';
-import SolaceText from '../../common/solaceui/SolaceText/SolaceText';
-import SolaceInput from '../../common/solaceui/SolaceInput/SolaceInput';
+import SolaceContainer from '../../common/solaceui/SolaceContainer';
+import SolaceText from '../../common/solaceui/SolaceText';
+import SolaceInput from '../../common/solaceui/SolaceInput';
 import Header from '../../common/Header';
-import SolaceLoader from '../../common/solaceui/SolaceLoader/SolaceLoader';
+import SolaceLoader from '../../common/solaceui/SolaceLoader';
 
 export type Props = {
   navigation: any;

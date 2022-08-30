@@ -2,9 +2,9 @@ import {View, TouchableOpacity, TextInput, StyleSheet} from 'react-native';
 import React, {useContext, useState} from 'react';
 
 import {GlobalContext} from '../../../state/contexts/GlobalContext';
-import SolaceContainer from '../../common/solaceui/SolaceContainer/SolaceContainer';
+import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import SolaceButton from '../../common/solaceui/SolaceButton';
-import SolaceText from '../../common/solaceui/SolaceText/SolaceText';
+import SolaceText from '../../common/solaceui/SolaceText';
 import TopNavbar from '../../common/TopNavbar';
 import globalStyles from '../../../utils/global_styles';
 

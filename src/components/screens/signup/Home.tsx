@@ -6,8 +6,8 @@ import {
 } from '../../../state/contexts/GlobalContext';
 import {setAccountStatus} from '../../../state/actions/global';
 import SolaceButton from '../../common/solaceui/SolaceButton';
-import SolaceContainer from '../../common/solaceui/SolaceContainer/SolaceContainer';
-import SolaceText from '../../common/solaceui/SolaceText/SolaceText';
+import SolaceContainer from '../../common/solaceui/SolaceContainer';
+import SolaceText from '../../common/solaceui/SolaceText';
 import globalStyles from '../../../utils/global_styles';
 
 export type Props = {

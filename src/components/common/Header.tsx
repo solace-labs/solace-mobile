@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import SolaceText from './solaceui/SolaceText/SolaceText';
+import SolaceText from './solaceui/SolaceText';
 
 type Props = {
   heading: string;

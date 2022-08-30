@@ -1,8 +1,8 @@
 import {View, Image, StyleProp, ImageStyle} from 'react-native';
 import React from 'react';
-import SolaceContainer from '../../common/solaceui/SolaceContainer/SolaceContainer';
+import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import Header from '../../common/Header';
-import SolaceText from '../../common/solaceui/SolaceText/SolaceText';
+import SolaceText from '../../common/solaceui/SolaceText';
 export type Props = {
   navigation: any;
 };

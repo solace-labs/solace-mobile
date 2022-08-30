@@ -1,7 +1,7 @@
 import React, {FC, ReactNode} from 'react';
 import {ScrollView, View, ViewProps, ViewStyle} from 'react-native';
 import type {StyleProp} from 'react-native';
-import {Colors} from '../../../../utils/colors';
+import {Colors} from '../../../utils/colors';
 
 export interface Props extends ViewProps {
   style?: StyleProp<ViewStyle>;

@@ -12,9 +12,9 @@ import {
 } from '../../../state/actions/global';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {StorageClearAll} from '../../../utils/storage';
-import SolaceContainer from '../../common/solaceui/SolaceContainer/SolaceContainer';
-import SolaceIcon from '../../common/solaceui/SolaceIcon/SolaceIcon';
-import SolaceText from '../../common/solaceui/SolaceText/SolaceText';
+import SolaceContainer from '../../common/solaceui/SolaceContainer';
+import SolaceIcon from '../../common/solaceui/SolaceIcon';
+import SolaceText from '../../common/solaceui/SolaceText';
 import WalletActivity from '../../wallet/WalletActivity';
 import globalStyles from '../../../utils/global_styles';
 

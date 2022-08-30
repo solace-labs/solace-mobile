@@ -12,9 +12,9 @@ import {StorageSetItem} from '../../../utils/storage';
 import PasscodeContainer, {
   PASSCODE_LENGTH,
 } from '../../common/PasscodeContainer';
-import SolaceContainer from '../../common/solaceui/SolaceContainer/SolaceContainer';
-import SolaceLoader from '../../common/solaceui/SolaceLoader/SolaceLoader';
-import SolaceText from '../../common/solaceui/SolaceText/SolaceText';
+import SolaceContainer from '../../common/solaceui/SolaceContainer';
+import SolaceLoader from '../../common/solaceui/SolaceLoader';
+import SolaceText from '../../common/solaceui/SolaceText';
 import globalStyles from '../../../utils/global_styles';
 
 export type Props = {

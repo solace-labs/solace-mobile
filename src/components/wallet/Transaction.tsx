@@ -1,7 +1,7 @@
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import React from 'react';
 import moment from 'moment';
-import SolaceText from '../common/solaceui/SolaceText/SolaceText';
+import SolaceText from '../common/solaceui/SolaceText';
 import globalStyles from '../../utils/global_styles';
 
 const Transaction = ({item}: {item: any}) => {

@@ -1,7 +1,7 @@
 import {View, Image, ActivityIndicator} from 'react-native';
 import React from 'react';
-import SolaceContainer from '../../common/solaceui/SolaceContainer/SolaceContainer';
-import SolaceText from '../../common/solaceui/SolaceText/SolaceText';
+import SolaceContainer from '../../common/solaceui/SolaceContainer';
+import SolaceText from '../../common/solaceui/SolaceText';
 import globalStyles from '../../../utils/global_styles';
 
 const Loading = () => {

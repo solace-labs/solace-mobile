@@ -7,8 +7,8 @@ import PasscodeContainer, {
   PASSCODE_LENGTH,
 } from '../../common/PasscodeContainer';
 import SolaceButton from '../../common/solaceui/SolaceButton';
-import SolaceContainer from '../../common/solaceui/SolaceContainer/SolaceContainer';
-import SolaceText from '../../common/solaceui/SolaceText/SolaceText';
+import SolaceContainer from '../../common/solaceui/SolaceContainer';
+import SolaceText from '../../common/solaceui/SolaceText';
 
 export type Props = {
   navigation: any;

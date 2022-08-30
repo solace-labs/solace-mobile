@@ -7,11 +7,11 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import {Colors} from '../../../../utils/colors';
+import {Colors} from '../../../utils/colors';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {Styles} from '../../../../utils/styles';
-import SolaceText from '../SolaceText/SolaceText';
+import {Styles} from '../../../utils/styles';
+import SolaceText from './SolaceText';
 
 export type SolaceIconProps = {
   children?: ReactNode;

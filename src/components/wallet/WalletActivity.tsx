@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import {View, TouchableOpacity, Image, ScrollView} from 'react-native';
 import globalStyles from '../../utils/global_styles';
-import SolaceText from '../common/solaceui/SolaceText/SolaceText';
+import SolaceText from '../common/solaceui/SolaceText';
 import {DATA} from '../screens/wallet/WalletHome';
 import Transaction from './Transaction';
 

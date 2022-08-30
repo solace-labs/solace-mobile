@@ -8,7 +8,7 @@ import {
 import React from 'react';
 import {PublicKeyType} from '../screens/wallet/Guardian';
 import {SolaceSDK} from 'solace-sdk';
-import SolaceText from '../common/solaceui/SolaceText/SolaceText';
+import SolaceText from '../common/solaceui/SolaceText';
 import globalStyles from '../../utils/global_styles';
 
 export type Props = {

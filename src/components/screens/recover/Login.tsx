@@ -6,13 +6,13 @@ import {setAwsCognito, setUser} from '../../../state/actions/global';
 import {AwsCognito} from '../../../utils/aws_cognito';
 import {showMessage} from 'react-native-flash-message';
 import {StorageSetItem} from '../../../utils/storage';
-import SolaceContainer from '../../common/solaceui/SolaceContainer/SolaceContainer';
+import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import Header from '../../common/Header';
-import SolaceInput from '../../common/solaceui/SolaceInput/SolaceInput';
-import SolacePasswordInput from '../../common/solaceui/SolacePasswordInput/SolacePasswordInput';
-import SolaceText from '../../common/solaceui/SolaceText/SolaceText';
+import SolaceInput from '../../common/solaceui/SolaceInput';
+import SolacePasswordInput from '../../common/solaceui/SolacePasswordInput';
+import SolaceText from '../../common/solaceui/SolaceText';
 import SolaceButton from '../../common/solaceui/SolaceButton';
-import SolaceLoader from '../../common/solaceui/SolaceLoader/SolaceLoader';
+import SolaceLoader from '../../common/solaceui/SolaceLoader';
 
 export type Props = {
   navigation: any;

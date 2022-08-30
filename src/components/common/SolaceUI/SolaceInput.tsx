@@ -1,8 +1,8 @@
 import React, {FC, ReactNode, RefObject, useState} from 'react';
 import {TextInput, TextInputProps, TextStyle} from 'react-native';
 import type {StyleProp} from 'react-native';
-import {Colors} from '../../../../utils/colors';
-import {Styles} from '../../../../utils/styles';
+import {Colors} from '../../../utils/colors';
+import {Styles} from '../../../utils/styles';
 
 export interface SolaceInputProps extends TextInputProps {
   style?: StyleProp<TextStyle>;

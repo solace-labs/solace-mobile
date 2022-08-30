@@ -1,9 +1,9 @@
 import React, {FC} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import SolaceInput, {SolaceInputProps} from '../SolaceInput/SolaceInput';
+import SolaceInput, {SolaceInputProps} from './SolaceInput';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {Colors} from '../../../../utils/colors';
+import {Colors} from '../../../utils/colors';
 
 type Props = {
   iconName: string;

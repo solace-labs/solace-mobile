@@ -8,10 +8,10 @@ import {setSDK, setUser} from '../../../state/actions/global';
 import {airdrop, getMeta, relayTransaction} from '../../../utils/relayer';
 import {NETWORK, PROGRAM_ADDRESS} from '../../../utils/constants';
 import {StorageGetItem, StorageSetItem} from '../../../utils/storage';
-import SolaceContainer from '../../common/solaceui/SolaceContainer/SolaceContainer';
-import SolaceLoader from '../../common/solaceui/SolaceLoader/SolaceLoader';
+import SolaceContainer from '../../common/solaceui/SolaceContainer';
+import SolaceLoader from '../../common/solaceui/SolaceLoader';
 import SolaceButton from '../../common/solaceui/SolaceButton';
-import SolaceText from '../../common/solaceui/SolaceText/SolaceText';
+import SolaceText from '../../common/solaceui/SolaceText';
 import Header from '../../common/Header';
 
 export type Props = {

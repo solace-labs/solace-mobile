@@ -1,7 +1,7 @@
 import React, {FC, useEffect, useRef} from 'react';
 import {StyleProp, TextInput, TouchableOpacity, ViewStyle} from 'react-native';
 import PasscodeDot from './PasscodeDot';
-import SolaceInput from './solaceui/SolaceInput/SolaceInput';
+import SolaceInput from './solaceui/SolaceInput';
 
 type Props = {
   code: string;

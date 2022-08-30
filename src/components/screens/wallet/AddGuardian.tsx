@@ -8,12 +8,12 @@ import {StorageGetItem} from '../../../utils/storage';
 import {getFeePayer} from '../../../utils/apis';
 import {AwsCognito} from '../../../utils/aws_cognito';
 import {CognitoRefreshToken} from 'amazon-cognito-identity-js';
-import SolaceContainer from '../../common/solaceui/SolaceContainer/SolaceContainer';
+import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import SolaceButton from '../../common/solaceui/SolaceButton';
-import SolaceText from '../../common/solaceui/SolaceText/SolaceText';
-import SolaceLoader from '../../common/solaceui/SolaceLoader/SolaceLoader';
+import SolaceText from '../../common/solaceui/SolaceText';
+import SolaceLoader from '../../common/solaceui/SolaceLoader';
 import TopNavbar from '../../common/TopNavbar';
-import SolaceCustomInput from '../../common/solaceui/SolaceCustomInput/SolaceCustomInput';
+import SolaceCustomInput from '../../common/solaceui/SolaceCustomInput';
 
 export type Props = {
   navigation: any;

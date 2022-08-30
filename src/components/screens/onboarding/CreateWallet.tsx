@@ -11,10 +11,10 @@ import {showMessage} from 'react-native-flash-message';
 import {getMeta, relayTransaction} from '../../../utils/relayer';
 import {StorageGetItem, StorageSetItem} from '../../../utils/storage';
 import {NETWORK, PROGRAM_ADDRESS} from '../../../utils/constants';
-import SolaceContainer from '../../common/solaceui/SolaceContainer/SolaceContainer';
-import SolaceLoader from '../../common/solaceui/SolaceLoader/SolaceLoader';
+import SolaceContainer from '../../common/solaceui/SolaceContainer';
+import SolaceLoader from '../../common/solaceui/SolaceLoader';
 import SolaceButton from '../../common/solaceui/SolaceButton';
-import SolaceText from '../../common/solaceui/SolaceText/SolaceText';
+import SolaceText from '../../common/solaceui/SolaceText';
 import Header from '../../common/Header';
 
 const enum status {

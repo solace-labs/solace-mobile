@@ -7,9 +7,9 @@ import GuardianTab from '../../wallet/GuardianTab';
 import GuardianSecondTab from '../../wallet/GuardianSecondTab';
 import {PublicKey} from 'solace-sdk';
 import {showMessage} from 'react-native-flash-message';
-import SolaceContainer from '../../common/solaceui/SolaceContainer/SolaceContainer';
+import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import SolaceButton from '../../common/solaceui/SolaceButton';
-import SolaceText from '../../common/solaceui/SolaceText/SolaceText';
+import SolaceText from '../../common/solaceui/SolaceText';
 import TopNavbar from '../../common/TopNavbar';
 
 export type Props = {

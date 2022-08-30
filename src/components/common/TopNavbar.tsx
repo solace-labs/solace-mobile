@@ -1,8 +1,8 @@
 import React, {FC} from 'react';
 import {View} from 'react-native';
 import globalStyles from '../../utils/global_styles';
-import SolaceIcon from './solaceui/SolaceIcon/SolaceIcon';
-import SolaceText from './solaceui/SolaceText/SolaceText';
+import SolaceIcon from './solaceui/SolaceIcon';
+import SolaceText from './solaceui/SolaceText';
 
 type Props = {
   startIcon?: string;

@@ -3,11 +3,11 @@ import React, {useContext, useEffect} from 'react';
 
 import {GlobalContext} from '../../../state/contexts/GlobalContext';
 import {getContact} from '../../../state/actions/global';
-import SolaceContainer from '../../common/solaceui/SolaceContainer/SolaceContainer';
+import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import TopNavbar from '../../common/TopNavbar';
 import WalletActivity from '../../wallet/WalletActivity';
-import SolaceText from '../../common/solaceui/SolaceText/SolaceText';
-import SolaceIcon from '../../common/solaceui/SolaceIcon/SolaceIcon';
+import SolaceText from '../../common/solaceui/SolaceText';
+import SolaceIcon from '../../common/solaceui/SolaceIcon';
 import globalStyles from '../../../utils/global_styles';
 
 export type Props = {

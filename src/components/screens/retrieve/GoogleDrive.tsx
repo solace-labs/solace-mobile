@@ -15,11 +15,11 @@ import {
   SOLACE_NAME_FILENAME,
   PRIVATE_KEY_FILENAME,
 } from '../../../utils/constants';
-import SolaceContainer from '../../common/solaceui/SolaceContainer/SolaceContainer';
+import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import Header from '../../common/Header';
-import SolaceLoader from '../../common/solaceui/SolaceLoader/SolaceLoader';
+import SolaceLoader from '../../common/solaceui/SolaceLoader';
 import SolaceButton from '../../common/solaceui/SolaceButton';
-import SolaceText from '../../common/solaceui/SolaceText/SolaceText';
+import SolaceText from '../../common/solaceui/SolaceText';
 export type Props = {
   navigation: any;
 };

@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import {PublicKeyType} from '../screens/wallet/Guardian';
-import SolaceText from '../common/solaceui/SolaceText/SolaceText';
+import SolaceText from '../common/solaceui/SolaceText';
 import {SolaceSDK} from 'solace-sdk';
 import globalStyles from '../../utils/global_styles';
 import {guardianStyles as styles} from './GuardianSecondTab';

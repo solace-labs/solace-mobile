@@ -4,12 +4,12 @@ import React, {useContext, useState} from 'react';
 import {GlobalContext} from '../../../state/contexts/GlobalContext';
 import {addNewContact} from '../../../state/actions/global';
 import {showMessage} from 'react-native-flash-message';
-import SolaceContainer from '../../common/solaceui/SolaceContainer/SolaceContainer';
+import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import SolaceButton from '../../common/solaceui/SolaceButton';
-import SolaceText from '../../common/solaceui/SolaceText/SolaceText';
+import SolaceText from '../../common/solaceui/SolaceText';
 import TopNavbar from '../../common/TopNavbar';
-import SolaceInput from '../../common/solaceui/SolaceInput/SolaceInput';
-import SolaceCustomInput from '../../common/solaceui/SolaceCustomInput/SolaceCustomInput';
+import SolaceInput from '../../common/solaceui/SolaceInput';
+import SolaceCustomInput from '../../common/solaceui/SolaceCustomInput';
 
 export type Props = {
   navigation: any;

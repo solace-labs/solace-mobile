@@ -12,10 +12,10 @@ import {
   SOLACE_NAME_FILENAME,
   PRIVATE_KEY_FILENAME,
 } from '../../../utils/constants';
-import SolaceLoader from '../../common/solaceui/SolaceLoader/SolaceLoader';
+import SolaceLoader from '../../common/solaceui/SolaceLoader';
 import SolaceButton from '../../common/solaceui/SolaceButton';
-import SolaceText from '../../common/solaceui/SolaceText/SolaceText';
-import SolaceContainer from '../../common/solaceui/SolaceContainer/SolaceContainer';
+import SolaceText from '../../common/solaceui/SolaceText';
+import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import Header from '../../common/Header';
 
 export type Props = {

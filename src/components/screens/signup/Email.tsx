@@ -13,10 +13,10 @@ import {
 import {AwsCognito} from '../../../utils/aws_cognito';
 import {showMessage} from 'react-native-flash-message';
 import SolaceButton from '../../common/solaceui/SolaceButton';
-import SolaceContainer from '../../common/solaceui/SolaceContainer/SolaceContainer';
-import SolaceInput from '../../common/solaceui/SolaceInput/SolaceInput';
-import SolacePasswordInput from '../../common/solaceui/SolacePasswordInput/SolacePasswordInput';
-import SolaceText from '../../common/solaceui/SolaceText/SolaceText';
+import SolaceContainer from '../../common/solaceui/SolaceContainer';
+import SolaceInput from '../../common/solaceui/SolaceInput';
+import SolacePasswordInput from '../../common/solaceui/SolacePasswordInput';
+import SolaceText from '../../common/solaceui/SolaceText';
 import Header from '../../common/Header';
 
 export type Props = {
