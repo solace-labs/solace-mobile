@@ -35,3 +35,9 @@ export const SOLACE_NAME_FILENAME = 'solace_n.solace';
 /** Encryption */
 export const SOLACE_SALT = 'solace-salt';
 export const SOLACE_COST = 5000;
+
+/** Regex */
+export const EMAIL_REGEX = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w\w+)+$/;
+export const OTP_REGEX = /^[0-9]{6,6}$/;
+export const PASSWORD_REGEX =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&#]{8,}$/;

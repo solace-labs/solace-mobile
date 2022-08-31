@@ -2,6 +2,7 @@ import axios from 'axios';
 import {KeyPair, PublicKey, SolaceSDK} from 'solace-sdk';
 import {
   DEFAULT_PRIVATE_KEY,
+  DEFAULT_PUBLIC_KEY,
   LAMPORTS_PER_SOL,
   NETWORK,
   RELAYER_BASE_URL,
@@ -19,6 +20,9 @@ interface RequestGuardianshipBody {
  * @param accessToken
  */
 export const getMeta = async (accessToken: string) => {
+  if (NETWORK === 'local') {
+    return {feePayer: DEFAULT_PUBLIC_KEY};
+  }
   return (
     await axios.get<{feePayer: any; clusterUrl: string}>(
       `${RELAYER_BASE_URL}/meta`,

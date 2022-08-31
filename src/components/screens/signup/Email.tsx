@@ -18,6 +18,7 @@ import SolaceInput from '../../common/solaceui/SolaceInput';
 import SolacePasswordInput from '../../common/solaceui/SolacePasswordInput';
 import SolaceText from '../../common/solaceui/SolaceText';
 import Header from '../../common/Header';
+import {EMAIL_REGEX, OTP_REGEX, PASSWORD_REGEX} from '../../../utils/constants';
 
 export type Props = {
   navigation: any;
@@ -48,58 +49,21 @@ const EmailScreen: React.FC<Props> = ({navigation}) => {
 
   const {state, dispatch} = useContext(GlobalContext);
 
-  const validateEmail = (text: string) => {
+  const validateEmail = (value: string) => {
     if (isOtpSent) {
       setIsOtpSent(false);
     }
-    let reg = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w\w+)+$/;
-    if (reg.test(text) === false) {
-      setEmail({
-        value: text,
-        isValid: false,
-      });
-      return false;
-    } else {
-      setEmail({value: text, isValid: true});
-    }
+    setEmail({value, isValid: EMAIL_REGEX.test(value)});
   };
-
-  const validateOtp = (text: string) => {
-    let reg = /^[0-9]{6,6}$/;
-    if (reg.test(text) === false) {
-      setOtp({
-        value: text,
-        isValid: false,
-        isVerified: false,
-      });
-      return false;
-    } else {
-      setOtp({
-        value: text,
-        isValid: true,
-        isVerified: false,
-      });
-    }
-  };
-
-  const validatePassword = (text: string) => {
+  const validatePassword = (value: string) => {
     if (isOtpSent) {
       setIsOtpSent(false);
     }
-    let reg =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&#]{8,}$/;
-    if (reg.test(text) === false) {
-      setPassword({
-        value: text,
-        isValid: false,
-      });
-      return false;
-    } else {
-      setPassword({
-        value: text,
-        isValid: true,
-      });
-    }
+    setPassword({value, isValid: PASSWORD_REGEX.test(value)});
+  };
+
+  const validateOtp = (value: string) => {
+    setOtp({value, isVerified: false, isValid: OTP_REGEX.test(value)});
   };
 
   const handleMailSubmit = async () => {
@@ -109,14 +73,14 @@ const EmailScreen: React.FC<Props> = ({navigation}) => {
     dispatch(setAwsCognito(awsCognito));
     if (!username) {
       showMessage({
-        message: 'Username not provided',
+        message: 'username not provided',
         type: 'info',
       });
       return;
     }
     if (!awsCognito) {
       showMessage({
-        message: 'Server Error. Try again later',
+        message: 'server error! try again later',
         type: 'danger',
       });
       return;
@@ -148,7 +112,7 @@ const EmailScreen: React.FC<Props> = ({navigation}) => {
     const awsCognito = state.awsCognito;
     if (!awsCognito) {
       showMessage({
-        message: 'Server Error. Try again later',
+        message: 'server error. try again later',
         type: 'danger',
       });
       return;
@@ -203,7 +167,12 @@ const EmailScreen: React.FC<Props> = ({navigation}) => {
           mt={16}
         />
         {!password.isValid && (
-          <SolaceText type="secondary" size="sm" variant="normal" align="left">
+          <SolaceText
+            type="secondary"
+            size="xs"
+            variant="normal"
+            align="left"
+            mt={8}>
             must be at least 8 characters long, contain at least one lowercase
             letter, one uppercase letter, one number, and one special character
           </SolaceText>

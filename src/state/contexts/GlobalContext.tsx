@@ -79,6 +79,13 @@ export const initialState = {
   ],
 };
 
+export const getKeypairFromPrivateKey = (user: User) => {
+  const privateKey = user.ownerPrivateKey;
+  return KeyPair.fromSecretKey(
+    Uint8Array.from(privateKey.split(',').map(e => +e)),
+  );
+};
+
 export const GlobalContext = createContext<{
   state: InitialStateType;
   dispatch: Dispatch<any>;
@@ -129,12 +136,15 @@ const GlobalProvider = ({children}: {children: any}) => {
     const inRecoveryMode = await checkInRecoverMode();
     if (inRecoveryMode) {
       checkRecovery();
-    } else if (await isUserValid()) {
+      return;
+    }
+    const userValid = await isUserValid();
+    if (userValid) {
       dispatch(setUser(storedUser));
       dispatch(setAccountStatus(AccountStatus.EXISITING));
-    } else {
-      dispatch(setAccountStatus(AccountStatus.NEW));
+      return;
     }
+    dispatch(setAccountStatus(AccountStatus.NEW));
   }, [checkInRecoverMode, checkRecovery, isUserValid]);
 
   useEffect(() => {

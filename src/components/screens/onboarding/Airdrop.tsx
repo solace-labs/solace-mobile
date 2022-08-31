@@ -1,16 +1,19 @@
-import {View, ActivityIndicator} from 'react-native';
+import {View} from 'react-native';
 import React, {useContext, useState} from 'react';
-import {GlobalContext, Tokens} from '../../../state/contexts/GlobalContext';
-import {KeyPair, SolaceSDK} from 'solace-sdk';
+import {
+  getKeypairFromPrivateKey,
+  GlobalContext,
+  Tokens,
+} from '../../../state/contexts/GlobalContext';
 import {showMessage} from 'react-native-flash-message';
 import {airdrop} from '../../../utils/relayer';
 import {StorageGetItem} from '../../../utils/storage';
-import {NETWORK} from '../../../utils/constants';
 import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import Header from '../../common/Header';
 import SolaceLoader from '../../common/solaceui/SolaceLoader';
 import SolaceButton from '../../common/solaceui/SolaceButton';
 import SolaceText from '../../common/solaceui/SolaceText';
+import {confirmTransaction} from '../../../utils/apis';
 
 export type Props = {
   navigation: any;
@@ -25,18 +28,16 @@ const AirdropScreen: React.FC<Props> = ({navigation}) => {
 
   const handleClick = async () => {
     try {
-      const privateKey = state.user?.ownerPrivateKey!;
       const tokens: Tokens = await StorageGetItem('tokens');
       if (!tokens) {
         showMessage({
           message: 'please login again',
           type: 'default',
         });
+        navigation.navigate('Login');
+        return;
       }
-      console.log(privateKey);
-      const keypair = KeyPair.fromSecretKey(
-        Uint8Array.from(privateKey.split(',').map(e => +e)),
-      );
+      const keypair = getKeypairFromPrivateKey(state.user!);
       const {publicKey} = keypair;
       const publicKeyString = publicKey.toString();
       const accessToken = tokens.accesstoken;
@@ -79,66 +80,6 @@ const AirdropScreen: React.FC<Props> = ({navigation}) => {
         type: 'danger',
       });
       throw e;
-    }
-  };
-
-  const confirmTransaction = async (transactionId: string) => {
-    setLoading({
-      value: true,
-      message: 'confirming transaction...',
-    });
-    console.log({transactionId});
-    let confirm = false;
-    let retry = 0;
-    while (!confirm) {
-      if (retry > 0) {
-        setLoading({
-          value: true,
-          message: 'retrying confirmation...',
-        });
-      }
-      if (retry === 3) {
-        setLoading({
-          value: false,
-          message: 'some error. try again?',
-        });
-        confirm = true;
-        continue;
-      }
-      try {
-        if (NETWORK === 'local') {
-          await SolaceSDK.localConnection.confirmTransaction(transactionId);
-        } else {
-          await SolaceSDK.testnetConnection.confirmTransaction(transactionId);
-        }
-        showMessage({
-          message: 'airdrop recieved',
-          type: 'success',
-        });
-        confirm = true;
-      } catch (e: any) {
-        if (
-          e.message.startsWith(
-            'Transaction was not confirmed in 60.00 seconds.',
-          )
-        ) {
-          console.log('Timeout');
-          showMessage({
-            message: 'it took longer than expected. tyring again...',
-            type: 'info',
-          });
-          retry++;
-        } else {
-          confirm = true;
-          console.log('OTHER ERROR: ', e.message);
-          retry++;
-          // showMessage({
-          //   message: 'some error verifying transaction',
-          //   type: 'danger',
-          // });
-          // throw e;
-        }
-      }
     }
   };
 
