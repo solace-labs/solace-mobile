@@ -1843,6 +1843,11 @@
     "sudo-prompt" "^9.0.0"
     "wcwidth" "^1.0.1"
 
+"@react-native-community/clipboard@^1.5.1":
+  "integrity" "sha512-AHAmrkLEH5UtPaDiRqoULERHh3oNv7Dgs0bTC0hO5Z2GdNokAMPT5w8ci8aMcRemcwbtdHjxChgtjbeA38GBdA=="
+  "resolved" "https://registry.npmjs.org/@react-native-community/clipboard/-/clipboard-1.5.1.tgz"
+  "version" "1.5.1"
+
 "@react-native-community/eslint-config@^2.0.0":
   "integrity" "sha512-vHaMMfvMp9BWCQQ0lNIXibOJTcXIbYUQ8dSUsMOsrXgVkeVQJj88OwrKS00rQyqwMaC4/a6HuDiFzYUkGKOpVg=="
   "resolved" "https://registry.npmjs.org/@react-native-community/eslint-config/-/eslint-config-2.0.0.tgz"
@@ -1982,6 +1987,16 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
+"@solana/buffer-layout-utils@^0.2.0":
+  "integrity" "sha512-szG4sxgJGktbuZYDg2FfNmkMi0DYQoVjN2h7ta1W1hPrwzarcFLBq9UpX1UjNXsNpT9dn+chgprtWGioUAr4/g=="
+  "resolved" "https://registry.npmjs.org/@solana/buffer-layout-utils/-/buffer-layout-utils-0.2.0.tgz"
+  "version" "0.2.0"
+  dependencies:
+    "@solana/buffer-layout" "^4.0.0"
+    "@solana/web3.js" "^1.32.0"
+    "bigint-buffer" "^1.1.5"
+    "bignumber.js" "^9.0.1"
+
 "@solana/buffer-layout@^4.0.0":
   "integrity" "sha512-lR0EMP2HC3+Mxwd4YcnZb0smnaDw7Bl2IQWZiTevRH5ZZBZn6VRWn3/92E3qdU4SSImJkA6IDHawOHAnx/qUvQ=="
   "resolved" "https://registry.npmjs.org/@solana/buffer-layout/-/buffer-layout-4.0.0.tgz"
@@ -1989,7 +2004,16 @@
   dependencies:
     "buffer" "~6.0.3"
 
-"@solana/web3.js@^1.17.0", "@solana/web3.js@^1.2.0":
+"@solana/spl-token@^0.3.4":
+  "integrity" "sha512-Mi1vk6qf9eeXjB5X6GKo0ePbOorl/CpTqQediohhjefYmanH2K9KxpckUfwV8VQkWSNTKCyrTfkyDWuljFBVNw=="
+  "resolved" "https://registry.npmjs.org/@solana/spl-token/-/spl-token-0.3.4.tgz"
+  "version" "0.3.4"
+  dependencies:
+    "@solana/buffer-layout" "^4.0.0"
+    "@solana/buffer-layout-utils" "^0.2.0"
+    "buffer" "^6.0.3"
+
+"@solana/web3.js@^1.17.0", "@solana/web3.js@^1.2.0", "@solana/web3.js@^1.32.0", "@solana/web3.js@^1.47.4":
   "integrity" "sha512-1l9N/nS8pJEA2YibNT8wa072718O0/A1eKWE0+pdWC5wDGQgBNxZSLuv7Cq5Dcn46WsZ5J5ZstK89q8J/ZZaQA=="
   "resolved" "https://registry.npmjs.org/@solana/web3.js/-/web3.js-1.50.1.tgz"
   "version" "1.50.1"
@@ -2480,6 +2504,26 @@
     "isomorphic-unfetch" "^3.0.0"
     "js-cookie" "^2.2.1"
 
+"anchor-rn@^0.18.2":
+  "integrity" "sha512-vZ2ZgDia4vvYTR+I0Yhl+vDGSaEJzZo2/AV9QJDP/nvNAg1iPqHsknB8QkKXB81ISZj/0dvzSAn5AGLcFyo1Bg=="
+  "resolved" "https://registry.npmjs.org/anchor-rn/-/anchor-rn-0.18.2.tgz"
+  "version" "0.18.2"
+  dependencies:
+    "@project-serum/borsh" "^0.2.2"
+    "@solana/web3.js" "^1.17.0"
+    "base64-js" "^1.5.1"
+    "bn.js" "^5.1.2"
+    "bs58" "^4.0.1"
+    "buffer-layout" "^1.2.0"
+    "camelcase" "^5.3.1"
+    "crypto-hash" "^1.3.0"
+    "eventemitter3" "^4.0.7"
+    "find" "^0.3.0"
+    "js-sha256" "^0.9.0"
+    "pako" "^2.0.3"
+    "snake-case" "^3.0.4"
+    "toml" "^3.0.0"
+
 "anser@^1.4.9":
   "integrity" "sha512-hCv9AqTQ8ycjpSd3upOJd7vFwW1JaoYQ7tpham03GJ1ca8/65rqn0RpaWpItOAd6ylW9wAw6luXYPJIyPFVOww=="
   "resolved" "https://registry.npmjs.org/anser/-/anser-1.4.10.tgz"
@@ -2651,6 +2695,16 @@
   "integrity" "sha1-5QNHYR1+aQlDIIu9r+vLwvuGbUY= sha512-BSHWgDSAiKs50o2Re8ppvp3seVHXSRM44cdSsT9FfNEUUZLOGWVCsiWaRPWM1Znn+mqZ1OfVZ3z3DWEzSp7hRA=="
   "resolved" "https://registry.npmjs.org/asap/-/asap-2.0.6.tgz"
   "version" "2.0.6"
+
+"assert@^2.0.0":
+  "integrity" "sha512-se5Cd+js9dXJnu6Ag2JFc00t+HmHOen+8Q+L7O9zI0PqQXr20uk2J0XQqMxZEeo5U50o8Nvmmx7dZrl+Ufr35A=="
+  "resolved" "https://registry.npmjs.org/assert/-/assert-2.0.0.tgz"
+  "version" "2.0.0"
+  dependencies:
+    "es6-object-assign" "^1.1.0"
+    "is-nan" "^1.2.1"
+    "object-is" "^1.0.1"
+    "util" "^0.12.0"
 
 "assign-symbols@^1.0.0":
   "integrity" "sha1-WWZ/QfrdTyDMvCu5a41Pf3jsA2c= sha512-Q+JC7Whu8HhmTdBph/Tq59IoRtoy6KAm5zzPv00WdujX82lbAL8K7WVjne7vdCsAmbF4AYaDOPyO3k0kl8qIrw=="
@@ -2903,6 +2957,11 @@
   dependencies:
     "bindings" "^1.3.0"
 
+"bignumber.js@^9.0.1":
+  "integrity" "sha512-4LwHK4nfDOraBCtst+wOWIHbu1vhvAPJK8g8nROd4iuc3PSEjWif/qwbkh8jwCJz6yDBvtU4KPynETgrfh7y3A=="
+  "resolved" "https://registry.npmjs.org/bignumber.js/-/bignumber.js-9.1.0.tgz"
+  "version" "9.1.0"
+
 "bin-links@^3.0.0":
   "integrity" "sha512-9vx+ypzVhASvHTS6K+YSGf7nwQdANoz7v6MTC0aCtYnOEZ87YvMf81aY737EZnGZdpbRM3sfWjO9oWkKmuIvyQ=="
   "resolved" "https://registry.npmjs.org/bin-links/-/bin-links-3.0.1.tgz"
@@ -3066,6 +3125,14 @@
   dependencies:
     "base64-js" "^1.3.1"
     "ieee754" "^1.1.13"
+
+"buffer@^6.0.3":
+  "integrity" "sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA=="
+  "resolved" "https://registry.npmjs.org/buffer/-/buffer-6.0.3.tgz"
+  "version" "6.0.3"
+  dependencies:
+    "base64-js" "^1.3.1"
+    "ieee754" "^1.2.1"
 
 "buffer@~6.0.3":
   "integrity" "sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA=="
@@ -3937,6 +4004,11 @@
     "is-callable" "^1.1.4"
     "is-date-object" "^1.0.1"
     "is-symbol" "^1.0.2"
+
+"es6-object-assign@^1.1.0":
+  "integrity" "sha512-MEl9uirslVwqQU369iHNWZXsI8yaZYGg/D65aOgZkeyFJwHYSxilf7rQzXKI7DdDuBPrBXbfk3sl9hJhmd5AUw=="
+  "resolved" "https://registry.npmjs.org/es6-object-assign/-/es6-object-assign-1.1.0.tgz"
+  "version" "1.1.0"
 
 "es6-promise@^4.0.3":
   "integrity" "sha512-HJDGx5daxeIvxdBxvG2cb9g4tEvwIk3i8+nhX0yGrYmZUzbkdg8QbDevheDB8gd0//uPj4c1EQua8Q+MViT0/w=="
@@ -5269,6 +5341,14 @@
   "integrity" "sha512-z7CMFGNrENq5iFB9Bqo64Xk6Y9sg+epq1myIcdHaGnbMTYOxvzsEtdYqQUylB7LxfkvgrrjP32T6Ywciio9UIQ=="
   "resolved" "https://registry.npmjs.org/is-lambda/-/is-lambda-1.0.1.tgz"
   "version" "1.0.1"
+
+"is-nan@^1.2.1":
+  "integrity" "sha512-E+zBKpQ2t6MEo1VsonYmluk9NxGrbzpeeLC2xIViuO2EjU2xsXsBPwTr3Ykv9l08UYEVEdWeRZNouaZqF6RN0w=="
+  "resolved" "https://registry.npmjs.org/is-nan/-/is-nan-1.3.2.tgz"
+  "version" "1.3.2"
+  dependencies:
+    "call-bind" "^1.0.0"
+    "define-properties" "^1.1.3"
 
 "is-negative-zero@^2.0.2":
   "integrity" "sha512-dqJvarLawXsFbNDeJW7zAz8ItJ9cd28YufuuFzh0G8pNHjJMnY08Dv7sYX2uF5UpQOwieAeOExEYAWWfu7ZZUA=="
@@ -7376,6 +7456,14 @@
   "resolved" "https://registry.npmjs.org/object-inspect/-/object-inspect-1.12.0.tgz"
   "version" "1.12.0"
 
+"object-is@^1.0.1":
+  "integrity" "sha512-3cyDsyHgtmi7I7DfSSI2LDp6SK2lwvtbg0p0R1e0RvTqF5ceGx+K2dfSjm1bKDMVCFEDAQvy+o8c6a7VujOddw=="
+  "resolved" "https://registry.npmjs.org/object-is/-/object-is-1.1.5.tgz"
+  "version" "1.1.5"
+  dependencies:
+    "call-bind" "^1.0.2"
+    "define-properties" "^1.1.3"
+
 "object-keys@^1.1.1":
   "integrity" "sha512-NuAESUOUMrlIXOfHKzD6bpPu3tYt3xvjNdRIQ+FeT0lNb4K8WR70CaDxhuNguS2XG+GjkyMwOzsN5ZktImfhLA=="
   "resolved" "https://registry.npmjs.org/object-keys/-/object-keys-1.1.1.tgz"
@@ -8045,7 +8133,7 @@
     "prop-types" "^15.7.2"
     "yargs" "^16.1.1"
 
-"react-native@*", "react-native@^0.0.0-0 || 0.60 - 0.68 || 1000.0.0", "react-native@>=0.42.0", "react-native@>=0.56", "react-native@0.68.1":
+"react-native@*", "react-native@^0.0.0-0 || 0.60 - 0.68 || 1000.0.0", "react-native@>=0.42.0", "react-native@>=0.56", "react-native@>=0.57.0", "react-native@0.68.1":
   "integrity" "sha512-5gfvslo5NO2Ece2k/q41eVOK3ca4u1QAOf+qM+auvOiUA4/QR5Yr0WfSGbRpUr2GaFgv7qP11F4+elCravg7uQ=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.68.1.tgz"
   "version" "0.68.1"
@@ -8106,7 +8194,7 @@
     "react-shallow-renderer" "^16.13.1"
     "scheduler" "^0.20.2"
 
-"react@*", "react@^16.0.0 || ^17.0.0", "react@^16.8.0 || ^17.0.0", "react@^17.0.0", "react@17.0.2":
+"react@*", "react@^16.0.0 || ^17.0.0", "react@^16.8.0 || ^17.0.0", "react@^17.0.0", "react@>=16.0", "react@17.0.2":
   "integrity" "sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA=="
   "resolved" "https://registry.npmjs.org/react/-/react-17.0.2.tgz"
   "version" "17.0.2"
@@ -8793,12 +8881,14 @@
     "ip" "^1.1.5"
     "smart-buffer" "^4.2.0"
 
-"solace-sdk@^1.3.2":
-  "integrity" "sha512-L+L/joM0CjURRSDY8bSEMdJL/7WM7mzZAMA7/rkexW9xRm5JCNeCF0XuiFwoN0kgBeMO0k++PhOhI7adh8srrw=="
-  "resolved" "https://registry.npmjs.org/solace-sdk/-/solace-sdk-1.3.2.tgz"
-  "version" "1.3.2"
+"solace-sdk@^2.0.1":
+  "integrity" "sha512-QYgdyofktJQ7SmoiXm7ecmy5h8yWaReqGfLyml1X8VzKY8ZqvXfkh+2yRi+cvL+PDH1R16aFIae0BUrDUIVI1g=="
+  "resolved" "https://registry.npmjs.org/solace-sdk/-/solace-sdk-2.0.1.tgz"
+  "version" "2.0.1"
   dependencies:
     "@project-serum/anchor" "^0.18.0"
+    "@solana/spl-token" "^0.3.4"
+    "anchor-rn" "^0.18.2"
     "bs58" "^5.0.0"
 
 "source-map-resolve@^0.5.0":
@@ -9481,7 +9571,7 @@
   "resolved" "https://registry.npmjs.org/util-deprecate/-/util-deprecate-1.0.2.tgz"
   "version" "1.0.2"
 
-"util@^0.12.4":
+"util@^0.12.0", "util@^0.12.4":
   "integrity" "sha512-bxZ9qtSlGUWSOy9Qa9Xgk11kSslpuZwaxCg4sNIDj6FLucDab2JxnHwyNTCpHMtK1MjoQiWQ6DiUMZYbSrO+Sw=="
   "resolved" "https://registry.npmjs.org/util/-/util-0.12.4.tgz"
   "version" "0.12.4"

@@ -27,7 +27,7 @@ const AssetScreen: React.FC<Props> = ({navigation}) => {
         startClick={handleGoBack}
       />
       <View style={{flex: 1}}>
-        <View style={globalStyles.rowCenter}>
+        <View style={globalStyles.rowSpaceBetween}>
           <SolaceText size="3xl" weight="semibold">
             SOL
           </SolaceText>

@@ -9,9 +9,10 @@ import {
 import React from 'react';
 import {PublicKeyType} from '../screens/wallet/Guardian';
 import SolaceText from '../common/solaceui/SolaceText';
-import {SolaceSDK} from 'solace-sdk';
 import globalStyles from '../../utils/global_styles';
 import {guardianStyles as styles} from './GuardianSecondTab';
+import Clipboard from '@react-native-community/clipboard';
+import {showMessage} from 'react-native-flash-message';
 
 export type Props = {
   guardians: {
@@ -29,6 +30,13 @@ const GuardianTab: React.FC<Props> = ({guardians, loading}) => {
       </View>
     );
   }
+
+  const handleCopy = async (text: string) => {
+    Clipboard.setString(text);
+    showMessage({
+      message: 'copied successfully',
+    });
+  };
 
   const renderGuardian = (
     guardian: PublicKeyType,
@@ -64,7 +72,7 @@ const GuardianTab: React.FC<Props> = ({guardians, loading}) => {
             </View>
           </View>
           <View style={styles.rightSide}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => handleCopy(guardian.toString())}>
               <SolaceText
                 type="secondary"
                 weight="bold"

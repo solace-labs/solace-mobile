@@ -141,6 +141,10 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
       <SolaceButton
         onPress={() => {
           handleClick();
+          // navigation.reset({
+          //   index: 0,
+          //   routes: [{name: 'Airdrop'}],
+          // });
         }}
         loading={loading.value}
         disabled={loading.value}>

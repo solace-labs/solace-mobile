@@ -27,7 +27,7 @@ const HomeScreen: React.FC<Props> = ({navigation}) => {
           solace
         </SolaceText>
       </View>
-      <SolaceButton onPress={() => navigation.navigate('Username')}>
+      <SolaceButton onPress={() => navigation.navigate('Email')}>
         <SolaceText type="secondary" variant="dark" weight="bold">
           create new wallet
         </SolaceText>

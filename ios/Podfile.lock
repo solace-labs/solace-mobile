@@ -423,6 +423,8 @@ PODS:
     - React-Core
   - RNCAsyncStorage (1.17.4):
     - React-Core
+  - RNCClipboard (1.5.1):
+    - React-Core
   - RNFBApp (14.9.3):
     - Firebase/CoreOnly (= 8.15.0)
     - React-Core
@@ -503,6 +505,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - RNAWSCognito (from `../node_modules/amazon-cognito-identity-js`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
+  - "RNCClipboard (from `../node_modules/@react-native-community/clipboard`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBAuth (from `../node_modules/@react-native-firebase/auth`)"
   - "RNGoogleSignin (from `../node_modules/@react-native-google-signin/google-signin`)"
@@ -614,6 +617,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/amazon-cognito-identity-js"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
+  RNCClipboard:
+    :path: "../node_modules/@react-native-community/clipboard"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBAuth:
@@ -688,6 +693,7 @@ SPEC CHECKSUMS:
   ReactCommon: bf2888a826ceedf54b99ad1b6182d1bc4a8a3984
   RNAWSCognito: 590dbcb259ec5a593b80f4d56624d386dd7b34ee
   RNCAsyncStorage: 9367a646dc24e3ab7b6874d79bc1bfd0832dce58
+  RNCClipboard: 41d8d918092ae8e676f18adada19104fa3e68495
   RNFBApp: b6276fc67748c7174275cace56776f0228ae58b2
   RNFBAuth: fce6c25e6416660487ac620eac0343a555bb1812
   RNGoogleSignin: b2179ba653c759b936404a7746fc5302f9de6a5a

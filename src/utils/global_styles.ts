@@ -7,6 +7,9 @@ const globalStyles = StyleSheet.create({
     height: 240,
     resizeMode: 'contain',
   },
+  fullWidth: {
+    width: '100%',
+  },
   fullCenter: {
     flex: 1,
     alignItems: 'center',

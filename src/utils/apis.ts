@@ -55,7 +55,7 @@ export const getFeePayer = async (
       });
       // TODO: refresh token refetch and new access token
       // return 'ACCESS_TOKEN_EXPIRED';
-      return getFeePayer(accessToken);
+      // return getFeePayer(accessToken);
     }
     throw e;
   }

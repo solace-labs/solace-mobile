@@ -33,19 +33,24 @@ const CreateWalletScreen: React.FC = () => {
 
   const handleClick = async () => {
     try {
+      setLoading({message: 'creating wallet...', value: true});
       const {accesstoken: accessToken}: Tokens =
         (await StorageGetItem('tokens')) || {};
 
       const keypair = getKeypairFromPrivateKey(state.user!);
 
       const feePayer = await getFeePayer(accessToken);
+
+      console.log({feePayer, keypair});
       const {sdk, transactionId} = await createWallet(
         keypair,
         feePayer,
         accessToken,
       );
 
-      await confirmTransaction(transactionId);
+      console.log('CREATED');
+
+      // await confirmTransaction(transactionId);
       const awsCognito = state.awsCognito!;
       await awsCognito.updateAttribute('address', sdk.wallet.toString());
       dispatch(setSDK(sdk));
@@ -55,11 +60,12 @@ const CreateWalletScreen: React.FC = () => {
         type: 'success',
       });
       await StorageSetItem('user', state.user);
+      resetLoading();
       dispatch(setAccountStatus(AccountStatus.EXISITING));
     } catch (e) {
       console.log('MAIN ERROR: ', e);
+      resetLoading();
     }
-    resetLoading();
   };
 
   const createWallet = async (
@@ -74,6 +80,7 @@ const CreateWalletScreen: React.FC = () => {
         programAddress: PROGRAM_ADDRESS,
       });
       const username = state.user?.solaceName!;
+      console.log('CREATING', {sdk, username});
       const tx = await sdk.createFromName(username, payer);
       const res = await relayTransaction(tx, accessToken);
       return {

@@ -47,6 +47,10 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
     navigation.navigate('Send');
   };
 
+  const handleRecieve = () => {
+    navigation.navigate('Recieve');
+  };
+
   useEffect(() => {
     const getInitialData = async () => {
       const userdata = await AsyncStorage.getItem('user');
@@ -101,7 +105,7 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
         <View
           style={[globalStyles.rowSpaceBetween, {marginTop: 20, width: '70%'}]}>
           <SolaceIcon
-            onPress={() => handleSend()}
+            onPress={handleSend}
             type="light"
             name="arrowup"
             variant="antdesign"
@@ -115,7 +119,7 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
             subText="scan"
           />
           <SolaceIcon
-            onPress={() => {}}
+            onPress={handleRecieve}
             type="light"
             name="arrowdown"
             variant="antdesign"

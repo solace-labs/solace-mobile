@@ -29,14 +29,12 @@ const MainPasscodeScreen = () => {
 
   const retrieveAccount = async (user: User) => {
     try {
-      console.log('RETRIEVE ACCOUNT', user);
       setLoading({
         value: true,
         message: 'logging you in',
       });
       const privateKey = state.user?.ownerPrivateKey!;
       const solaceName = state.user?.solaceName!;
-      console.log({privateKey});
       const keypair = KeyPair.fromSecretKey(
         Uint8Array.from(privateKey.split(',').map(e => +e)),
       );
@@ -45,7 +43,6 @@ const MainPasscodeScreen = () => {
         owner: keypair,
         programAddress: PROGRAM_ADDRESS,
       });
-      console.log({sdk});
       dispatch(setSDK(sdk));
       setLoading({
         value: false,
@@ -97,7 +94,7 @@ const MainPasscodeScreen = () => {
 
   return (
     <SolaceContainer>
-      <View style={globalStyles.fullCenter}>
+      <View style={[globalStyles.fullCenter, {flex: 0.5}]}>
         <Image
           source={require('../../../../assets/images/solace/solace-icon.png')}
         />
@@ -106,7 +103,7 @@ const MainPasscodeScreen = () => {
         </SolaceText>
       </View>
       <View style={{flex: 1}}>
-        <SolaceText variant="white" size="lg" weight="semibold">
+        <SolaceText variant="white" size="xl" weight="medium">
           enter passcode
         </SolaceText>
         <PasscodeContainer code={code} setCode={setCode} />

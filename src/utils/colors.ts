@@ -1,8 +1,6 @@
 import {Appearance} from 'react-native';
 const colorScheme = Appearance.getColorScheme();
 
-console.log({colorScheme});
-
 let theme = {
   background: {
     lightest: '#ffffff',

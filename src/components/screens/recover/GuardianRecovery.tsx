@@ -13,6 +13,7 @@ import SolaceLoader from '../../common/solaceui/SolaceLoader';
 import SolaceButton from '../../common/solaceui/SolaceButton';
 import SolaceText from '../../common/solaceui/SolaceText';
 import Header from '../../common/Header';
+import {confirmTransaction, getFeePayer} from '../../../utils/apis';
 
 export type Props = {
   navigation: any;
@@ -40,19 +41,19 @@ const GuardianRecovery: React.FC<Props> = ({navigation}) => {
       });
       const username = state.user?.solaceName!;
       const accessToken = tokens.accesstoken;
-      const feePayer = new PublicKey(await getFeePayer(accessToken));
+      const feePayer = await getFeePayer(accessToken);
       console.log({feePayer, username});
       const data = await requestAirdrop(
         keypair.publicKey.toString(),
         accessToken,
       );
-      console.log('AIRDROP CONFIRMATION');
-      await confirmTransaction(data);
-      const tx = await newSDK.recoverWallet(username, feePayer);
-      console.log({tx});
-      const res = await relayTransaction(tx, accessToken);
-      console.log({res});
-      await confirmTransaction(res.data);
+      console.log('AIRDROP CONFIRMATION', data);
+      // await confirmTransaction(data);
+      // const tx = await newSDK.recoverWallet(username, feePayer);
+      // console.log({tx});
+      // const res = await relayTransaction(tx, accessToken);
+      // console.log({res});
+      // await confirmTransaction(res);
       await StorageSetItem('user', {
         solaceName: username,
         ownerPrivateKey: keypair.secretKey.toString(),
@@ -98,7 +99,8 @@ const GuardianRecovery: React.FC<Props> = ({navigation}) => {
         message: 'transaction sent',
         type: 'success',
       });
-      return res.data;
+      console.log('inside airdrop', res);
+      return res;
     } catch (e) {
       console.log('Airdrop error', e);
       setLoading({
@@ -113,70 +115,70 @@ const GuardianRecovery: React.FC<Props> = ({navigation}) => {
     }
   };
 
-  const confirmTransaction = async (data: string) => {
-    setLoading({
-      value: true,
-      message: 'confirming transaction...',
-    });
-    console.log({data});
-    let confirm = false;
-    let retry = 0;
-    while (!confirm) {
-      if (retry > 0) {
-        setLoading({
-          value: true,
-          message: 'retrying confirmation...',
-        });
-      }
-      if (retry === 3) {
-        setLoading({
-          value: false,
-          message: 'some error. try again?',
-        });
-        confirm = true;
-        continue;
-      }
-      try {
-        const res = await SolaceSDK.testnetConnection.confirmTransaction(data);
-        showMessage({
-          message: 'transaction confirmed - wallet created',
-          type: 'success',
-        });
-        confirm = true;
-      } catch (e: any) {
-        if (
-          e.message.startsWith(
-            'Transaction was not confirmed in 60.00 seconds.',
-          )
-        ) {
-          console.log('Timeout');
-          retry++;
-        } else {
-          console.log('OTHER ERROR: ', e.message);
-          retry++;
-        }
-      }
-    }
-  };
+  // const confirmTransaction = async (data: string) => {
+  //   setLoading({
+  //     value: true,
+  //     message: 'confirming transaction...',
+  //   });
+  //   console.log({data});
+  //   let confirm = false;
+  //   let retry = 0;
+  //   while (!confirm) {
+  //     if (retry > 0) {
+  //       setLoading({
+  //         value: true,
+  //         message: 'retrying confirmation...',
+  //       });
+  //     }
+  //     if (retry === 3) {
+  //       setLoading({
+  //         value: false,
+  //         message: 'some error. try again?',
+  //       });
+  //       confirm = true;
+  //       continue;
+  //     }
+  //     try {
+  //       const res = await SolaceSDK.testnetConnection.confirmTransaction(data);
+  //       showMessage({
+  //         message: 'transaction confirmed - wallet created',
+  //         type: 'success',
+  //       });
+  //       confirm = true;
+  //     } catch (e: any) {
+  //       if (
+  //         e.message.startsWith(
+  //           'Transaction was not confirmed in 60.00 seconds.',
+  //         )
+  //       ) {
+  //         console.log('Timeout');
+  //         retry++;
+  //       } else {
+  //         console.log('OTHER ERROR: ', e.message);
+  //         retry++;
+  //       }
+  //     }
+  //   }
+  // };
 
-  const getFeePayer = async (accessToken: string) => {
-    setLoading({
-      message: 'recovering...',
-      value: true,
-    });
-    try {
-      const response = await getMeta(accessToken);
-      console.log({response});
-      return response.feePayer;
-    } catch (e) {
-      setLoading({
-        message: 'create',
-        value: false,
-      });
-      console.log('FEE PAYER', e);
-      throw e;
-    }
-  };
+  // const getFeePayer = async (accessToken: string) => {
+  //   setLoading({
+  //     message: 'recovering...',
+  //     value: true,
+  //   });
+  //   try {
+  //     const response = await getMeta(accessToken);
+  //     console.log({response});
+  //     return response.feePayer;
+  //   } catch (e) {
+  //     setLoading({
+  //       message: 'create',
+  //       value: false,
+  //     });
+  //     console.log('FEE PAYER', e);
+  //     throw e;
+  //   }
+  // };
 
   return (
     <SolaceContainer>

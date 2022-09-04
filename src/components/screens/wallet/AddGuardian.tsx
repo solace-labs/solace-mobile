@@ -35,22 +35,24 @@ const AddGuardian: React.FC<Props> = ({navigation}) => {
     const walletName = state.user?.solaceName!;
     const solaceWalletAddress = sdk.wallet.toString();
     const accessToken = tokens.accesstoken;
+    console.log({solaceWalletAddress, walletName});
     try {
       let feePayerResponse = await getFeePayer(accessToken);
-      if (feePayerResponse === 'ACCESS_TOKEN_EXPIRED') {
-        const awsCognito = new AwsCognito();
-        await awsCognito.setCognitoUser(walletName);
-        const res: any = await awsCognito.refreshSession(
-          new CognitoRefreshToken({RefreshToken: tokens.refreshtoken}),
-        );
-        console.log('NEW TOKENS: ', res);
-        feePayerResponse = await getFeePayer(res.accessToken);
-      }
-      const feePayer = new PublicKey(feePayerResponse);
+      // if (feePayerResponse === 'ACCESS_TOKEN_EXPIRED') {
+      // const awsCognito = new AwsCognito();
+      // await awsCognito.setCognitoUser(walletName);
+      // const res: any = await awsCognito.refreshSession(
+      //   new CognitoRefreshToken({RefreshToken: tokens.refreshtoken}),
+      // );
+      // console.log('NEW TOKENS: ', res);
+      // feePayerResponse = await getFeePayer(res.accessToken);
+      // }
+      // const feePayer = new PublicKey(feePayerResponse);
       const guardianPublicKey = new PublicKey(address);
-      const tx = await sdk.addGuardian(guardianPublicKey, feePayer);
-      const res = await relayTransaction(tx, accessToken);
-      const transactionId = res.data;
+      const tx = await sdk.addGuardian(guardianPublicKey, feePayerResponse);
+      const response = await relayTransaction(tx, accessToken);
+      console.log({response});
+      const transactionId = response;
       await confirmTransaction(transactionId);
       await requestGuardian(
         {
@@ -66,7 +68,7 @@ const AddGuardian: React.FC<Props> = ({navigation}) => {
       });
       navigation.goBack();
     } catch (e) {
-      console.log('MAIN ERROR:', e);
+      console.log('MAIN ERROR:', JSON.stringify(e));
     }
   };
 
@@ -94,6 +96,7 @@ const AddGuardian: React.FC<Props> = ({navigation}) => {
         continue;
       }
       try {
+        console.log({data});
         const res = await SolaceSDK.testnetConnection.confirmTransaction(data);
         showMessage({
           message: 'transaction confirmed - guardian added',

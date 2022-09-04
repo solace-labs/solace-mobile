@@ -7,7 +7,8 @@ import {
   NETWORK,
   RELAYER_BASE_URL,
 } from './constants';
-import {relayTransaction as rlTransaction} from 'solace-sdk/relayer';
+// import {relayTransaction as rlTransaction} from 'solace-sdk/dist/esm/relayer';
+// import {relayTransaction as rlTransaction} from 'solace-sdk/relayer';
 
 interface RequestGuardianshipBody {
   guardianAddress: string;
@@ -70,17 +71,23 @@ export const airdrop = async (publicKey: string, accessToken: string) => {
  */
 export const relayTransaction = async (tx: any, accessToken: string) => {
   console.log('RELAYING');
-  if (NETWORK === 'local') {
-    const keypair = KeyPair.fromSecretKey(Uint8Array.from(DEFAULT_PRIVATE_KEY));
-    console.log('DONE RELAYING');
-    const res = await rlTransaction(tx, keypair);
-    console.log('RES', res);
-    return res;
+  // if (NETWORK === 'local') {
+  //   const keypair = KeyPair.fromSecretKey(Uint8Array.from(DEFAULT_PRIVATE_KEY));
+  //   console.log('DONE RELAYING');
+  //   const res = await rlTransaction(tx, keypair);
+  //   console.log('RES', res);
+  //   return res;
+  // }
+  try {
+    const res = await axios.post(`${RELAYER_BASE_URL}/relay`, tx, {
+      headers: {Authorization: accessToken},
+    });
+
+    return res.data;
+  } catch (e: any) {
+    console.log('ERROR RELAYING: ', e);
+    throw e;
   }
-  const res = await axios.post(`${RELAYER_BASE_URL}/relay`, tx, {
-    headers: {Authorization: accessToken},
-  });
-  return res.data;
 };
 
 /**

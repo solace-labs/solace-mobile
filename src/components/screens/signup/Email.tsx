@@ -19,18 +19,23 @@ import SolacePasswordInput from '../../common/solaceui/SolacePasswordInput';
 import SolaceText from '../../common/solaceui/SolaceText';
 import Header from '../../common/Header';
 import {EMAIL_REGEX, OTP_REGEX, PASSWORD_REGEX} from '../../../utils/constants';
+import SolaceLoader from '../../common/solaceui/SolaceLoader';
 
 export type Props = {
   navigation: any;
 };
 
 const EmailScreen: React.FC<Props> = ({navigation}) => {
-  const [email, setEmail] = useState({
+  const [username, setUsername] = useState({
     value: '',
     isValid: false,
   });
+  const [email, setEmail] = useState({
+    value: 'ankit.negi@onpar.in',
+    isValid: false,
+  });
   const [password, setPassword] = useState({
-    value: '',
+    value: 'ankitN1311@',
     isValid: false,
   });
   const [otp, setOtp] = useState({
@@ -41,13 +46,13 @@ const EmailScreen: React.FC<Props> = ({navigation}) => {
   const [active, setActive] = useState('email');
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const {state, dispatch} = useContext(GlobalContext);
 
   useEffect(() => {
     validateEmail(email.value);
     validatePassword(password.value);
+    validateUsername(username.value);
   }, []);
-
-  const {state, dispatch} = useContext(GlobalContext);
 
   const validateEmail = (value: string) => {
     if (isOtpSent) {
@@ -61,23 +66,20 @@ const EmailScreen: React.FC<Props> = ({navigation}) => {
     }
     setPassword({value, isValid: PASSWORD_REGEX.test(value)});
   };
-
+  const validateUsername = (value: string) => {
+    if (isOtpSent) {
+      setIsOtpSent(false);
+    }
+    setUsername({value, isValid: value.trim().length > 0});
+  };
   const validateOtp = (value: string) => {
     setOtp({value, isVerified: false, isValid: OTP_REGEX.test(value)});
   };
 
   const handleMailSubmit = async () => {
-    const username = state.user!.solaceName;
     const awsCognito = new AwsCognito();
-    awsCognito.setCognitoUser(username);
+    awsCognito.setCognitoUser(username.value);
     dispatch(setAwsCognito(awsCognito));
-    if (!username) {
-      showMessage({
-        message: 'username not provided',
-        type: 'info',
-      });
-      return;
-    }
     if (!awsCognito) {
       showMessage({
         message: 'server error! try again later',
@@ -88,12 +90,17 @@ const EmailScreen: React.FC<Props> = ({navigation}) => {
     try {
       setIsLoading(true);
       const response = await awsCognito?.emailSignUp(
-        username,
+        username.value,
         email.value,
         password.value,
       );
       console.log({response});
-      dispatch(setUser({...state.user, email: email.value}));
+      dispatch(
+        setUser({
+          solaceName: username.value,
+          email: email.value,
+        }),
+      );
       setIsOtpSent(true);
       showMessage({
         message: 'OTP sent to the provided mail',
@@ -134,23 +141,30 @@ const EmailScreen: React.FC<Props> = ({navigation}) => {
   };
 
   const isDisable = () => {
-    return !email.isValid || !password.isValid || isLoading || otp.isVerified;
+    return (
+      !username.isValid ||
+      !email.isValid ||
+      !password.isValid ||
+      isLoading ||
+      otp.isVerified
+    );
   };
 
   return (
     <SolaceContainer>
       <View style={{flex: 1}}>
         <Header
-          heading={`enter ${
-            active === 'email'
-              ? 'email'
-              : active === 'password'
-              ? 'password'
-              : 'otp'
-          }`}
+          heading={`enter ${active}`}
           subHeading={
             'we’ll notify you of important or suspicious activity on your wallet'
           }
+        />
+        <SolaceInput
+          placeholder="username"
+          onFocus={() => setActive('username')}
+          mt={16}
+          value={username.value}
+          onChangeText={text => validateUsername(text)}
         />
         <SolaceInput
           placeholder="email address"
@@ -187,12 +201,12 @@ const EmailScreen: React.FC<Props> = ({navigation}) => {
             onChangeText={text => validateOtp(text)}
           />
         )}
-        {isLoading && (
-          <View style={{flex: 1}}>
-            <ActivityIndicator size="small" color="#fff" />
-          </View>
-        )}
       </View>
+      {isLoading && (
+        <View style={{flex: 1}}>
+          <ActivityIndicator size="small" color="#fff" />
+        </View>
+      )}
       <SolaceButton
         onPress={() => {
           isOtpSent ? handleVerifyOtp() : handleMailSubmit();

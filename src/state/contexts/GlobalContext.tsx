@@ -13,7 +13,11 @@ import {KeyPair, SolaceSDK} from 'solace-sdk';
 import {AwsCognito} from '../../utils/aws_cognito';
 import {GoogleApi} from '../../utils/google_apis';
 import {NETWORK, PROGRAM_ADDRESS} from '../../utils/constants';
-import {StorageGetItem} from '../../utils/storage';
+import {
+  StorageDeleteItem,
+  StorageGetItem,
+  StorageSetItem,
+} from '../../utils/storage';
 
 type InitialStateType = {
   accountStatus: AccountStatus;
@@ -93,8 +97,6 @@ export const GlobalContext = createContext<{
 
 const GlobalProvider = ({children}: {children: any}) => {
   const [state, dispatch] = useReducer(globalReducer, initialState);
-  console.log({state});
-
   const checkInRecoverMode = useCallback(async () => {
     const storedUser: User = await StorageGetItem('user');
     return (storedUser &&
@@ -116,11 +118,9 @@ const GlobalProvider = ({children}: {children: any}) => {
     const storedUser: User = await StorageGetItem('user');
     const privateKey = storedUser.ownerPrivateKey! as string;
     const solaceName = storedUser.solaceName!;
-    console.log('checking recovery', privateKey);
     const keypair = KeyPair.fromSecretKey(
       Uint8Array.from(privateKey.split(',').map(e => +e)),
     );
-    console.log(keypair.publicKey.toString());
     const sdk = await SolaceSDK.retrieveFromName(solaceName, {
       network: NETWORK,
       owner: keypair,
@@ -128,22 +128,29 @@ const GlobalProvider = ({children}: {children: any}) => {
     });
     const res = await sdk.fetchWalletData();
     console.log(res);
+    if (res && res.recoveryMode) {
+      dispatch(setAccountStatus(AccountStatus.RECOVERY));
+    }
   }, []);
 
   const init = useCallback(async () => {
     const storedUser: User = await StorageGetItem('user');
+    // await StorageSetItem('user', {...storedUser, isWalletCreated: true});
     console.log({storedUser});
     const inRecoveryMode = await checkInRecoverMode();
     if (inRecoveryMode) {
+      console.log('RECOVERY USER!!!');
       checkRecovery();
       return;
     }
     const userValid = await isUserValid();
     if (userValid) {
+      console.log('VALID USER!!!');
       dispatch(setUser(storedUser));
       dispatch(setAccountStatus(AccountStatus.EXISITING));
       return;
     }
+    console.log('NEW USER!!!');
     dispatch(setAccountStatus(AccountStatus.NEW));
   }, [checkInRecoverMode, checkRecovery, isUserValid]);
 
