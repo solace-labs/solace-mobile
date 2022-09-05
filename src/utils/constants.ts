@@ -5,6 +5,7 @@ export const PROGRAM_ADDRESS =
     ? '8FRYfiEcSPFuJd27jkKaPBwFCiXDFYrnfwqgH9JFjS2U'
     : '3CvPZTk1PYMs6JzgiVNFtsAeijSNwbhrQTMYeFQKWpFw';
 export const LAMPORTS_PER_SOL = 1000000000;
+export const SPL_TOKEN = 'DB6BcxUpHDSxEFpqDRjm98HTvX2JZapbBNN8RcR4K11z';
 export const DEFAULT_PRIVATE_KEY = [
   64, 49, 21, 122, 173, 218, 147, 45, 207, 84, 138, 105, 6, 50, 18, 81, 174,
   246, 20, 171, 195, 135, 70, 222, 225, 154, 217, 74, 218, 186, 191, 197, 49,

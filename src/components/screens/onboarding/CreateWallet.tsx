@@ -34,23 +34,12 @@ const CreateWalletScreen: React.FC = () => {
   const handleClick = async () => {
     try {
       setLoading({message: 'creating wallet...', value: true});
-      const {accesstoken: accessToken}: Tokens =
-        (await StorageGetItem('tokens')) || {};
-
       const keypair = getKeypairFromPrivateKey(state.user!);
-
-      const feePayer = await getFeePayer(accessToken);
-
+      const feePayer = await getFeePayer();
       console.log({feePayer, keypair});
-      const {sdk, transactionId} = await createWallet(
-        keypair,
-        feePayer,
-        accessToken,
-      );
-
-      console.log('CREATED');
-
-      // await confirmTransaction(transactionId);
+      const {sdk, transactionId} = await createWallet(keypair, feePayer);
+      console.log('CREATED. Confirming now...');
+      await confirmTransaction(transactionId);
       const awsCognito = state.awsCognito!;
       await awsCognito.updateAttribute('address', sdk.wallet.toString());
       dispatch(setSDK(sdk));
@@ -71,7 +60,6 @@ const CreateWalletScreen: React.FC = () => {
   const createWallet = async (
     keypair: ReturnType<typeof SolaceSDK.newKeyPair>,
     payer: InstanceType<typeof PublicKey>,
-    accessToken: string,
   ) => {
     try {
       const sdk = new SolaceSDK({
@@ -82,7 +70,7 @@ const CreateWalletScreen: React.FC = () => {
       const username = state.user?.solaceName!;
       console.log('CREATING', {sdk, username});
       const tx = await sdk.createFromName(username, payer);
-      const res = await relayTransaction(tx, accessToken);
+      const res = await relayTransaction(tx);
       return {
         sdk,
         transactionId: res.data,

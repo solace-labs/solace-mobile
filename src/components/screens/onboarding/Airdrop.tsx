@@ -3,11 +3,9 @@ import React, {useContext, useState} from 'react';
 import {
   getKeypairFromPrivateKey,
   GlobalContext,
-  Tokens,
 } from '../../../state/contexts/GlobalContext';
 import {showMessage} from 'react-native-flash-message';
-import {airdrop} from '../../../utils/relayer';
-import {StorageGetItem} from '../../../utils/storage';
+import {airdrop, getAccessToken} from '../../../utils/relayer';
 import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import Header from '../../common/Header';
 import SolaceLoader from '../../common/solaceui/SolaceLoader';
@@ -28,22 +26,17 @@ const AirdropScreen: React.FC<Props> = ({navigation}) => {
 
   const handleClick = async () => {
     try {
-      const tokens: Tokens = await StorageGetItem('tokens');
-      if (!tokens) {
-        showMessage({
-          message: 'please login again',
-          type: 'default',
-        });
-        navigation.navigate('Login');
-        return;
-      }
+      setLoading({
+        message: 'requesting...',
+        value: true,
+      });
+      await getAccessToken();
       const keypair = getKeypairFromPrivateKey(state.user!);
       const {publicKey} = keypair;
       const publicKeyString = publicKey.toString();
-      const accessToken = tokens.accesstoken;
       /** Requesting Airdrop */
       console.log('REQUESTING');
-      const data = await requestAirdrop(publicKeyString, accessToken);
+      const data = await requestAirdrop(publicKeyString);
       /** Airdrop confirmation */
       console.log('AIRDROP CONFIRMATION');
       await confirmTransaction(data);
@@ -51,19 +44,26 @@ const AirdropScreen: React.FC<Props> = ({navigation}) => {
         index: 0,
         routes: [{name: 'CreateWallet'}],
       });
-    } catch (e) {
+    } catch (e: any) {
+      if (e.message === 'TOKEN_NOT_AVAILABLE') {
+        showMessage({
+          message: 'please login again',
+          type: 'warning',
+        });
+        navigation.navigate('Login');
+      }
       console.log(e);
     }
   };
 
-  const requestAirdrop = async (publicKey: string, accessToken: string) => {
-    console.log({publicKey, accessToken});
+  const requestAirdrop = async (publicKey: string) => {
+    console.log({publicKey});
     setLoading({
       value: true,
       message: 'requesting air drop...',
     });
     try {
-      const data: any = await airdrop(publicKey, accessToken);
+      const data: any = await airdrop(publicKey);
       showMessage({
         message: 'transaction sent',
         type: 'success',

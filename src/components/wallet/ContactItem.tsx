@@ -17,6 +17,12 @@ export type Props = {
 
 const ContactItem: React.FC<Props> = ({contact}) => {
   const navigation: any = useNavigation();
+  const imageText = contact.name
+    .split(' ')
+    .map(word => word[0])
+    .join('')
+    .toLowerCase();
+
   return (
     <View style={{marginVertical: 10}}>
       <TouchableOpacity
@@ -24,11 +30,7 @@ const ContactItem: React.FC<Props> = ({contact}) => {
         onPress={() => navigation.navigate('Contact', {id: contact.id})}>
         <View style={globalStyles.avatar}>
           <SolaceText type="secondary" weight="bold">
-            {contact.name
-              .split(' ')
-              .map(word => word[0])
-              .join('')
-              .toLowerCase()}
+            {imageText}
           </SolaceText>
         </View>
         <SolaceText size="sm" type="secondary" weight="bold" align="left">

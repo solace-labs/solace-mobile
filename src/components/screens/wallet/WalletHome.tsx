@@ -95,7 +95,8 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
           }}
         />
         <SolaceText weight="semibold" size="sm">
-          {user?.solaceName ? user.solaceName : username}.solace.money
+          {user?.solaceName ? user.solaceName : username}
+          {/* .solace.money */}
         </SolaceText>
       </View>
       <View style={[globalStyles.fullCenter, {flex: 0.7}]}>

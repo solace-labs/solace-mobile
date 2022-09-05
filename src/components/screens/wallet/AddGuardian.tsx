@@ -1,13 +1,10 @@
 import {View} from 'react-native';
 import React, {useContext, useState} from 'react';
-import {GlobalContext, Tokens} from '../../../state/contexts/GlobalContext';
+import {GlobalContext} from '../../../state/contexts/GlobalContext';
 import {PublicKey, SolaceSDK} from 'solace-sdk';
 import {relayTransaction, requestGuardian} from '../../../utils/relayer';
 import {showMessage} from 'react-native-flash-message';
-import {StorageGetItem} from '../../../utils/storage';
 import {getFeePayer} from '../../../utils/apis';
-import {AwsCognito} from '../../../utils/aws_cognito';
-import {CognitoRefreshToken} from 'amazon-cognito-identity-js';
 import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import SolaceButton from '../../common/solaceui/SolaceButton';
 import SolaceText from '../../common/solaceui/SolaceText';
@@ -30,38 +27,22 @@ const AddGuardian: React.FC<Props> = ({navigation}) => {
   });
 
   const addGuardian = async () => {
-    const tokens: Tokens = await StorageGetItem('tokens');
     const sdk = state.sdk!;
     const walletName = state.user?.solaceName!;
     const solaceWalletAddress = sdk.wallet.toString();
-    const accessToken = tokens.accesstoken;
     console.log({solaceWalletAddress, walletName});
     try {
-      let feePayerResponse = await getFeePayer(accessToken);
-      // if (feePayerResponse === 'ACCESS_TOKEN_EXPIRED') {
-      // const awsCognito = new AwsCognito();
-      // await awsCognito.setCognitoUser(walletName);
-      // const res: any = await awsCognito.refreshSession(
-      //   new CognitoRefreshToken({RefreshToken: tokens.refreshtoken}),
-      // );
-      // console.log('NEW TOKENS: ', res);
-      // feePayerResponse = await getFeePayer(res.accessToken);
-      // }
-      // const feePayer = new PublicKey(feePayerResponse);
+      const feePayer = await getFeePayer();
       const guardianPublicKey = new PublicKey(address);
-      const tx = await sdk.addGuardian(guardianPublicKey, feePayerResponse);
-      const response = await relayTransaction(tx, accessToken);
-      console.log({response});
-      const transactionId = response;
+      const tx = await sdk.addGuardian(guardianPublicKey, feePayer);
+      const transactionId = await relayTransaction(tx);
+      console.log({transactionId});
       await confirmTransaction(transactionId);
-      await requestGuardian(
-        {
-          guardianAddress: guardianPublicKey.toString(),
-          solaceWalletAddress,
-          walletName,
-        },
-        accessToken,
-      );
+      await requestGuardian({
+        guardianAddress: guardianPublicKey.toString(),
+        solaceWalletAddress,
+        walletName,
+      });
       setLoading({
         message: '',
         value: false,

@@ -41,17 +41,18 @@ const Login: React.FC<Props> = ({navigation}) => {
       } = response;
       await StorageSetItem('tokens', {accesstoken, idtoken, refreshtoken});
       dispatch(setUser({...state.user, solaceName: username}));
+      setIsLoading(false);
       navigation.reset({
         index: 0,
         routes: [{name: 'MainPasscode'}],
       });
     } catch (e: any) {
+      setIsLoading(false);
       showMessage({
         message: e.message,
         type: 'danger',
       });
     }
-    setIsLoading(false);
   };
 
   const isDisable = () => {
