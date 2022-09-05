@@ -18,8 +18,12 @@ import PasscodeContainer, {
 } from '../../common/PasscodeContainer';
 import SolaceLoader from '../../common/solaceui/SolaceLoader';
 import globalStyles from '../../../utils/global_styles';
+import {getFeePayer} from '../../../utils/apis';
+import Navigation from '../../../navigation/Navigation';
+import {useNavigation} from '@react-navigation/native';
 
 const MainPasscodeScreen = () => {
+  const navigation: any = useNavigation();
   const [code, setCode] = useState('');
   const {state, dispatch} = useContext(GlobalContext);
   const [loading, setLoading] = useState({
@@ -33,6 +37,7 @@ const MainPasscodeScreen = () => {
         value: true,
         message: 'logging you in',
       });
+      await getFeePayer();
       const privateKey = state.user?.ownerPrivateKey!;
       const solaceName = state.user?.solaceName!;
       const keypair = KeyPair.fromSecretKey(
@@ -49,12 +54,16 @@ const MainPasscodeScreen = () => {
         message: '',
       });
       dispatch(setAccountStatus(AccountStatus.ACTIVE));
-    } catch (e) {
+    } catch (e: any) {
       setLoading({
         value: false,
         message: '',
       });
       setCode('');
+      if (e.message === 'Request failed with status code 401') {
+        navigation.navigate('Login');
+        return;
+      }
       showMessage({
         message: 'error retrieving accout, contact solace team',
         type: 'default',

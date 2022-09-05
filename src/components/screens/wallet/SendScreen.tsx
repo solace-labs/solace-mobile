@@ -10,10 +10,11 @@ import globalStyles from '../../../utils/global_styles';
 import Clipboard from '@react-native-community/clipboard';
 import {showMessage} from 'react-native-flash-message';
 import {PublicKey, SolaceSDK} from 'solace-sdk';
-import {confirmTransaction, getFeePayer} from '../../../utils/apis';
+import {getFeePayer} from '../../../utils/apis';
 import {relayTransaction} from '../../../utils/relayer';
 import {
   LAMPORTS_PER_SOL,
+  PROGRAM_ADDRESS,
   SPL_TOKEN,
   TOKEN_PROGRAM_ID,
 } from '../../../utils/constants';
@@ -29,8 +30,9 @@ export type Account = {
   tokenAddress: string;
 };
 
-const RecieveScreen: React.FC<Props> = ({navigation}) => {
+const SendScreen: React.FC<Props> = ({navigation}) => {
   const {state} = useContext(GlobalContext);
+  const [address, setAddress] = useState(state.sdk?.wallet.toString() ?? '');
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [loading, setLoading] = useState(false);
   const handleGoBack = () => {
@@ -51,9 +53,46 @@ const RecieveScreen: React.FC<Props> = ({navigation}) => {
   const getAccounts = async () => {
     try {
       setLoading(true);
-      const sdk = state.sdk!;
+      const sdk = state.sdk;
+      const splTokenAddress = new PublicKey(SPL_TOKEN);
+      const tokenAccount = await sdk?.getTokenAccount(splTokenAddress);
+      console.log('Getting account', tokenAccount!.toString());
+      const accountInfo = await sdk?.getTokenAccountInfo(splTokenAddress);
+      console.log({accountInfo});
 
-      // const accountInfo = await sdk?.getTokenAccountInfo(splTokenAddress);
+      if (!accountInfo) {
+        const feePayer = await getFeePayer();
+        const tx = await sdk?.createTokenAccount(
+          {
+            tokenAccount: tokenAccount!,
+            tokenMint: splTokenAddress,
+          },
+          feePayer,
+        );
+        console.log({tx});
+        const response = await relayTransaction(tx);
+        console.log(response);
+        setLoading(false);
+        return;
+      }
+      const balance = +accountInfo!.amount.toString() / LAMPORTS_PER_SOL;
+      setAccounts([
+        {amount: balance, tokenAddress: splTokenAddress.toString()},
+      ]);
+      console.log(balance);
+      setLoading(false);
+    } catch (e) {
+      console.log(e);
+      setLoading(false);
+      showMessage({message: 'some error try again', type: 'warning'});
+    }
+    // constsdk?.getTokenAccountInfo();
+  };
+
+  const getAllAccounts = async () => {
+    try {
+      setLoading(true);
+      const sdk = state.sdk!;
       const allAccounts = await sdk.provider.connection.getTokenAccountsByOwner(
         sdk.wallet,
         {
@@ -76,31 +115,21 @@ const RecieveScreen: React.FC<Props> = ({navigation}) => {
       console.log({accs});
       setAccounts(accs);
       setLoading(false);
-
-      if (accs.length === 0) {
-        const splTokenAddress = new PublicKey(SPL_TOKEN);
-        const tokenAccount = await sdk?.getTokenAccount(splTokenAddress);
-        const feePayer = await getFeePayer();
-        const tx = await sdk?.createTokenAccount(
-          {
-            tokenAccount: tokenAccount!,
-            tokenMint: splTokenAddress,
-          },
-          feePayer,
-        );
-        const transactionId = await relayTransaction(tx);
-        confirmTransaction(transactionId);
-        setLoading(false);
-      }
     } catch (e) {
-      console.log(e);
       setLoading(false);
-      showMessage({message: 'some error try again', type: 'warning'});
+      console.log('ERR', e);
     }
   };
 
   useEffect(() => {
-    getAccounts();
+    const willFocusSubscription = navigation.addListener('focus', async () => {
+      await getAllAccounts();
+    });
+    return willFocusSubscription;
+  }, [navigation]);
+
+  useEffect(() => {
+    getAllAccounts();
   }, []);
 
   if (loading) {
@@ -109,7 +138,7 @@ const RecieveScreen: React.FC<Props> = ({navigation}) => {
         <TopNavbar
           startIcon="back"
           // endIcon="plus"
-          text="recieve"
+          text="send"
           startClick={handleGoBack}
           // endClick={handleAdd}
         />
@@ -127,10 +156,10 @@ const RecieveScreen: React.FC<Props> = ({navigation}) => {
     <SolaceContainer>
       <TopNavbar
         startIcon="back"
-        // endIcon="plus"
-        text="recieve"
+        endIcon="plus"
+        text="send"
         startClick={handleGoBack}
-        // endClick={handleAdd}
+        endClick={handleAdd}
       />
       <View style={globalStyles.fullCenter}>
         {/* <View style={globalStyles.fullWidth}>
@@ -151,20 +180,14 @@ const RecieveScreen: React.FC<Props> = ({navigation}) => {
         {accounts && accounts.length > 0 ? (
           <ScrollView bounces={true} style={{margin: 8, width: '100%'}}>
             {accounts.map((account, index) => {
-              return (
-                <AccountItem account={account} key={index} type="recieve" />
-              );
+              return <AccountItem account={account} key={index} type="send" />;
             })}
           </ScrollView>
         ) : (
-          <View style={{flex: 1}}>
+          <View style={{flex: 1, width: '100%'}}>
             <Image
               source={require('../../../../assets/images/solace/send-money.png')}
-              style={{
-                width: '100%',
-                height: 240,
-                resizeMode: 'contain',
-              }}
+              style={globalStyles.image}
             />
             <SolaceText type="secondary" size="sm">
               <SolaceText
@@ -176,7 +199,7 @@ const RecieveScreen: React.FC<Props> = ({navigation}) => {
                 weight="bold">
                 add a address token
               </SolaceText>{' '}
-              to recieve
+              no tokens found
             </SolaceText>
           </View>
         )}
@@ -185,4 +208,4 @@ const RecieveScreen: React.FC<Props> = ({navigation}) => {
   );
 };
 
-export default RecieveScreen;
+export default SendScreen;

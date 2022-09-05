@@ -7,14 +7,28 @@ import {Account} from '../screens/wallet/Recieve';
 
 export type Props = {
   account: Account;
+  type: 'send' | 'recieve';
 };
 
-const AccountItem: React.FC<Props> = ({account: {tokenAddress, amount}}) => {
+const AccountItem: React.FC<Props> = ({
+  account: {tokenAddress, amount},
+  type,
+}) => {
   const navigation: any = useNavigation();
 
   const accountAddress =
     tokenAddress.slice(0, 5) + '...' + tokenAddress.slice(-5);
   const currentBalance = amount.toFixed(2);
+
+  const redirectToAsset = () => {
+    console.log(type);
+    if (type === 'send') {
+      navigation.navigate('Asset', {id: tokenAddress});
+    } else if (type === 'recieve') {
+      navigation.navigate('RecieveItem');
+    }
+  };
+
   return (
     <View
       style={{
@@ -22,7 +36,7 @@ const AccountItem: React.FC<Props> = ({account: {tokenAddress, amount}}) => {
       }}>
       <TouchableOpacity
         style={[globalStyles.rowSpaceBetween]}
-        onPress={() => navigation.navigate('RecieveItem', {id: tokenAddress})}>
+        onPress={redirectToAsset}>
         <View style={globalStyles.rowCenter}>
           <View style={globalStyles.avatar}>
             <SolaceText type="secondary" weight="bold">

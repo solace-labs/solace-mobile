@@ -39,7 +39,7 @@
     "react-native-screens": "^3.13.1",
     "react-native-svg": "^13.1.0",
     "react-native-vector-icons": "^9.1.0",
-    "solace-sdk": "^2.0.12",
+    "solace-sdk": "^2.0.13",
     "util": "^0.12.4"
   },
   "devDependencies": {

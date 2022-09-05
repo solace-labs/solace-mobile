@@ -12,39 +12,43 @@ export const confirmTransaction = async (transactionId: string) => {
   showMessage({
     message: 'confirming transaction...',
   });
-  let confirm = false;
-  let retry = 0;
-  while (!confirm) {
-    if (retry > 0) {
-      showMessage({
-        message: 'confirming, please wait...',
-      });
-    }
-    try {
-      if (NETWORK === 'local') {
-        await SolaceSDK.localConnection.confirmTransaction(transactionId);
-      } else {
-        // await SolaceSDK.testnetConnection.confirmTransaction(transactionId);
-        const response = await SolaceSDK.testnetConnection.getSignatureStatus(
-          transactionId,
-        );
-        console.log('STATUS: ', response.value);
-      }
-      showMessage({
-        message: 'confirmed',
-        type: 'success',
-      });
-      confirm = true;
-    } catch (e: any) {
-      if (
-        e.message.startsWith('Transaction was not confirmed in 60.00 seconds.')
-      ) {
-        console.log('Timeout');
-      } else {
-        console.log('Confirmation Error: ', e.message);
-      }
-      retry++;
-    }
+  try {
+    let interval: any;
+    await new Promise((resolve, reject) => {
+      interval = setInterval(async () => {
+        console.log('CONFIRMING...');
+        if (NETWORK === 'local') {
+          const response = await SolaceSDK.localConnection.getSignatureStatus(
+            transactionId,
+          );
+          console.log({
+            confirmation_status: response.value?.confirmationStatus,
+          });
+          if (response?.value?.confirmationStatus === 'confirmed') {
+            resolve('success');
+          }
+        } else if (NETWORK === 'testnet') {
+          const response = await SolaceSDK.testnetConnection.getSignatureStatus(
+            transactionId,
+          );
+          console.log({
+            confirmation_status: response.value?.confirmationStatus,
+          });
+          if (response?.value?.confirmationStatus === 'confirmed') {
+            resolve('success');
+          }
+        }
+      }, 1000);
+    });
+    clearInterval(interval);
+    showMessage({
+      message: 'confirmed. open in explorer',
+      duration: 5000,
+      onPress: () => {},
+      type: 'success',
+    });
+  } catch (e: any) {
+    console.log('ERROR CONFIRMING', e);
   }
 };
 
@@ -56,9 +60,15 @@ export const getFeePayer = async (): Promise<PublicKeyType> => {
     console.log('FEE PAYER', e);
     if (e.message === 'Request failed with status code 401') {
       console.log('***************REFRESING SESSION****************');
-      const newTokens = await getRefreshToken();
-      console.log({newTokens});
-      return await getFeePayer();
+      showMessage({
+        message: 'login again',
+        type: 'warning',
+      });
+      // const newTokens = await getRefreshToken();
+
+      // console.log({newTokens});
+      // return await getFeePayer();
+      throw e;
     } else {
       throw e;
     }

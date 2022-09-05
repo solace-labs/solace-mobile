@@ -8978,10 +8978,10 @@
     "ip" "^1.1.5"
     "smart-buffer" "^4.2.0"
 
-"solace-sdk@^2.0.12":
-  "integrity" "sha512-/+fs/cm3gl1Ry1Yo2WB0hjmiw4EfKPo8nB1VtWfnwHyb2fJV3hQ4xtKEwCdoFaak/SgrU7gwz9KFSWCKyAUrPA=="
-  "resolved" "https://registry.npmjs.org/solace-sdk/-/solace-sdk-2.0.12.tgz"
-  "version" "2.0.12"
+"solace-sdk@^2.0.13":
+  "integrity" "sha512-RjP5vjIfyUHAS/+uxt+xGIRmpw1CL9nutWGh2oQmUfv2KNk+hWY9sQpBM3tbFsYKkn6C6YcdF8gB+TXJbll5SA=="
+  "resolved" "https://registry.npmjs.org/solace-sdk/-/solace-sdk-2.0.13.tgz"
+  "version" "2.0.13"
   dependencies:
     "@solana/spl-token" "^0.3.4"
     "anchor-rn" "^0.18.2"
