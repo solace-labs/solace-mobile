@@ -1,4 +1,4 @@
-package com.solace.newarchitecture.modules;
+package com.solacewallet.solace.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;

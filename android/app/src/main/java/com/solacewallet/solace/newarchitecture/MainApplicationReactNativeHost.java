@@ -1,4 +1,4 @@
-package com.solace.newarchitecture;
+package com.solacewallet.solace.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.EmptyReactNativeConfig;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.solace.BuildConfig;
-import com.solace.newarchitecture.components.MainComponentsRegistry;
-import com.solace.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.solacewallet.solace.BuildConfig;
+import com.solacewallet.solace.newarchitecture.components.MainComponentsRegistry;
+import com.solacewallet.solace.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

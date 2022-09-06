@@ -1,4 +1,4 @@
-package com.solace;
+package com.solacewallet.solace;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

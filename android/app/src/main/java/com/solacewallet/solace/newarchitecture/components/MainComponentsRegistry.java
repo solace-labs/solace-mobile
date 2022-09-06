@@ -1,4 +1,4 @@
-package com.solace.newarchitecture.components;
+package com.solacewallet.solace.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;
