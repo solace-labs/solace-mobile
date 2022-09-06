@@ -1,5 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {View, Image, ScrollView, ActivityIndicator} from 'react-native';
+import {
+  View,
+  Image,
+  ScrollView,
+  ActivityIndicator,
+  RefreshControl,
+} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 
 import {GlobalContext} from '../../../state/contexts/GlobalContext';
@@ -19,6 +25,7 @@ import {
 } from '../../../utils/constants';
 import AccountItem from '../../wallet/AccountItem';
 import SolaceLoader from '../../common/solaceui/SolaceLoader';
+import SolaceIcon from '../../common/solaceui/SolaceIcon';
 
 export type Props = {
   navigation: any;
@@ -119,6 +126,9 @@ const RecieveScreen: React.FC<Props> = ({navigation}) => {
       </SolaceContainer>
     );
   }
+  const handleRefresh = () => {
+    getAccounts();
+  };
   // const contacts = state.contacts!;
   const contacts: any[] = [];
   const showContacts = contacts.length > 0;
@@ -149,13 +159,30 @@ const RecieveScreen: React.FC<Props> = ({navigation}) => {
           </SolaceText>
         </TouchableOpacity> */}
         {accounts && accounts.length > 0 ? (
-          <ScrollView bounces={true} style={{margin: 8, width: '100%'}}>
-            {accounts.map((account, index) => {
-              return (
-                <AccountItem account={account} key={index} type="recieve" />
-              );
-            })}
-          </ScrollView>
+          <>
+            <ScrollView
+              refreshControl={
+                <RefreshControl
+                  refreshing={loading}
+                  onRefresh={handleRefresh}
+                />
+              }
+              bounces={true}
+              style={{margin: 8, width: '100%'}}>
+              <View
+                style={[globalStyles.rowCenter, {justifyContent: 'center'}]}>
+                <SolaceText size="sm" weight="extralight">
+                  pull to refresh
+                </SolaceText>
+                <SolaceIcon type="dark" name="down" />
+              </View>
+              {accounts.map((account, index) => {
+                return (
+                  <AccountItem account={account} key={index} type="recieve" />
+                );
+              })}
+            </ScrollView>
+          </>
         ) : (
           <View style={{flex: 1}}>
             <Image

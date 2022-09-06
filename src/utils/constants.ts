@@ -23,6 +23,7 @@ export const DEFAULT_PUBLIC_KEY =
 /** Relayer constants */
 export const RELAYER_BASE_URL =
   'https://rxc9xav4nk.execute-api.ap-south-1.amazonaws.com';
+export const SECOND_RELAYER_BASE_URL = 'https://solace-open-relayer.vercel.app';
 
 /** Cognito constants */
 export const COGNITO_USERPOOL_ID = 'ap-south-1_8Ylepg5f1';

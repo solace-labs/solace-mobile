@@ -1,4 +1,5 @@
 import {CognitoRefreshToken} from 'amazon-cognito-identity-js';
+import {Linking} from 'react-native';
 import {showMessage} from 'react-native-flash-message';
 import {PublicKey, SolaceSDK} from 'solace-sdk';
 import {PublicKeyType} from '../components/screens/wallet/Guardian';
@@ -16,7 +17,6 @@ export const confirmTransaction = async (transactionId: string) => {
     let interval: any;
     await new Promise((resolve, reject) => {
       interval = setInterval(async () => {
-        console.log('CONFIRMING...');
         if (NETWORK === 'local') {
           const response = await SolaceSDK.localConnection.getSignatureStatus(
             transactionId,
@@ -30,21 +30,44 @@ export const confirmTransaction = async (transactionId: string) => {
         } else if (NETWORK === 'testnet') {
           const response = await SolaceSDK.testnetConnection.getSignatureStatus(
             transactionId,
+            {
+              searchTransactionHistory: true,
+            },
           );
-          console.log({
-            confirmation_status: response.value?.confirmationStatus,
-          });
-          if (response?.value?.confirmationStatus === 'confirmed') {
-            resolve('success');
+          if (response.value) {
+            const {confirmationStatus, err} = response.value;
+            console.log(confirmationStatus);
+            if (confirmationStatus === 'finalized') {
+              resolve('success');
+            }
+            if (
+              confirmationStatus === 'confirmed' ||
+              confirmationStatus === 'processed'
+            ) {
+              console.log(confirmationStatus);
+            }
+            if (err) {
+              reject('error confirming transaction');
+            }
           }
         }
-      }, 1000);
+      }, 2000);
     });
     clearInterval(interval);
     showMessage({
-      message: 'confirmed. open in explorer',
+      message: 'finalized, tap to see transaction',
       duration: 5000,
-      onPress: () => {},
+      onPress: () => {
+        console.log(transactionId);
+        const url = `https://solscan.io/search?q=${transactionId}&cluster=testnet`;
+        Linking.canOpenURL(url).then(supported => {
+          if (supported) {
+            Linking.openURL(url);
+          } else {
+            console.log("Don't know how to open URI: " + url);
+          }
+        });
+      },
       type: 'success',
     });
   } catch (e: any) {
@@ -64,10 +87,6 @@ export const getFeePayer = async (): Promise<PublicKeyType> => {
         message: 'login again',
         type: 'warning',
       });
-      // const newTokens = await getRefreshToken();
-
-      // console.log({newTokens});
-      // return await getFeePayer();
       throw e;
     } else {
       throw e;

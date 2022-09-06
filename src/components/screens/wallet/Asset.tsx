@@ -105,6 +105,10 @@ const AssetScreen = () => {
       });
       const response = await relayTransaction(tx);
       console.log(response);
+      setSendLoading({
+        message: 'finalizing..',
+        value: true,
+      });
       await confirmTransaction(response);
       const data = await sdk.fetchWalletData();
       console.log({data});

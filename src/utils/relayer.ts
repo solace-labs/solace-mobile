@@ -8,6 +8,7 @@ import {
   LAMPORTS_PER_SOL,
   NETWORK,
   RELAYER_BASE_URL,
+  SECOND_RELAYER_BASE_URL,
 } from './constants';
 import {StorageGetItem} from './storage';
 
@@ -95,13 +96,17 @@ export const relayTransaction = async (tx: any) => {
     return res;
   }
   try {
-    const accessToken = await getAccessToken();
-    const res = await axios.post(`${RELAYER_BASE_URL}/relay`, tx, {
-      headers: {Authorization: accessToken},
-    });
+    // const accessToken = await getAccessToken();
+    console.log('TX', tx);
+    const res = await axios.post(
+      `${SECOND_RELAYER_BASE_URL}/api/relay`,
+      tx,
+      // headers: {Authorization: accessToken},
+    );
+    console.log({res});
     return res.data;
   } catch (e: any) {
-    console.log('ERROR RELAYING: ', e);
+    console.log('ERROR RELAYING: ', JSON.stringify(e));
     throw e;
   }
 };

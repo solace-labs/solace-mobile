@@ -151,7 +151,7 @@ const GlobalProvider = ({children}: {children: any}) => {
       return;
     }
     console.log('NEW USER!!!');
-    dispatch(setAccountStatus(AccountStatus.NEW));
+    dispatch(setAccountStatus(AccountStatus.SIGNED_UP));
   }, [checkInRecoverMode, checkRecovery, isUserValid]);
 
   useEffect(() => {

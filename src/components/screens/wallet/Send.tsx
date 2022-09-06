@@ -9,11 +9,6 @@ import SolaceCustomInput from '../../common/solaceui/SolaceCustomInput';
 import SolaceText from '../../common/solaceui/SolaceText';
 import SolaceIcon from '../../common/solaceui/SolaceIcon';
 import globalStyles from '../../../utils/global_styles';
-import {PublicKey} from 'solace-sdk';
-import {getFeePayer, confirmTransaction} from '../../../utils/apis';
-import {LAMPORTS_PER_SOL} from '../../../utils/constants';
-import {relayTransaction} from '../../../utils/relayer';
-
 export type Props = {
   navigation: any;
 };
@@ -31,41 +26,6 @@ const SendScreen: React.FC<Props> = ({navigation}) => {
 
   const contacts = state.contacts!;
   const showContacts = contacts.length > 0;
-
-  const send = async () => {
-    const sdk = state.sdk!;
-    const feePayer = await getFeePayer();
-    console.log({feePayer});
-    if (!sdk) {
-      return;
-    }
-    const splTokenAddress = new PublicKey(
-      'DB6BcxUpHDSxEFpqDRjm98HTvX2JZapbBNN8RcR4K11z',
-    );
-    const reciever = new PublicKey(
-      'GNgMfSSJ4NjSuu1EdHj94P6TzQS24KH38y1si2CMrUsF',
-    );
-    const recieverTokenAccount = await sdk.getAnyAssociatedTokenAccount(
-      splTokenAddress,
-      reciever,
-    );
-    const tx = await sdk.requestSplTransfer(
-      {
-        amount: 5 * LAMPORTS_PER_SOL,
-        mint: splTokenAddress,
-        reciever,
-        recieverTokenAccount,
-      },
-      feePayer,
-    );
-    const response = await relayTransaction(tx);
-    console.log(response);
-    await confirmTransaction(response);
-
-    const data = await sdk.fetchWalletData();
-    console.log({data});
-    console.log(data.ongoingTransfer.approvals);
-  };
 
   return (
     <SolaceContainer>

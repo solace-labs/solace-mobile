@@ -1,5 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {View, Image, ScrollView, ActivityIndicator} from 'react-native';
+import {
+  View,
+  Image,
+  ScrollView,
+  ActivityIndicator,
+  RefreshControl,
+} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 
 import {GlobalContext} from '../../../state/contexts/GlobalContext';
@@ -20,6 +26,8 @@ import {
 } from '../../../utils/constants';
 import AccountItem from '../../wallet/AccountItem';
 import SolaceLoader from '../../common/solaceui/SolaceLoader';
+import SolaceIcon from '../../common/solaceui/SolaceIcon';
+import {createIconSetFromFontello} from 'react-native-vector-icons';
 
 export type Props = {
   navigation: any;
@@ -93,6 +101,7 @@ const SendScreen: React.FC<Props> = ({navigation}) => {
     try {
       setLoading(true);
       const sdk = state.sdk!;
+      console.log(sdk.wallet);
       const allAccounts = await sdk.provider.connection.getTokenAccountsByOwner(
         sdk.wallet,
         {
@@ -130,7 +139,16 @@ const SendScreen: React.FC<Props> = ({navigation}) => {
 
   useEffect(() => {
     getAllAccounts();
+    // const getData = async () => {
+    //   const walletData = await state.sdk!.fetchWalletData();
+    //   console.log(walletData);
+    // };
+    // getData();
   }, []);
+
+  const handleRefresh = () => {
+    getAllAccounts();
+  };
 
   if (loading) {
     return (
@@ -178,7 +196,18 @@ const SendScreen: React.FC<Props> = ({navigation}) => {
           </SolaceText>
         </TouchableOpacity> */}
         {accounts && accounts.length > 0 ? (
-          <ScrollView bounces={true} style={{margin: 8, width: '100%'}}>
+          <ScrollView
+            refreshControl={
+              <RefreshControl refreshing={loading} onRefresh={handleRefresh} />
+            }
+            bounces={true}
+            style={{margin: 8, width: '100%'}}>
+            <View style={[globalStyles.rowCenter, {justifyContent: 'center'}]}>
+              <SolaceText size="sm" weight="extralight">
+                pull to refresh
+              </SolaceText>
+              <SolaceIcon type="dark" name="down" />
+            </View>
             {accounts.map((account, index) => {
               return <AccountItem account={account} key={index} type="send" />;
             })}

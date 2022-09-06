@@ -33,13 +33,14 @@ const CreateWalletScreen: React.FC = () => {
 
   const handleClick = async () => {
     try {
+      dispatch(setUser(await StorageGetItem('user')));
       setLoading({message: 'creating wallet...', value: true});
       const keypair = getKeypairFromPrivateKey(state.user!);
       const feePayer = await getFeePayer();
       console.log({feePayer, keypair});
       const {sdk, transactionId} = await createWallet(keypair, feePayer);
       console.log('CREATED. Confirming now...');
-      await confirmTransaction(transactionId);
+      // await confirmTransaction(transactionId);
       const awsCognito = state.awsCognito!;
       await awsCognito.updateAttribute('address', sdk.wallet.toString());
       dispatch(setSDK(sdk));
@@ -48,7 +49,7 @@ const CreateWalletScreen: React.FC = () => {
         message: 'wallet created',
         type: 'success',
       });
-      await StorageSetItem('user', state.user);
+      await StorageSetItem('user', {...state.user, isWalletCreated: true});
       resetLoading();
       dispatch(setAccountStatus(AccountStatus.EXISITING));
     } catch (e) {

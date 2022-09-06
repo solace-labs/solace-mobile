@@ -12,6 +12,7 @@ import SolaceLoader from '../../common/solaceui/SolaceLoader';
 import SolaceButton from '../../common/solaceui/SolaceButton';
 import SolaceText from '../../common/solaceui/SolaceText';
 import {confirmTransaction} from '../../../utils/apis';
+import {StorageGetItem} from '../../../utils/storage';
 
 export type Props = {
   navigation: any;
@@ -31,7 +32,9 @@ const AirdropScreen: React.FC<Props> = ({navigation}) => {
         value: true,
       });
       await getAccessToken();
-      const keypair = getKeypairFromPrivateKey(state.user!);
+      const storedUser = await StorageGetItem('user');
+      // const keypair = getKeypairFromPrivateKey(state.user!);
+      const keypair = getKeypairFromPrivateKey(storedUser);
       const {publicKey} = keypair;
       const publicKeyString = publicKey.toString();
       /** Requesting Airdrop */
