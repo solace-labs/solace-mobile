@@ -1,5 +1,5 @@
 import React, {FC, ReactNode} from 'react';
-import {ScrollView, View, ViewProps, ViewStyle} from 'react-native';
+import {Platform, ScrollView, View, ViewProps, ViewStyle} from 'react-native';
 import type {StyleProp} from 'react-native';
 import {Colors} from '../../../utils/colors';
 

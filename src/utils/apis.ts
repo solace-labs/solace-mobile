@@ -34,6 +34,7 @@ export const confirmTransaction = async (transactionId: string) => {
               searchTransactionHistory: true,
             },
           );
+          console.log('confirm', response);
           if (response.value) {
             const {confirmationStatus, err} = response.value;
             console.log(confirmationStatus);
@@ -59,7 +60,7 @@ export const confirmTransaction = async (transactionId: string) => {
       duration: 5000,
       onPress: () => {
         console.log(transactionId);
-        const url = `https://solscan.io/search?q=${transactionId}&cluster=testnet`;
+        const url = `https://solscan.io/tx/${transactionId}?&cluster=testnet`;
         Linking.canOpenURL(url).then(supported => {
           if (supported) {
             Linking.openURL(url);

@@ -7,13 +7,14 @@ import React, {
   useReducer,
 } from 'react';
 import {Contact} from '../../components/wallet/ContactItem';
-import {setAccountStatus, setUser} from '../actions/global';
+import {clearData, setAccountStatus, setUser} from '../actions/global';
 import globalReducer from '../reducers/global';
 import {KeyPair, SolaceSDK} from 'solace-sdk';
 import {AwsCognito} from '../../utils/aws_cognito';
 import {GoogleApi} from '../../utils/google_apis';
 import {NETWORK, PROGRAM_ADDRESS} from '../../utils/constants';
 import {
+  StorageClearAll,
   StorageDeleteItem,
   StorageGetItem,
   StorageSetItem,
@@ -50,7 +51,6 @@ export type User = {
   publicKey?: string;
   isWalletCreated: boolean;
   pin: string;
-  inRecovery?: boolean;
 };
 
 export enum AccountStatus {
@@ -62,6 +62,13 @@ export enum AccountStatus {
   SIGNED_UP = 'SIGNED_UP',
   LOGGED_ID = 'LOGGED_ID',
   RETRIEVE = 'RETRIEVE',
+}
+
+export enum AppState {
+  SIGNUP = 'SIGNUP',
+  GDRIVE = 'GDRIVE',
+  ONBOARDED = 'ONBOARDED',
+  RECOVERY = 'RECOVERY',
 }
 
 export const initialState = {
@@ -97,14 +104,19 @@ export const GlobalContext = createContext<{
 
 const GlobalProvider = ({children}: {children: any}) => {
   const [state, dispatch] = useReducer(globalReducer, initialState);
+
+  /** valid recover mode */
   const checkInRecoverMode = useCallback(async () => {
     const storedUser: User = await StorageGetItem('user');
+    const appState: AppState = await StorageGetItem('appstate');
     return (storedUser &&
-      storedUser.inRecovery &&
+      appState &&
+      appState === AppState.RECOVERY &&
       storedUser.solaceName &&
       storedUser.ownerPrivateKey) as boolean;
   }, []);
 
+  /** Valid logged in user */
   const isUserValid = useCallback(async () => {
     const storedUser: User = await StorageGetItem('user');
     return (storedUser &&
@@ -113,6 +125,17 @@ const GlobalProvider = ({children}: {children: any}) => {
       storedUser.ownerPrivateKey &&
       storedUser.isWalletCreated) as boolean;
   }, []);
+
+  const isGdriveUserValid = async () => {
+    const storedUser: User = await StorageGetItem('user');
+    const appState: AppState = await StorageGetItem('appstate');
+    return (storedUser &&
+      appState &&
+      appState === AppState.GDRIVE &&
+      storedUser.pin &&
+      storedUser.solaceName &&
+      storedUser.ownerPrivateKey) as boolean;
+  };
 
   const checkRecovery = useCallback(async () => {
     const storedUser: User = await StorageGetItem('user');
@@ -134,24 +157,40 @@ const GlobalProvider = ({children}: {children: any}) => {
   }, []);
 
   const init = useCallback(async () => {
+    // await StorageClearAll();
+    await StorageSetItem('appstate', AppState.RECOVERY);
     const storedUser: User = await StorageGetItem('user');
-    // await StorageSetItem('user', {...storedUser, isWalletCreated: true});
-    console.log({storedUser});
+    const appState: AppState = await StorageGetItem('appstate');
+    console.log({storedUser, appState});
+
+    /** RECOVERY CHECK */
     const inRecoveryMode = await checkInRecoverMode();
     if (inRecoveryMode) {
       console.log('RECOVERY USER!!!');
-      checkRecovery();
+      dispatch(setAccountStatus(AccountStatus.RECOVERY));
       return;
     }
+    /** LOGGED IN CHECK */
     const userValid = await isUserValid();
-    if (userValid) {
+    if (userValid && appState === AppState.ONBOARDED) {
       console.log('VALID USER!!!');
       dispatch(setUser(storedUser));
       dispatch(setAccountStatus(AccountStatus.EXISITING));
       return;
     }
+    /**  GDRIVE ALREADY BACKED UP */
+    const gdriveUserValid = await isGdriveUserValid();
+    if (gdriveUserValid && appState === AppState.GDRIVE) {
+      console.log('GDRIVE USER!!!');
+      dispatch(setUser(storedUser));
+      dispatch(setAccountStatus(AccountStatus.SIGNED_UP));
+      return;
+    }
+    /** NEW USER */
     console.log('NEW USER!!!');
-    dispatch(setAccountStatus(AccountStatus.SIGNED_UP));
+    await StorageClearAll();
+    dispatch(clearData());
+    dispatch(setAccountStatus(AccountStatus.NEW));
   }, [checkInRecoverMode, checkRecovery, isUserValid]);
 
   useEffect(() => {

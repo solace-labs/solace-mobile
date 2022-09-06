@@ -45,7 +45,7 @@ const RecieveScreen: React.FC<Props> = ({navigation}) => {
   };
 
   const handleAdd = () => {
-    navigation.navigate('AddContact');
+    navigation.navigate('AddToken');
   };
 
   const handleCopy = (text: string) => {
@@ -56,11 +56,10 @@ const RecieveScreen: React.FC<Props> = ({navigation}) => {
   };
 
   const getAccounts = async () => {
+    console.log('getting');
     try {
       setLoading(true);
       const sdk = state.sdk!;
-
-      // const accountInfo = await sdk?.getTokenAccountInfo(splTokenAddress);
       const allAccounts = await sdk.provider.connection.getTokenAccountsByOwner(
         sdk.wallet,
         {
@@ -94,6 +93,10 @@ const RecieveScreen: React.FC<Props> = ({navigation}) => {
       if (accs.length === 0) {
         const splTokenAddress = new PublicKey(SPL_TOKEN);
         const tokenAccount = await sdk?.getTokenAccount(splTokenAddress);
+        const accountInfo = await sdk?.getTokenAccountInfo(splTokenAddress);
+        console.log('SPL TOKEN:', splTokenAddress);
+        console.log('TOKEN ACCOUNT:', tokenAccount);
+        console.log('ACCOUNT INFO:', accountInfo);
         const feePayer = await getFeePayer();
         const tx = await sdk?.createTokenAccount(
           {
@@ -114,18 +117,25 @@ const RecieveScreen: React.FC<Props> = ({navigation}) => {
   };
 
   useEffect(() => {
-    getAccounts();
-  }, []);
+    const willFocusSubscription = navigation.addListener('focus', async () => {
+      await getAccounts();
+    });
+    return willFocusSubscription;
+  }, [navigation]);
+
+  // useEffect(() => {
+  //   getAccounts();
+  // }, []);
 
   if (loading) {
     return (
       <SolaceContainer>
         <TopNavbar
           startIcon="back"
-          // endIcon="plus"
+          endIcon="plus"
           text="recieve"
           startClick={handleGoBack}
-          // endClick={handleAdd}
+          endClick={handleAdd}
         />
         <SolaceLoader text="getting tokens">
           <ActivityIndicator size="small" style={{marginTop: 8}} />
@@ -144,27 +154,12 @@ const RecieveScreen: React.FC<Props> = ({navigation}) => {
     <SolaceContainer>
       <TopNavbar
         startIcon="back"
-        // endIcon="plus"
+        endIcon="plus"
         text="recieve"
         startClick={handleGoBack}
-        // endClick={handleAdd}
+        endClick={handleAdd}
       />
       <View style={globalStyles.fullCenter}>
-        {/* <View style={globalStyles.fullWidth}>
-          <SolaceCustomInput
-            placeholder="username or address"
-            iconName="content-copy"
-            handleIconPress={() => handleCopy(address)}
-            value={address}
-            iconType="mci"
-          />
-        </View> */}
-        {/* <TouchableOpacity style={[globalStyles.rowCenter, {marginTop: 8}]}>
-          <SolaceIcon name="gift" type="dark" />
-          <SolaceText type="secondary" weight="bold" variant="normal">
-            send a gift
-          </SolaceText>
-        </TouchableOpacity> */}
         {accounts && accounts.length > 0 ? (
           <>
             <ScrollView
@@ -191,7 +186,7 @@ const RecieveScreen: React.FC<Props> = ({navigation}) => {
             </ScrollView>
           </>
         ) : (
-          <View style={{flex: 1}}>
+          <View style={[globalStyles.fullCenter, globalStyles.fullWidth]}>
             <Image
               source={require('../../../../assets/images/solace/send-money.png')}
               style={{
@@ -208,7 +203,7 @@ const RecieveScreen: React.FC<Props> = ({navigation}) => {
                 variant="white"
                 style={{textDecorationLine: 'underline'}}
                 weight="bold">
-                add a address token
+                add a token
               </SolaceText>{' '}
               to recieve
             </SolaceText>

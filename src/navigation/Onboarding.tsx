@@ -6,12 +6,13 @@ import GoogleDriveScreen from '../components/screens/onboarding/GoogleDrive';
 import Login from '../components/screens/onboarding/Login';
 import CreateWalletScreen from '../components/screens/onboarding/CreateWallet';
 import AirdropScreen from '../components/screens/onboarding/Airdrop';
+import OnboardLoading from '../components/screens/onboarding/OnboardLoading';
 
 const Stack = createNativeStackNavigator();
 const OnboardingStack = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Passcode"
+      initialRouteName="OnboardLoading"
       screenOptions={{headerShown: false}}>
       <Stack.Screen name="Passcode" component={PasscodeScreen} />
       <Stack.Screen name="ConfirmPasscode" component={ConfirmPasscodeScreen} />
@@ -19,6 +20,7 @@ const OnboardingStack = () => {
       <Stack.Screen name="GoogleDrive" component={GoogleDriveScreen} />
       <Stack.Screen name="Airdrop" component={AirdropScreen} />
       <Stack.Screen name="CreateWallet" component={CreateWalletScreen} />
+      <Stack.Screen name="OnboardLoading" component={OnboardLoading} />
     </Stack.Navigator>
   );
 };

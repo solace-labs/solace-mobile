@@ -3,11 +3,11 @@ import React, {useContext, useState} from 'react';
 import {showMessage} from 'react-native-flash-message';
 import {SolaceSDK} from 'solace-sdk';
 
-import {GlobalContext, Tokens} from '../../../state/contexts/GlobalContext';
+import {AppState, GlobalContext} from '../../../state/contexts/GlobalContext';
 import {setSDK, setUser} from '../../../state/actions/global';
-import {airdrop, relayTransaction} from '../../../utils/relayer';
+import {relayTransaction} from '../../../utils/relayer';
 import {NETWORK, PROGRAM_ADDRESS} from '../../../utils/constants';
-import {StorageGetItem, StorageSetItem} from '../../../utils/storage';
+import {StorageSetItem} from '../../../utils/storage';
 import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import SolaceLoader from '../../common/solaceui/SolaceLoader';
 import SolaceButton from '../../common/solaceui/SolaceButton';
@@ -40,26 +40,26 @@ const GuardianRecovery: React.FC<Props> = ({navigation}) => {
       });
       const username = state.user?.solaceName!;
       const feePayer = await getFeePayer();
-      console.log({feePayer, username});
-      const data = await requestAirdrop(keypair.publicKey.toString());
-      console.log('AIRDROP CONFIRMATION', data);
-      await confirmTransaction(data);
       const tx = await newSDK.recoverWallet(username, feePayer);
       console.log({tx});
       const res = await relayTransaction(tx);
       console.log({res});
+      setLoading({
+        message: 'finalizing...please wait',
+        value: true,
+      });
       await confirmTransaction(res);
       await StorageSetItem('user', {
         solaceName: username,
         ownerPrivateKey: keypair.secretKey.toString(),
-        inRecovery: true,
       });
+      await StorageSetItem('appstate', AppState.RECOVERY);
       dispatch(setSDK(newSDK));
       dispatch(
         setUser({
           ...state.user,
           solaceName: username,
-          isWalletCreated: true,
+          ownerPrivateKey: keypair.secretKey.toString(),
         }),
       );
       setLoading({
@@ -79,35 +79,6 @@ const GuardianRecovery: React.FC<Props> = ({navigation}) => {
         message: 'some error. try again?',
         value: false,
       });
-    }
-  };
-
-  const requestAirdrop = async (publicKey: string) => {
-    const {accesstoken} = (await StorageGetItem('tokens')) as Tokens;
-    console.log({publicKey, accesstoken});
-    setLoading({
-      value: true,
-      message: 'requesting air drop...',
-    });
-    try {
-      const res: any = await airdrop(publicKey);
-      showMessage({
-        message: 'transaction sent',
-        type: 'success',
-      });
-      console.log('inside airdrop', res);
-      return res;
-    } catch (e) {
-      console.log('Airdrop error', e);
-      setLoading({
-        value: false,
-        message: 'request now',
-      });
-      showMessage({
-        message: 'error requesting airdrop. try again!',
-        type: 'danger',
-      });
-      // throw e;
     }
   };
 

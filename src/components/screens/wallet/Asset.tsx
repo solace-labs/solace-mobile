@@ -84,10 +84,21 @@ const AssetScreen = () => {
       }
       const splTokenAddress = new PublicKey(asset);
       const reciever = new PublicKey(recipientAddress);
-      const recieverTokenAccount = await sdk.getAnyAssociatedTokenAccount(
+      console.log(reciever, recipientAddress, splTokenAddress);
+      const recieverTokenAccount = await sdk.getPDAAssociatedTokenAccount(
         splTokenAddress,
         reciever,
       );
+      // const recieverTokenAccount = await sdk.getAnyAssociatedTokenAccount(
+      //   splTokenAddress,
+      //   reciever,
+      // );
+      console.log({
+        splTokenAddress,
+        recieverTokenAccount,
+        reciever,
+        amount,
+      });
       const tx = await sdk.requestSplTransfer(
         {
           amount: +amount * LAMPORTS_PER_SOL,

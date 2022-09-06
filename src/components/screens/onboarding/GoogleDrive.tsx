@@ -1,13 +1,23 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {View, Image} from 'react-native';
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {showMessage} from 'react-native-flash-message';
 import {SolaceSDK} from 'solace-sdk';
 
-import {setGoogleApi, setUser} from '../../../state/actions/global';
-import {GlobalContext} from '../../../state/contexts/GlobalContext';
+import {
+  setAccountStatus,
+  setGoogleApi,
+  setUser,
+} from '../../../state/actions/global';
+import {
+  AccountStatus,
+  AppState,
+  GlobalContext,
+  User,
+} from '../../../state/contexts/GlobalContext';
 import {encryptKey} from '../../../utils/aes_encryption';
 import {GoogleApi} from '../../../utils/google_apis';
-import {StorageSetItem} from '../../../utils/storage';
+import {StorageGetItem, StorageSetItem} from '../../../utils/storage';
 import {
   SOLACE_NAME_FILENAME,
   PRIVATE_KEY_FILENAME,
@@ -36,23 +46,23 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
       const secretKeyString = secretKey.toString();
       /** Google Drive Storage of Private Key and Solace Name */
       console.log('STORING');
-      // await storeToGoogleDrive(secretKeyString);
-      dispatch(
-        setUser({
-          ...state.user,
-          isWalletCreated: false,
-          ownerPrivateKey: secretKeyString,
-        }),
-      );
-      await StorageSetItem('user', {
-        ...state.user,
-        isWalletCreated: false,
-        ownerPrivateKey: secretKeyString,
-      });
-      navigation.reset({
-        index: 0,
-        routes: [{name: 'CreateWallet'}],
-      });
+      await storeToGoogleDrive(secretKeyString);
+      // dispatch(
+      //   setUser({
+      //     ...state.user,
+      //     isWalletCreated: false,
+      //     ownerPrivateKey: secretKeyString,
+      //   }),
+      // );
+      // await StorageSetItem('user', {
+      //   ...state.user,
+      //   isWalletCreated: false,
+      //   ownerPrivateKey: secretKeyString,
+      // });
+      // navigation.reset({
+      //   index: 0,
+      //   routes: [{name: 'CreateWallet'}],
+      // });
     } catch (e) {
       console.log(e);
     }
@@ -82,6 +92,21 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
           SOLACE_NAME_FILENAME,
           encryptedUsername,
         );
+        const appState = await StorageGetItem('appstate');
+        if (appState === AppState.RECOVERY) {
+          const user: User = {
+            pin,
+            solaceName: username,
+            ownerPrivateKey: secretKey,
+            isWalletCreated: true,
+            email: state.user?.email!,
+          };
+          await StorageSetItem('appstate', AppState.ONBOARDED);
+          await StorageSetItem('user', user);
+          dispatch(setUser(user));
+          dispatch(setAccountStatus(AccountStatus.EXISITING));
+          return;
+        }
         dispatch(
           setUser({
             ...state.user,
@@ -89,6 +114,7 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
             ownerPrivateKey: secretKey,
           }),
         );
+        await StorageSetItem('appstate', AppState.GDRIVE);
         await StorageSetItem('user', {
           ...state.user,
           isWalletCreated: false,
@@ -100,7 +126,7 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
         });
         navigation.reset({
           index: 0,
-          routes: [{name: 'Airdrop'}],
+          routes: [{name: 'CreateWallet'}],
         });
       } else {
         showMessage({
@@ -134,6 +160,24 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
     }
   };
 
+  const checkIfAlreadyBackup = async () => {
+    const appState: AppState = await StorageGetItem('appstate');
+    if (appState === AppState.GDRIVE) {
+      showMessage({
+        message: 'google drive backup already exists',
+        type: 'info',
+      });
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'CreateWallet'}],
+      });
+    }
+  };
+
+  useEffect(() => {
+    checkIfAlreadyBackup();
+  }, []);
+
   const imageStyle = {
     width: 70,
     height: 70,
@@ -155,13 +199,7 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
       </View>
 
       <SolaceButton
-        onPress={() => {
-          handleClick();
-          // navigation.reset({
-          //   index: 0,
-          //   routes: [{name: 'Airdrop'}],
-          // });
-        }}
+        onPress={handleClick}
         loading={loading.value}
         disabled={loading.value}>
         <SolaceText type="secondary" weight="bold" variant="dark">

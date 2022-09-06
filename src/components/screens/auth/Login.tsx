@@ -19,11 +19,11 @@ export type Props = {
 };
 
 const Login: React.FC<Props> = ({navigation}) => {
-  const [username, setUsername] = useState('ankitonpar');
-  const [password, setPassword] = useState('ankitN1311@');
-  const [active, setActive] = useState('username');
-  const [isLoading, setIsLoading] = useState(false);
   const {state, dispatch} = useContext(GlobalContext);
+  const [username, setUsername] = useState(state.user?.solaceName!);
+  const [password, setPassword] = useState('ankitN1311@');
+  const [active, setActive] = useState('password');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSignIn = async () => {
     try {
@@ -69,6 +69,7 @@ const Login: React.FC<Props> = ({navigation}) => {
           subHeading="sign in to your account"
         />
         <SolaceInput
+          editable={false}
           placeholder="username"
           onFocus={() => setActive('username')}
           mt={16}

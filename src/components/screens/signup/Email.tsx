@@ -3,6 +3,7 @@ import {View, ActivityIndicator} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import {
   AccountStatus,
+  AppState,
   GlobalContext,
 } from '../../../state/contexts/GlobalContext';
 import {
@@ -130,7 +131,11 @@ const EmailScreen: React.FC<Props> = ({navigation}) => {
       const response = await awsCognito?.confirmRegistration(otp.value);
       console.log({response});
       setOtp({...otp, isVerified: true});
-      await StorageSetItem('user', {...state.user});
+      await StorageSetItem('user', {
+        solaceName: username.value,
+        email: email.value,
+      });
+      await StorageSetItem('appstate', AppState.SIGNUP);
       setIsLoading(false);
       dispatch(setAccountStatus(AccountStatus.SIGNED_UP));
     } catch (e: any) {

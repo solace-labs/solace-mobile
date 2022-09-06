@@ -143,14 +143,14 @@ const SendScreen: React.FC<Props> = ({navigation}) => {
     return willFocusSubscription;
   }, [navigation]);
 
-  useEffect(() => {
-    getAllAccounts();
-    // const getData = async () => {
-    //   const walletData = await state.sdk!.fetchWalletData();
-    //   console.log(walletData);
-    // };
-    // getData();
-  }, []);
+  // useEffect(() => {
+  //   getAllAccounts();
+  //   const getData = async () => {
+  //     const walletData = await state.sdk!.fetchWalletData();
+  //     console.log(walletData);
+  //   };
+  //   getData();
+  // }, []);
 
   const handleRefresh = () => {
     getAllAccounts();
@@ -180,27 +180,12 @@ const SendScreen: React.FC<Props> = ({navigation}) => {
     <SolaceContainer>
       <TopNavbar
         startIcon="back"
-        endIcon="plus"
+        // endIcon="plus"
         text="send"
         startClick={handleGoBack}
-        endClick={handleAdd}
+        // endClick={handleAdd}
       />
       <View style={globalStyles.fullCenter}>
-        {/* <View style={globalStyles.fullWidth}>
-          <SolaceCustomInput
-            placeholder="username or address"
-            iconName="content-copy"
-            handleIconPress={() => handleCopy(address)}
-            value={address}
-            iconType="mci"
-          />
-        </View> */}
-        {/* <TouchableOpacity style={[globalStyles.rowCenter, {marginTop: 8}]}>
-          <SolaceIcon name="gift" type="dark" />
-          <SolaceText type="secondary" weight="bold" variant="normal">
-            send a gift
-          </SolaceText>
-        </TouchableOpacity> */}
         {accounts && accounts.length > 0 ? (
           <ScrollView
             refreshControl={
@@ -224,17 +209,11 @@ const SendScreen: React.FC<Props> = ({navigation}) => {
               source={require('../../../../assets/images/solace/send-money.png')}
               style={globalStyles.image}
             />
-            <SolaceText type="secondary" size="sm">
-              <SolaceText
-                onPress={handleAdd}
-                type="secondary"
-                size="sm"
-                variant="white"
-                style={{textDecorationLine: 'underline'}}
-                weight="bold">
-                add a address token
-              </SolaceText>{' '}
+            <SolaceText type="secondary" size="sm" weight="bold">
               no tokens found
+            </SolaceText>
+            <SolaceText type="secondary" size="xs" mt={10}>
+              sol transfers are coming very soon
             </SolaceText>
           </View>
         )}

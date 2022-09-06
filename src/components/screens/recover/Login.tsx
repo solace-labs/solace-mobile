@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {View} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
-import {GlobalContext} from '../../../state/contexts/GlobalContext';
+import {AppState, GlobalContext} from '../../../state/contexts/GlobalContext';
 import {setAwsCognito, setUser} from '../../../state/actions/global';
 import {AwsCognito} from '../../../utils/aws_cognito';
 import {showMessage} from 'react-native-flash-message';
@@ -19,23 +19,23 @@ export type Props = {
 };
 
 const Login: React.FC<Props> = ({navigation}) => {
-  const [username, setUsername] = useState('ankitonpar');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('ankitN1311@');
   const [active, setActive] = useState('username');
   const [isLoading, setIsLoading] = useState(false);
   const {state, dispatch} = useContext(GlobalContext);
 
   const checkInRecoveryMode = async () => {
-    const storedUser = await StorageGetItem('user');
-    console.log({storedUser});
-    if (storedUser.inRecovery) {
+    const appState: AppState = await StorageGetItem('appstate');
+    console.log({appState});
+    if (appState === AppState.RECOVERY) {
       navigation.navigate('Recover');
     }
   };
 
   useEffect(() => {
     checkInRecoveryMode();
-  });
+  }, []);
 
   const handleSignIn = async () => {
     try {

@@ -9,6 +9,7 @@ import AddGuardian from '../components/screens/wallet/AddGuardian';
 import Guardian from '../components/screens/wallet/Guardian';
 import RecieveScreen from '../components/screens/wallet/Recieve';
 import RecieveItem from '../components/screens/wallet/RecieveItem';
+import AddToken from '../components/screens/wallet/AddToken';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,6 +23,7 @@ const WalletStack = () => {
       <Stack.Screen name="Recieve" component={RecieveScreen} />
       <Stack.Screen name="RecieveItem" component={RecieveItem} />
       <Stack.Screen name="AddContact" component={AddContactScreen} />
+      <Stack.Screen name="AddToken" component={AddToken} />
       <Stack.Screen name="Contact" component={ContactScreen} />
       <Stack.Screen name="Asset" component={AssetScreen} />
       <Stack.Screen name="AddGuardian" component={AddGuardian} />

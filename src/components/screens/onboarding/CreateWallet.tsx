@@ -3,9 +3,9 @@ import React, {useContext, useState} from 'react';
 import {setAccountStatus, setSDK, setUser} from '../../../state/actions/global';
 import {
   AccountStatus,
+  AppState,
   getKeypairFromPrivateKey,
   GlobalContext,
-  Tokens,
 } from '../../../state/contexts/GlobalContext';
 import {PublicKey, SolaceSDK} from 'solace-sdk';
 import {showMessage} from 'react-native-flash-message';
@@ -41,7 +41,8 @@ const CreateWalletScreen: React.FC = () => {
       console.log({feePayer, keypair});
       const {sdk, transactionId} = await createWallet(keypair, feePayer);
       console.log('CREATED. Confirming now...');
-      // await confirmTransaction(transactionId);
+      setLoading({message: 'finalizing wallet...please wait', value: true});
+      await confirmTransaction(transactionId);
       const awsCognito = state.awsCognito!;
       await awsCognito.updateAttribute('address', sdk.wallet.toString());
       dispatch(setSDK(sdk));
@@ -50,6 +51,7 @@ const CreateWalletScreen: React.FC = () => {
         message: 'wallet created',
         type: 'success',
       });
+      await StorageSetItem('appstate', AppState.ONBOARDED);
       await StorageSetItem('user', {...state.user, isWalletCreated: true});
       resetLoading();
       dispatch(setAccountStatus(AccountStatus.EXISITING));
@@ -73,9 +75,10 @@ const CreateWalletScreen: React.FC = () => {
       console.log('CREATING', {sdk, username});
       const tx = await sdk.createFromName(username, payer);
       const res = await relayTransaction(tx);
+      console.log('TX', res);
       return {
         sdk,
-        transactionId: res.data,
+        transactionId: res,
       };
     } catch (e: any) {
       setLoading({
@@ -98,7 +101,6 @@ const CreateWalletScreen: React.FC = () => {
         />
         {loading.value && <SolaceLoader text={loading.message} />}
       </View>
-
       <SolaceButton
         onPress={() => {
           handleClick();

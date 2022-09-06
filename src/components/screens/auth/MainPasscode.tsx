@@ -18,8 +18,6 @@ import PasscodeContainer, {
 } from '../../common/PasscodeContainer';
 import SolaceLoader from '../../common/solaceui/SolaceLoader';
 import globalStyles from '../../../utils/global_styles';
-import {getFeePayer} from '../../../utils/apis';
-import Navigation from '../../../navigation/Navigation';
 import {useNavigation} from '@react-navigation/native';
 
 const MainPasscodeScreen = () => {
@@ -37,7 +35,6 @@ const MainPasscodeScreen = () => {
         value: true,
         message: 'logging you in',
       });
-      await getFeePayer();
       const privateKey = state.user?.ownerPrivateKey!;
       const solaceName = state.user?.solaceName!;
       const keypair = KeyPair.fromSecretKey(
@@ -48,6 +45,9 @@ const MainPasscodeScreen = () => {
         owner: keypair,
         programAddress: PROGRAM_ADDRESS,
       });
+      const data = await sdk.fetchWalletData();
+      console.log('WALLET DATA: ', data);
+      console.log('WALLET ADDRESS', sdk.wallet);
       dispatch(setSDK(sdk));
       setLoading({
         value: false,
@@ -61,7 +61,7 @@ const MainPasscodeScreen = () => {
       });
       setCode('');
       if (e.message === 'Request failed with status code 401') {
-        navigation.navigate('Login');
+        navigation.navigate('AuthLoading');
         return;
       }
       showMessage({
@@ -118,9 +118,9 @@ const MainPasscodeScreen = () => {
         <PasscodeContainer code={code} setCode={setCode} />
         {loading.value && (
           <SolaceLoader
-            style={{justifyContent: 'flex-start'}}
+            style={{justifyContent: 'flex-start', marginTop: 24}}
             text={loading.message}>
-            <ActivityIndicator style={{paddingLeft: 8}} size="small" />
+            <ActivityIndicator style={{marginTop: 8}} size="small" />
           </SolaceLoader>
         )}
       </View>

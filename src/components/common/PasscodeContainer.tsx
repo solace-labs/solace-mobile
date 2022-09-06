@@ -10,36 +10,37 @@ import {
 } from 'react-native';
 import PasscodeDot from './PasscodeDot';
 import SolaceInput from './solaceui/SolaceInput';
+import SolacePasswordInput from './solaceui/SolacePasswordInput';
 
 type Props = {
   code: string;
   setCode: any;
 };
 
-export const PASSCODE_LENGTH = 6;
+export const PASSCODE_LENGTH = 8;
 const PasscodeContainer: FC<Props> = ({code, setCode}) => {
-  const textInputRef = useRef<TextInput>(null);
+  // const textInputRef = useRef<TextInput>(null);
 
-  const tempArray = new Array(PASSCODE_LENGTH).fill(0);
+  // const tempArray = new Array(PASSCODE_LENGTH).fill(0);
 
-  const focusMainInput = async () => {
-    const textInput = textInputRef.current! as TextInput;
-    textInput.focus();
-  };
-  console.log(code);
+  // const focusMainInput = async () => {
+  //   const textInput = textInputRef.current! as TextInput;
+  //   textInput.focus();
+  // };
+  // console.log(code);
 
-  const handleOnPress = async () => {
-    await focusMainInput();
-  };
+  // const handleOnPress = async () => {
+  //   await focusMainInput();
+  // };
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      focusMainInput();
-    }, 500);
-    return () => {
-      clearTimeout(timer);
-    };
-  }, []);
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     focusMainInput();
+  //   }, 500);
+  //   return () => {
+  //     clearTimeout(timer);
+  //   };
+  // }, []);
 
   const passcodeContainerStyle: StyleProp<ViewStyle> = {
     flexDirection: 'row',
@@ -59,15 +60,20 @@ const PasscodeContainer: FC<Props> = ({code, setCode}) => {
     fontFamily: 'SpaceMono-Bold',
   };
 
+  const passcodeStyle: StyleProp<TextStyle> = {
+    fontFamily: 'SpaceMono-Bold',
+    marginTop: 34,
+  };
+
   return (
     <>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={() => handleOnPress()}
         style={passcodeContainerStyle}>
         {tempArray.map((_, index) => {
           return <PasscodeDot key={index} isFilled={code.length - index > 0} />;
         })}
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       {/* <SolaceInput
         forwardRef={textInputRef}
         hidden={true}
@@ -80,16 +86,16 @@ const PasscodeContainer: FC<Props> = ({code, setCode}) => {
         onChangeText={setCode}
         autoFocus={true}
       /> */}
-      <View>
-        <TextInput
-          ref={textInputRef}
-          style={hiddenInput}
+      <View style={passcodeStyle}>
+        <SolacePasswordInput
           value={code}
           maxLength={PASSCODE_LENGTH}
           onChangeText={x => setCode(x)}
           returnKeyType="done"
-          keyboardType="number-pad"
+          textAlign={'center'}
+          placeholder="--------"
           textContentType="oneTimeCode"
+          style={{marginTop: 10}}
           autoFocus={true}
         />
       </View>

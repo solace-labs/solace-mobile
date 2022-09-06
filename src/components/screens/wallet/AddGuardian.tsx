@@ -4,7 +4,7 @@ import {GlobalContext} from '../../../state/contexts/GlobalContext';
 import {PublicKey, SolaceSDK} from 'solace-sdk';
 import {relayTransaction, requestGuardian} from '../../../utils/relayer';
 import {showMessage} from 'react-native-flash-message';
-import {getFeePayer} from '../../../utils/apis';
+import {confirmTransaction, getFeePayer} from '../../../utils/apis';
 import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import SolaceButton from '../../common/solaceui/SolaceButton';
 import SolaceText from '../../common/solaceui/SolaceText';
@@ -20,13 +20,17 @@ const AddGuardian: React.FC<Props> = ({navigation}) => {
   const [address, setAddress] = useState(
     'GNgMfSSJ4NjSuu1EdHj94P6TzQS24KH38y1si2CMrUsF',
   );
-  const {state, dispatch} = useContext(GlobalContext);
+  const {state} = useContext(GlobalContext);
   const [loading, setLoading] = useState({
     value: false,
     message: 'add guardian',
   });
 
   const addGuardian = async () => {
+    setLoading({
+      message: 'adding guardian...',
+      value: true,
+    });
     const sdk = state.sdk!;
     const walletName = state.user?.solaceName!;
     const solaceWalletAddress = sdk.wallet.toString();
@@ -37,6 +41,10 @@ const AddGuardian: React.FC<Props> = ({navigation}) => {
       const tx = await sdk.addGuardian(guardianPublicKey, feePayer);
       const transactionId = await relayTransaction(tx);
       console.log({transactionId});
+      setLoading({
+        message: 'finalizing...',
+        value: true,
+      });
       await confirmTransaction(transactionId);
       await requestGuardian({
         guardianAddress: guardianPublicKey.toString(),
@@ -47,78 +55,23 @@ const AddGuardian: React.FC<Props> = ({navigation}) => {
         message: '',
         value: false,
       });
+      showMessage({
+        message: 'guardian added successfully',
+        type: 'success',
+      });
       navigation.goBack();
     } catch (e) {
       console.log('MAIN ERROR:', JSON.stringify(e));
+      setLoading({
+        message: '',
+        value: false,
+      });
+      showMessage({
+        message: 'service unavilable. try again later',
+        type: 'warning',
+      });
     }
   };
-
-  const confirmTransaction = async (data: string) => {
-    setLoading({
-      value: true,
-      message: 'confirming transaction...',
-    });
-    console.log({data});
-    let confirm = false;
-    let retry = 0;
-    while (!confirm) {
-      if (retry > 0) {
-        setLoading({
-          value: true,
-          message: 'retrying confirmation...',
-        });
-      }
-      if (retry === 3) {
-        setLoading({
-          value: false,
-          message: 'some error. try again?',
-        });
-        confirm = true;
-        continue;
-      }
-      try {
-        console.log({data});
-        const res = await SolaceSDK.testnetConnection.confirmTransaction(data);
-        showMessage({
-          message: 'transaction confirmed - guardian added',
-          type: 'success',
-        });
-        confirm = true;
-      } catch (e: any) {
-        if (
-          e.message.startsWith(
-            'Transaction was not confirmed in 60.00 seconds.',
-          )
-        ) {
-          console.log('Timeout');
-          retry++;
-        } else {
-          // confirm = true;
-          console.log('OTHER ERROR: ', e.message);
-          retry++;
-          // throw e;
-        }
-      }
-    }
-  };
-
-  // const getFeePayer = async (accessToken: string) => {
-  //   try {
-  //     const response = await getMeta(accessToken);
-  //     return response.feePayer;
-  //   } catch (e: any) {
-  //     console.log('FEE PAYER', e.status);
-  //     if (e.message === 'Request failed with status code 401') {
-  //       showMessage({
-  //         message: 'You need to login again',
-  //         type: 'info',
-  //       });
-  //       await StorageDeleteItem('tokens');
-  //       dispatch(setAccountStatus(AccountStatus.EXISITING));
-  //     }
-  //     throw e;
-  //   }
-  // };
 
   const handleGoBack = () => {
     navigation.goBack();

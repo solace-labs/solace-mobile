@@ -45,26 +45,27 @@ export type Account = {
 const RecieveItem: React.FC<Props> = ({navigation}) => {
   const {state, dispatch} = useContext(GlobalContext);
 
-  const [address, setAddress] = useState('no-address');
+  const [address, setAddress] = useState(state.sdk?.wallet!?.toString());
   const [loading, setLoading] = useState(false);
 
-  const getTokenAccount = async () => {
-    setLoading(true);
-    try {
-      const splTokenAddress = new PublicKey(SPL_TOKEN);
-      const tokenAccount = await state.sdk?.getTokenAccount(splTokenAddress);
-      console.log(tokenAccount);
-      setAddress(tokenAccount!.toString());
-      setLoading(false);
-    } catch (e) {
-      setLoading(false);
-      console.log(e);
-      showMessage({
-        message: 'some error try again.',
-        type: 'danger',
-      });
-    }
-  };
+  // const getTokenAccount = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const splTokenAddress = new PublicKey(SPL_TOKEN);
+  //     const tokenAccount = await state.sdk?.getTokenAccount(splTokenAddress);
+  //     console.log('Wallet: ', state.sdk!.wallet);
+  //     console.log('Token Account: ', tokenAccount);
+  //     setAddress(tokenAccount!.toString());
+  //     setLoading(false);
+  //   } catch (e) {
+  //     setLoading(false);
+  //     console.log(e);
+  //     showMessage({
+  //       message: 'some error try again.',
+  //       type: 'danger',
+  //     });
+  //   }
+  // };
 
   const handleGoBack = () => {
     navigation.goBack();
@@ -77,9 +78,9 @@ const RecieveItem: React.FC<Props> = ({navigation}) => {
     });
   };
 
-  useEffect(() => {
-    getTokenAccount();
-  }, []);
+  // useEffect(() => {
+  //   getTokenAccount();
+  // }, []);
 
   const headerTitle = address
     ? `${address.slice(0, 5)}...${address.slice(-5)}`
