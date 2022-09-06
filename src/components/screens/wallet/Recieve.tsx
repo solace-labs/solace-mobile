@@ -15,14 +15,8 @@ import SolaceText from '../../common/solaceui/SolaceText';
 import globalStyles from '../../../utils/global_styles';
 import Clipboard from '@react-native-community/clipboard';
 import {showMessage} from 'react-native-flash-message';
-import {PublicKey, SolaceSDK} from 'solace-sdk';
-import {confirmTransaction, getFeePayer} from '../../../utils/apis';
-import {relayTransaction} from '../../../utils/relayer';
-import {
-  LAMPORTS_PER_SOL,
-  SPL_TOKEN,
-  TOKEN_PROGRAM_ID,
-} from '../../../utils/constants';
+import {SolaceSDK} from 'solace-sdk';
+import {LAMPORTS_PER_SOL, TOKEN_PROGRAM_ID} from '../../../utils/constants';
 import AccountItem from '../../wallet/AccountItem';
 import SolaceLoader from '../../common/solaceui/SolaceLoader';
 import SolaceIcon from '../../common/solaceui/SolaceIcon';
@@ -39,7 +33,10 @@ export type Account = {
 const RecieveScreen: React.FC<Props> = ({navigation}) => {
   const {state} = useContext(GlobalContext);
   const [accounts, setAccounts] = useState<Account[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState({
+    message: '',
+    value: false,
+  });
   const handleGoBack = () => {
     navigation.goBack();
   };
@@ -58,7 +55,10 @@ const RecieveScreen: React.FC<Props> = ({navigation}) => {
   const getAccounts = async () => {
     console.log('getting');
     try {
-      setLoading(true);
+      setLoading({
+        message: 'fetching tokens...',
+        value: true,
+      });
       const sdk = state.sdk!;
       const allAccounts = await sdk.provider.connection.getTokenAccountsByOwner(
         sdk.wallet,
@@ -88,30 +88,16 @@ const RecieveScreen: React.FC<Props> = ({navigation}) => {
       }
       console.log({accs});
       setAccounts(accs);
-      setLoading(false);
-
-      if (accs.length === 0) {
-        const splTokenAddress = new PublicKey(SPL_TOKEN);
-        const tokenAccount = await sdk?.getTokenAccount(splTokenAddress);
-        const accountInfo = await sdk?.getTokenAccountInfo(splTokenAddress);
-        console.log('SPL TOKEN:', splTokenAddress);
-        console.log('TOKEN ACCOUNT:', tokenAccount);
-        console.log('ACCOUNT INFO:', accountInfo);
-        const feePayer = await getFeePayer();
-        const tx = await sdk?.createTokenAccount(
-          {
-            tokenAccount: tokenAccount!,
-            tokenMint: splTokenAddress,
-          },
-          feePayer,
-        );
-        const transactionId = await relayTransaction(tx);
-        confirmTransaction(transactionId);
-        setLoading(false);
-      }
+      setLoading({
+        message: '',
+        value: false,
+      });
     } catch (e) {
       console.log(e);
-      setLoading(false);
+      setLoading({
+        message: '',
+        value: false,
+      });
       showMessage({message: 'service unavailable', type: 'warning'});
     }
   };
@@ -127,7 +113,7 @@ const RecieveScreen: React.FC<Props> = ({navigation}) => {
   //   getAccounts();
   // }, []);
 
-  if (loading) {
+  if (loading.value) {
     return (
       <SolaceContainer>
         <TopNavbar
@@ -137,7 +123,7 @@ const RecieveScreen: React.FC<Props> = ({navigation}) => {
           startClick={handleGoBack}
           endClick={handleAdd}
         />
-        <SolaceLoader text="getting tokens">
+        <SolaceLoader text={loading.message}>
           <ActivityIndicator size="small" style={{marginTop: 8}} />
         </SolaceLoader>
       </SolaceContainer>
@@ -165,7 +151,7 @@ const RecieveScreen: React.FC<Props> = ({navigation}) => {
             <ScrollView
               refreshControl={
                 <RefreshControl
-                  refreshing={loading}
+                  refreshing={loading.value}
                   onRefresh={handleRefresh}
                 />
               }
