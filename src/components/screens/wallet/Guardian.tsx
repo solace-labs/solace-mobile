@@ -29,7 +29,6 @@ const Guardian: React.FC<Props> = ({navigation}) => {
   const [guarding, setGuarding] = useState<PublicKeyType[]>([]);
 
   const getGuardians = async () => {
-    console.log('here');
     setLoading(true);
     try {
       const sdk = state.sdk!;
@@ -39,15 +38,11 @@ const Guardian: React.FC<Props> = ({navigation}) => {
           type: 'danger',
         });
       }
-      console.log('SDK', sdk);
-      // const data = await sdk.fetchWalletData();
-      // console.log({data});
       const {
         pendingGuardians,
         approvedGuardians,
         guarding: whoIProtect,
       } = await sdk.fetchWalletData();
-      console.log({pendingGuardians, approvedGuardians, guarding});
       setGuardians({
         approved: approvedGuardians,
         pending: pendingGuardians,
@@ -59,7 +54,6 @@ const Guardian: React.FC<Props> = ({navigation}) => {
         message: 'some error fetching guardians',
         type: 'danger',
       });
-      console.log('Error during fetching guardian: ', e);
       setLoading(false);
     }
   };

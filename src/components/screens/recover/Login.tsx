@@ -27,7 +27,6 @@ const Login: React.FC<Props> = ({navigation}) => {
 
   const checkInRecoveryMode = async () => {
     const appState: AppState = await StorageGetItem('appstate');
-    console.log({appState});
     if (appState === AppState.RECOVERY) {
       navigation.navigate('Recover');
     }
@@ -43,7 +42,6 @@ const Login: React.FC<Props> = ({navigation}) => {
       const awsCognito = new AwsCognito();
       awsCognito.setCognitoUser(username);
       dispatch(setAwsCognito(awsCognito));
-      console.log(username, password);
       const response = await awsCognito?.emailLogin(username, password);
       const {
         accessToken: {jwtToken: accesstoken},

@@ -21,7 +21,6 @@ const AccountItem: React.FC<Props> = ({
   const currentBalance = amount.toFixed(2);
 
   const redirectToAsset = () => {
-    console.log(type);
     if (type === 'send') {
       navigation.navigate('Asset', {id: tokenAddress});
     } else if (type === 'recieve') {

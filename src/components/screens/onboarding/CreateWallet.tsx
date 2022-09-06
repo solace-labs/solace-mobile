@@ -35,12 +35,9 @@ const CreateWalletScreen: React.FC = () => {
     try {
       dispatch(setUser(await StorageGetItem('user')));
       setLoading({message: 'creating wallet...', value: true});
-      console.log(state.user);
       const keypair = getKeypairFromPrivateKey(state.user!);
       const feePayer = await getFeePayer();
-      console.log({feePayer, keypair});
       const {sdk, transactionId} = await createWallet(keypair, feePayer);
-      console.log('CREATED. Confirming now...');
       setLoading({message: 'finalizing wallet...please wait', value: true});
       await confirmTransaction(transactionId);
       const awsCognito = state.awsCognito!;
@@ -72,7 +69,6 @@ const CreateWalletScreen: React.FC = () => {
         programAddress: PROGRAM_ADDRESS,
       });
       const username = state.user?.solaceName!;
-      console.log('CREATING', {sdk, username});
       const tx = await sdk.createFromName(username, payer);
       const res = await relayTransaction(tx);
       console.log('TX', res);

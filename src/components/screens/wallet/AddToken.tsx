@@ -36,9 +36,6 @@ const AddToken: React.FC<Props> = ({navigation}) => {
       const sdk = state.sdk!;
       const tokenAccount = await sdk?.getTokenAccount(splTokenAddress);
       const accountInfo = await sdk?.getTokenAccountInfo(splTokenAddress);
-      console.log('SPL TOKEN:', splTokenAddress);
-      console.log('TOKEN ACCOUNT:', tokenAccount);
-      console.log('ACCOUNT INFO:', accountInfo);
       const feePayer = await getFeePayer();
       const tx = await sdk?.createTokenAccount(
         {

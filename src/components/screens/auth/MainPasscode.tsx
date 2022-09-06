@@ -46,7 +46,6 @@ const MainPasscodeScreen = () => {
         programAddress: PROGRAM_ADDRESS,
       });
       const data = await sdk.fetchWalletData();
-      console.log('WALLET DATA: ', data);
       console.log('WALLET ADDRESS', sdk.wallet);
       dispatch(setSDK(sdk));
       setLoading({

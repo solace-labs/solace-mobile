@@ -150,7 +150,6 @@ const GlobalProvider = ({children}: {children: any}) => {
       programAddress: PROGRAM_ADDRESS,
     });
     const res = await sdk.fetchWalletData();
-    console.log(res);
     if (res && res.recoveryMode) {
       dispatch(setAccountStatus(AccountStatus.RECOVERY));
     }
@@ -161,19 +160,16 @@ const GlobalProvider = ({children}: {children: any}) => {
     await StorageSetItem('appstate', AppState.RECOVERY);
     const storedUser: User = await StorageGetItem('user');
     const appState: AppState = await StorageGetItem('appstate');
-    console.log({storedUser, appState});
 
     /** RECOVERY CHECK */
     const inRecoveryMode = await checkInRecoverMode();
     if (inRecoveryMode) {
-      console.log('RECOVERY USER!!!');
       dispatch(setAccountStatus(AccountStatus.RECOVERY));
       return;
     }
     /** LOGGED IN CHECK */
     const userValid = await isUserValid();
     if (userValid && appState === AppState.ONBOARDED) {
-      console.log('VALID USER!!!');
       dispatch(setUser(storedUser));
       dispatch(setAccountStatus(AccountStatus.EXISITING));
       return;
@@ -181,13 +177,11 @@ const GlobalProvider = ({children}: {children: any}) => {
     /**  GDRIVE ALREADY BACKED UP */
     const gdriveUserValid = await isGdriveUserValid();
     if (gdriveUserValid && appState === AppState.GDRIVE) {
-      console.log('GDRIVE USER!!!');
       dispatch(setUser(storedUser));
       dispatch(setAccountStatus(AccountStatus.SIGNED_UP));
       return;
     }
     /** NEW USER */
-    console.log('NEW USER!!!');
     await StorageClearAll();
     dispatch(clearData());
     dispatch(setAccountStatus(AccountStatus.NEW));

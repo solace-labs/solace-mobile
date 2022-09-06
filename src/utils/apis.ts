@@ -21,9 +21,6 @@ export const confirmTransaction = async (transactionId: string) => {
           const response = await SolaceSDK.localConnection.getSignatureStatus(
             transactionId,
           );
-          console.log({
-            confirmation_status: response.value?.confirmationStatus,
-          });
           if (response?.value?.confirmationStatus === 'confirmed') {
             resolve('success');
           }
@@ -37,7 +34,6 @@ export const confirmTransaction = async (transactionId: string) => {
           console.log('confirm', response);
           if (response.value) {
             const {confirmationStatus, err} = response.value;
-            console.log(confirmationStatus);
             if (confirmationStatus === 'finalized') {
               resolve('success');
             }

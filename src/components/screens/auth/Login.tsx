@@ -31,9 +31,7 @@ const Login: React.FC<Props> = ({navigation}) => {
       const awsCognito = new AwsCognito();
       awsCognito.setCognitoUser(username);
       dispatch(setAwsCognito(awsCognito));
-      console.log(username, password);
       const response = await awsCognito?.emailLogin(username, password);
-      console.log({response});
       const {
         accessToken: {jwtToken: accesstoken},
         idToken: {jwtToken: idtoken},

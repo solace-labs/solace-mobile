@@ -64,30 +64,24 @@ const SendScreen: React.FC<Props> = ({navigation}) => {
       const sdk = state.sdk;
       const splTokenAddress = new PublicKey(SPL_TOKEN);
       const tokenAccount = await sdk?.getTokenAccount(splTokenAddress);
-      console.log('Getting account', tokenAccount!.toString());
       const accountInfo = await sdk?.getTokenAccountInfo(splTokenAddress);
-      console.log({accountInfo});
-
-      if (!accountInfo) {
-        const feePayer = await getFeePayer();
-        const tx = await sdk?.createTokenAccount(
-          {
-            tokenAccount: tokenAccount!,
-            tokenMint: splTokenAddress,
-          },
-          feePayer,
-        );
-        console.log({tx});
-        const response = await relayTransaction(tx);
-        console.log(response);
-        setLoading(false);
-        return;
-      }
+      // if (!accountInfo) {
+      //   const feePayer = await getFeePayer();
+      //   const tx = await sdk?.createTokenAccount(
+      //     {
+      //       tokenAccount: tokenAccount!,
+      //       tokenMint: splTokenAddress,
+      //     },
+      //     feePayer,
+      //   );
+      //   await relayTransaction(tx);
+      //   setLoading(false);
+      //   return;
+      // }
       const balance = +accountInfo!.amount.toString() / LAMPORTS_PER_SOL;
       setAccounts([
         {amount: balance, tokenAddress: splTokenAddress.toString()},
       ]);
-      console.log(balance);
       setLoading(false);
     } catch (e) {
       console.log(e);
@@ -101,7 +95,6 @@ const SendScreen: React.FC<Props> = ({navigation}) => {
     try {
       setLoading(true);
       const sdk = state.sdk!;
-      console.log(sdk.wallet);
       const allAccounts = await sdk.provider.connection.getTokenAccountsByOwner(
         sdk.wallet,
         {
@@ -113,9 +106,7 @@ const SendScreen: React.FC<Props> = ({navigation}) => {
         const accountInfoBuffer = Buffer.from(
           allAccounts.value[i].account.data,
         );
-        console.log('HERE');
         const accountInfo = await SolaceSDK.getAccountInfo(accountInfoBuffer);
-        console.log('NOT HERE');
         const balance = +accountInfo.amount.toString() / LAMPORTS_PER_SOL;
         const tokenAddress = accountInfo.mint.toString();
         accs.push({
@@ -123,7 +114,6 @@ const SendScreen: React.FC<Props> = ({navigation}) => {
           tokenAddress,
         });
       }
-      console.log({accs});
       setAccounts(accs);
       setLoading(false);
     } catch (e) {

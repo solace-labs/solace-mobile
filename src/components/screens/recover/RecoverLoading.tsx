@@ -12,7 +12,6 @@ const RecoverLoading: React.FC<Props> = ({navigation}) => {
   const getTokens = async () => {
     try {
       const appState: AppState = await StorageGetItem('appstate');
-      console.log({appState});
       if (appState === AppState.RECOVERY) {
         navigation.reset({
           index: 0,

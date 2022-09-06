@@ -55,10 +55,6 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
         const encryptedSolaceName = await googleApi.getFileData(
           SOLACE_NAME_FILENAME,
         );
-        console.log({
-          encryptedSecretKey,
-          encryptedSolaceName,
-        });
         dispatch(
           setRetrieveData({
             ...state.retrieveData,

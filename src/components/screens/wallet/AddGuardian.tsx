@@ -34,13 +34,11 @@ const AddGuardian: React.FC<Props> = ({navigation}) => {
     const sdk = state.sdk!;
     const walletName = state.user?.solaceName!;
     const solaceWalletAddress = sdk.wallet.toString();
-    console.log({solaceWalletAddress, walletName});
     try {
       const feePayer = await getFeePayer();
       const guardianPublicKey = new PublicKey(address);
       const tx = await sdk.addGuardian(guardianPublicKey, feePayer);
       const transactionId = await relayTransaction(tx);
-      console.log({transactionId});
       setLoading({
         message: 'finalizing...',
         value: true,

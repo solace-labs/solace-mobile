@@ -53,7 +53,6 @@ const RecieveScreen: React.FC<Props> = ({navigation}) => {
   };
 
   const getAccounts = async () => {
-    console.log('getting');
     try {
       setLoading({
         message: 'fetching tokens...',
@@ -66,27 +65,19 @@ const RecieveScreen: React.FC<Props> = ({navigation}) => {
           programId: TOKEN_PROGRAM_ID,
         },
       );
-      console.log({account: allAccounts.value});
       const accs: Account[] = [];
       for (let i = 0; i < allAccounts.value.length; i++) {
         const accountInfoBuffer = Buffer.from(
           allAccounts.value[i].account.data,
         );
-        console.log({accountInfoBuffer});
         const accountInfo = await SolaceSDK.getAccountInfo(accountInfoBuffer);
-        console.log({accountInfo});
         const balance = +accountInfo.amount.toString() / LAMPORTS_PER_SOL;
         const tokenAddress = accountInfo.mint.toString();
-        console.log({
-          amount: balance,
-          tokenAddress,
-        });
         accs.push({
           amount: balance,
           tokenAddress,
         });
       }
-      console.log({accs});
       setAccounts(accs);
       setLoading({
         message: '',

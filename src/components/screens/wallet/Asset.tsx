@@ -78,27 +78,15 @@ const AssetScreen = () => {
     try {
       const sdk = state.sdk!;
       const feePayer = await getFeePayer();
-      console.log({feePayer});
       if (!sdk) {
         return;
       }
       const splTokenAddress = new PublicKey(asset);
       const reciever = new PublicKey(recipientAddress);
-      console.log(reciever, recipientAddress, splTokenAddress);
       const recieverTokenAccount = await sdk.getPDAAssociatedTokenAccount(
         splTokenAddress,
         reciever,
       );
-      // const recieverTokenAccount = await sdk.getAnyAssociatedTokenAccount(
-      //   splTokenAddress,
-      //   reciever,
-      // );
-      console.log({
-        splTokenAddress,
-        recieverTokenAccount,
-        reciever,
-        amount,
-      });
       const tx = await sdk.requestSplTransfer(
         {
           amount: +amount * LAMPORTS_PER_SOL,
@@ -108,23 +96,13 @@ const AssetScreen = () => {
         },
         feePayer,
       );
-      console.log({
-        tx,
-        splTokenAddress,
-        recieverTokenAccount,
-        reciever,
-        amount,
-      });
       const response = await relayTransaction(tx);
-      console.log(response);
       setSendLoading({
         message: 'finalizing... please wait',
         value: true,
       });
       await confirmTransaction(response);
       const data = await sdk.fetchWalletData();
-      console.log({data});
-      console.log(data.ongoingTransfer.approvals);
       setSendLoading({message: '', value: false});
       await getMaxBalance();
       navigation.goBack();

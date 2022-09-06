@@ -68,7 +68,7 @@ const GuardianRecovery: React.FC<Props> = ({navigation}) => {
       });
       navigation.navigate('Recover');
     } catch (e: any) {
-      console.log('e', JSON.stringify(e));
+      console.log('e', e);
       if (e.message === 'Request failed') {
         showMessage({
           message: 'already in recovery phase',

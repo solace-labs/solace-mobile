@@ -39,7 +39,6 @@ const PasscodeScreen: React.FC<Props> = ({navigation}) => {
   const decryptStoredData = async () => {
     try {
       const {encryptedSecretKey, encryptedSolaceName} = state.retrieveData!;
-      console.log(encryptedSecretKey);
       setLoading({
         message: 'logging you in...',
         value: true,
@@ -53,7 +52,6 @@ const PasscodeScreen: React.FC<Props> = ({navigation}) => {
         isWalletCreated: true,
       };
       await StorageSetItem('appstate', AppState.ONBOARDED);
-      console.log({user});
       dispatch(setUser(user));
       await StorageSetItem('user', user);
       showMessage({

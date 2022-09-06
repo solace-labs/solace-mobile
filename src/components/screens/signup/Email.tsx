@@ -96,7 +96,6 @@ const EmailScreen: React.FC<Props> = ({navigation}) => {
         email.value,
         password.value,
       );
-      console.log({response});
       dispatch(
         setUser({
           solaceName: username.value,
@@ -129,7 +128,6 @@ const EmailScreen: React.FC<Props> = ({navigation}) => {
     try {
       setIsLoading(true);
       const response = await awsCognito?.confirmRegistration(otp.value);
-      console.log({response});
       setOtp({...otp, isVerified: true});
       await StorageSetItem('user', {
         solaceName: username.value,
