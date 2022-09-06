@@ -67,14 +67,21 @@ const RecieveScreen: React.FC<Props> = ({navigation}) => {
           programId: TOKEN_PROGRAM_ID,
         },
       );
+      console.log({account: allAccounts.value});
       const accs: Account[] = [];
       for (let i = 0; i < allAccounts.value.length; i++) {
         const accountInfoBuffer = Buffer.from(
           allAccounts.value[i].account.data,
         );
+        console.log({accountInfoBuffer});
         const accountInfo = await SolaceSDK.getAccountInfo(accountInfoBuffer);
+        console.log({accountInfo});
         const balance = +accountInfo.amount.toString() / LAMPORTS_PER_SOL;
         const tokenAddress = accountInfo.mint.toString();
+        console.log({
+          amount: balance,
+          tokenAddress,
+        });
         accs.push({
           amount: balance,
           tokenAddress,
@@ -102,7 +109,7 @@ const RecieveScreen: React.FC<Props> = ({navigation}) => {
     } catch (e) {
       console.log(e);
       setLoading(false);
-      showMessage({message: 'some error try again', type: 'warning'});
+      showMessage({message: 'service unavailable', type: 'warning'});
     }
   };
 
@@ -121,7 +128,7 @@ const RecieveScreen: React.FC<Props> = ({navigation}) => {
           // endClick={handleAdd}
         />
         <SolaceLoader text="getting tokens">
-          <ActivityIndicator size="small" style={{marginLeft: 8}} />
+          <ActivityIndicator size="small" style={{marginTop: 8}} />
         </SolaceLoader>
       </SolaceContainer>
     );

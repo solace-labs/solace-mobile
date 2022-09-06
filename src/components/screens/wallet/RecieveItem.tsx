@@ -53,6 +53,7 @@ const RecieveItem: React.FC<Props> = ({navigation}) => {
     try {
       const splTokenAddress = new PublicKey(SPL_TOKEN);
       const tokenAccount = await state.sdk?.getTokenAccount(splTokenAddress);
+      console.log(tokenAccount);
       setAddress(tokenAccount!.toString());
       setLoading(false);
     } catch (e) {

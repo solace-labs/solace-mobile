@@ -113,7 +113,9 @@ const SendScreen: React.FC<Props> = ({navigation}) => {
         const accountInfoBuffer = Buffer.from(
           allAccounts.value[i].account.data,
         );
+        console.log('HERE');
         const accountInfo = await SolaceSDK.getAccountInfo(accountInfoBuffer);
+        console.log('NOT HERE');
         const balance = +accountInfo.amount.toString() / LAMPORTS_PER_SOL;
         const tokenAddress = accountInfo.mint.toString();
         accs.push({
@@ -127,6 +129,10 @@ const SendScreen: React.FC<Props> = ({navigation}) => {
     } catch (e) {
       setLoading(false);
       console.log('ERR', e);
+      showMessage({
+        message: 'service unavilable',
+        type: 'danger',
+      });
     }
   };
 

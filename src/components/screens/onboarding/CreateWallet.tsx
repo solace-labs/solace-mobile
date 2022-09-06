@@ -35,6 +35,7 @@ const CreateWalletScreen: React.FC = () => {
     try {
       dispatch(setUser(await StorageGetItem('user')));
       setLoading({message: 'creating wallet...', value: true});
+      console.log(state.user);
       const keypair = getKeypairFromPrivateKey(state.user!);
       const feePayer = await getFeePayer();
       console.log({feePayer, keypair});

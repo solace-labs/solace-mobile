@@ -20,6 +20,7 @@ import SolaceText from '../../common/solaceui/SolaceText';
 import Header from '../../common/Header';
 import {EMAIL_REGEX, OTP_REGEX, PASSWORD_REGEX} from '../../../utils/constants';
 import SolaceLoader from '../../common/solaceui/SolaceLoader';
+import {StorageSetItem} from '../../../utils/storage';
 
 export type Props = {
   navigation: any;
@@ -129,6 +130,7 @@ const EmailScreen: React.FC<Props> = ({navigation}) => {
       const response = await awsCognito?.confirmRegistration(otp.value);
       console.log({response});
       setOtp({...otp, isVerified: true});
+      await StorageSetItem('user', {...state.user});
       setIsLoading(false);
       dispatch(setAccountStatus(AccountStatus.SIGNED_UP));
     } catch (e: any) {

@@ -36,11 +36,23 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
       const secretKeyString = secretKey.toString();
       /** Google Drive Storage of Private Key and Solace Name */
       console.log('STORING');
-      await storeToGoogleDrive(secretKeyString);
-      // navigation.reset({
-      //   index: 0,
-      //   routes: [{name: 'CreateWallet'}],
-      // });
+      // await storeToGoogleDrive(secretKeyString);
+      dispatch(
+        setUser({
+          ...state.user,
+          isWalletCreated: false,
+          ownerPrivateKey: secretKeyString,
+        }),
+      );
+      await StorageSetItem('user', {
+        ...state.user,
+        isWalletCreated: false,
+        ownerPrivateKey: secretKeyString,
+      });
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'CreateWallet'}],
+      });
     } catch (e) {
       console.log(e);
     }

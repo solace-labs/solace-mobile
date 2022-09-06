@@ -20,6 +20,7 @@ import {relayTransaction} from '../../../utils/relayer';
 import {LAMPORTS_PER_SOL} from '../../../utils/constants';
 import {showMessage} from 'react-native-flash-message';
 import {setAccountStatus} from '../../../state/actions/global';
+import SolaceLoader from '../../common/solaceui/SolaceLoader';
 
 const AssetScreen = () => {
   const navigation = useNavigation();
@@ -67,13 +68,13 @@ const AssetScreen = () => {
 
   const send = async () => {
     setSendLoading({
-      message: 'sending',
+      message: 'sending...',
       value: true,
     });
-    showMessage({
-      message: 'sending',
-      type: 'info',
-    });
+    // showMessage({
+    //   message: 'sending',
+    //   type: 'info',
+    // });
     try {
       const sdk = state.sdk!;
       const feePayer = await getFeePayer();
@@ -106,7 +107,7 @@ const AssetScreen = () => {
       const response = await relayTransaction(tx);
       console.log(response);
       setSendLoading({
-        message: 'finalizing..',
+        message: 'finalizing... please wait',
         value: true,
       });
       await confirmTransaction(response);
@@ -195,8 +196,8 @@ const AssetScreen = () => {
             <SolaceText type="secondary">use max</SolaceText>
           </TouchableOpacity>
         </View>
+        {sendLoading.value && <SolaceLoader text={sendLoading.message} />}
       </View>
-
       <SolaceButton
         onPress={send}
         loading={sendLoading.value}

@@ -34,6 +34,8 @@ export const GOOGLE_WEB_CLIENT_ID =
   '757682918669-642g9pqab06h33pl8i2tqjegi60a91ms.apps.googleusercontent.com';
 export const GOOGLE_IOS_CLIENT_ID =
   '757682918669-r08gca3sbdn42o0onj5etmh86pp21qj6.apps.googleusercontent.com';
+export const GOOGLE_ANDROID_CLIENT_ID =
+  '757682918669-jh26htoc81mopio9sn39pg5nghvagpt0.apps.googleusercontent.com';
 
 /** Filename for google drive storage of encrypted data */
 export const PRIVATE_KEY_FILENAME = 'solace_pk.solace';

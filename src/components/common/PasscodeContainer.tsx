@@ -1,5 +1,13 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {FC, useEffect, useRef} from 'react';
-import {StyleProp, TextInput, TouchableOpacity, ViewStyle} from 'react-native';
+import {
+  StyleProp,
+  TextInput,
+  TextStyle,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native';
 import PasscodeDot from './PasscodeDot';
 import SolaceInput from './solaceui/SolaceInput';
 
@@ -14,16 +22,23 @@ const PasscodeContainer: FC<Props> = ({code, setCode}) => {
 
   const tempArray = new Array(PASSCODE_LENGTH).fill(0);
 
-  const handleOnPress = () => {
+  const focusMainInput = async () => {
     const textInput = textInputRef.current! as TextInput;
     textInput.focus();
   };
+  console.log(code);
+
+  const handleOnPress = async () => {
+    await focusMainInput();
+  };
 
   useEffect(() => {
-    setTimeout(() => {
-      const textInput = textInputRef.current! as TextInput;
-      textInput.focus();
+    const timer = setTimeout(() => {
+      focusMainInput();
     }, 500);
+    return () => {
+      clearTimeout(timer);
+    };
   }, []);
 
   const passcodeContainerStyle: StyleProp<ViewStyle> = {
@@ -31,6 +46,17 @@ const PasscodeContainer: FC<Props> = ({code, setCode}) => {
     marginTop: 50,
     justifyContent: 'center',
     paddingVertical: 20,
+  };
+
+  const hiddenInput: StyleProp<TextStyle> = {
+    borderColor: '#fff3',
+    marginTop: 20,
+    borderRadius: 3,
+    color: 'white',
+    padding: 14,
+    display: 'none',
+    // borderWidth: 1,
+    fontFamily: 'SpaceMono-Bold',
   };
 
   return (
@@ -42,17 +68,31 @@ const PasscodeContainer: FC<Props> = ({code, setCode}) => {
           return <PasscodeDot key={index} isFilled={code.length - index > 0} />;
         })}
       </TouchableOpacity>
-      <SolaceInput
-        autoFocus={true}
+      {/* <SolaceInput
         forwardRef={textInputRef}
         hidden={true}
         mt={16}
         maxLength={PASSCODE_LENGTH}
         returnKeyType="done"
         keyboardType="number-pad"
+        textContentType="oneTimeCode"
         value={code}
-        onChangeText={text => setCode(text)}
-      />
+        onChangeText={setCode}
+        autoFocus={true}
+      /> */}
+      <View>
+        <TextInput
+          ref={textInputRef}
+          style={hiddenInput}
+          value={code}
+          maxLength={PASSCODE_LENGTH}
+          onChangeText={x => setCode(x)}
+          returnKeyType="done"
+          keyboardType="number-pad"
+          textContentType="oneTimeCode"
+          autoFocus={true}
+        />
+      </View>
     </>
   );
 };
