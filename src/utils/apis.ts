@@ -78,7 +78,10 @@ export const getFeePayer = async (): Promise<PublicKeyType> => {
     return new PublicKey(feePayer);
   } catch (e: any) {
     console.log('FEE PAYER', e);
-    if (e.message === 'Request failed with status code 401') {
+    if (
+      e === 'TOKEN_NOT_AVAILABLE' ||
+      e.message === 'Request failed with status code 401'
+    ) {
       console.log('***************REFRESING SESSION****************');
       showMessage({
         message: 'login again',

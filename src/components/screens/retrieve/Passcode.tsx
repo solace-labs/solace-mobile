@@ -7,7 +7,11 @@ import {
   GlobalContext,
 } from '../../../state/contexts/GlobalContext';
 import {setAccountStatus, setUser} from '../../../state/actions/global';
-import {decryptData, generateKey} from '../../../utils/aes_encryption';
+import {
+  decryptData,
+  decryptKey,
+  generateKey,
+} from '../../../utils/aes_encryption';
 import {showMessage} from 'react-native-flash-message';
 import {StorageSetItem} from '../../../utils/storage';
 import PasscodeContainer, {
@@ -30,12 +34,6 @@ const PasscodeScreen: React.FC<Props> = ({navigation}) => {
     message: '',
   });
 
-  const decryptSecretKey = async (encryptedData: any, pin: string) => {
-    const key = await generateKey(pin, 'salt', 5000, 256);
-    const decryptedData = await decryptData(encryptedData, key);
-    return decryptedData;
-  };
-
   const decryptStoredData = async () => {
     try {
       const {encryptedSecretKey, encryptedSolaceName} = state.retrieveData!;
@@ -43,8 +41,8 @@ const PasscodeScreen: React.FC<Props> = ({navigation}) => {
         message: 'logging you in...',
         value: true,
       });
-      const secretKey = await decryptSecretKey(encryptedSecretKey, code);
-      const solaceName = await decryptSecretKey(encryptedSolaceName, code);
+      const secretKey = await decryptKey(encryptedSecretKey, code);
+      const solaceName = await decryptKey(encryptedSolaceName, code);
       const user = {
         solaceName,
         ownerPrivateKey: secretKey,
@@ -67,7 +65,7 @@ const PasscodeScreen: React.FC<Props> = ({navigation}) => {
       console.log(e.message);
       setCode('');
       showMessage({
-        message: 'Incorrect passcode. Please try again.',
+        message: 'incorrect passcode. please try again.',
         type: 'danger',
       });
       setLoading({

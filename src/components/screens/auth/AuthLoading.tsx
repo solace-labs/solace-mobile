@@ -12,6 +12,7 @@ export type Props = {
 const AuthLoading: React.FC<Props> = ({navigation}) => {
   const getTokens = async () => {
     try {
+      console.log('COMING HERE');
       await getFeePayer();
       const tokens = await StorageGetItem('tokens');
       if (tokens) {
@@ -27,7 +28,10 @@ const AuthLoading: React.FC<Props> = ({navigation}) => {
       }
     } catch (e: any) {
       await StorageDeleteItem('tokens');
-      if (e.message === 'Request failed with status code 401') {
+      if (
+        e === 'TOKEN_NOT_AVAILABLE' ||
+        e.message === 'Request failed with status code 401'
+      ) {
         navigation.reset({
           index: 0,
           routes: [{name: 'Login'}],
