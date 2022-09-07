@@ -1,11 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {View} from 'react-native';
 import React, {useContext, useState} from 'react';
-import {GlobalContext} from '../../../state/contexts/GlobalContext';
+import {AppState, GlobalContext} from '../../../state/contexts/GlobalContext';
 import {setAwsCognito, setUser} from '../../../state/actions/global';
 import {AwsCognito} from '../../../utils/aws_cognito';
 import {showMessage} from 'react-native-flash-message';
-import {StorageSetItem} from '../../../utils/storage';
+import {StorageGetItem, StorageSetItem} from '../../../utils/storage';
 import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import Header from '../../common/Header';
 import SolaceInput from '../../common/solaceui/SolaceInput';
@@ -13,6 +13,7 @@ import SolacePasswordInput from '../../common/solaceui/SolacePasswordInput';
 import SolaceText from '../../common/solaceui/SolaceText';
 import SolaceButton from '../../common/solaceui/SolaceButton';
 import SolaceLoader from '../../common/solaceui/SolaceLoader';
+import {TEST_PASSWORD} from '../../../utils/constants';
 
 export type Props = {
   navigation: any;
@@ -28,6 +29,11 @@ const Login: React.FC<Props> = ({navigation}) => {
   const handleSignIn = async () => {
     try {
       setIsLoading(true);
+      const appState = await StorageGetItem('appstate');
+      if (appState === AppState.TESTING) {
+        handleTestSignIn();
+        return;
+      }
       const awsCognito = new AwsCognito();
       awsCognito.setCognitoUser(username);
       dispatch(setAwsCognito(awsCognito));
@@ -54,6 +60,18 @@ const Login: React.FC<Props> = ({navigation}) => {
         type: 'danger',
       });
       setIsLoading(false);
+    }
+  };
+
+  const handleTestSignIn = async () => {
+    const solaceName = state.user?.solaceName;
+    if (password === TEST_PASSWORD && username === solaceName) {
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'CreateWallet'}],
+      });
+    } else {
+      showMessage({message: 'email/password is wrong', type: 'danger'});
     }
   };
 

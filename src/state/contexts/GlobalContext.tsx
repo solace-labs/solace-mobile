@@ -13,13 +13,7 @@ import {KeyPair, SolaceSDK} from 'solace-sdk';
 import {AwsCognito} from '../../utils/aws_cognito';
 import {GoogleApi} from '../../utils/google_apis';
 import {NETWORK, PROGRAM_ADDRESS} from '../../utils/constants';
-import {
-  StorageClearAll,
-  StorageDeleteItem,
-  StorageGetItem,
-  StorageSetItem,
-} from '../../utils/storage';
-import {decryptKey, encryptKey} from '../../utils/aes_encryption';
+import {StorageClearAll, StorageGetItem} from '../../utils/storage';
 
 type InitialStateType = {
   accountStatus: AccountStatus;
@@ -70,6 +64,7 @@ export enum AppState {
   GDRIVE = 'GDRIVE',
   ONBOARDED = 'ONBOARDED',
   RECOVERY = 'RECOVERY',
+  TESTING = 'TESTING',
 }
 
 export const initialState = {
@@ -158,14 +153,18 @@ const GlobalProvider = ({children}: {children: any}) => {
 
   const init = useCallback(async () => {
     /*** GETDATA */
-    // const appstate = await StorageGetItem('appstate');
-    // const storeduser = await StorageGetItem('user');
-    // console.log(appstate);
-    // console.log(storeduser);
+    const appstate = await StorageGetItem('appstate');
+    const storeduser = await StorageGetItem('user');
+    console.log(appstate);
+    console.log(storeduser);
     // await StorageClearAll();
     // await StorageSetItem('appstate', AppState.ONBOARDED);
     const storedUser: User = await StorageGetItem('user');
     const appState: AppState = await StorageGetItem('appstate');
+    if (appState === AppState.TESTING) {
+      dispatch(setAccountStatus(AccountStatus.EXISITING));
+      return;
+    }
 
     /** RECOVERY CHECK */
     const inRecoveryMode = await checkInRecoverMode();
@@ -200,10 +199,8 @@ const GlobalProvider = ({children}: {children: any}) => {
     // const storeduser = await StorageGetItem('user');
     // console.log(appstate);
     // console.log(storeduser);
-
     /*** LOGOUT */
     // await StorageClearAll();
-
     /*** LOGIN */
     // await StorageSetItem('appstate', AppState.ONBOARDED);
     // await StorageSetItem('user', {
@@ -214,21 +211,12 @@ const GlobalProvider = ({children}: {children: any}) => {
     //   pin: '12341234',
     //   solaceName: 'solace8',
     // });
-
     // const datatoencrypt =
     //   '182,177,209,146,232,29,199,170,151,161,22,146,203,238,222,240,212,83,59,9,170,179,80,154,16,15,205,81,49,85,99,216,205,53,40,98,14,176,223,191,216,223,218,61,109,178,102,218,255,88,222,12,99,251,125,67,199,123,78,250,251,19,162,6';
-
-    const datatoencrypt = 'solace8';
-
-    const encrypteddata = await encryptKey(datatoencrypt, '12345678');
-    const decrypteddata = await decryptKey(encrypteddata, '12345678');
-
-    console.log(decrypteddata);
   };
 
   useEffect(() => {
     init();
-    // checking();
   }, []);
 
   return (

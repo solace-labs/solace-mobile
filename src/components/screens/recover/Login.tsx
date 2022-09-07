@@ -1,8 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {View} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
-import {AppState, GlobalContext} from '../../../state/contexts/GlobalContext';
-import {setAwsCognito, setUser} from '../../../state/actions/global';
+import {
+  AccountStatus,
+  AppState,
+  GlobalContext,
+} from '../../../state/contexts/GlobalContext';
+import {
+  setAccountStatus,
+  setAwsCognito,
+  setUser,
+} from '../../../state/actions/global';
 import {AwsCognito} from '../../../utils/aws_cognito';
 import {showMessage} from 'react-native-flash-message';
 import {StorageGetItem, StorageSetItem} from '../../../utils/storage';
@@ -13,6 +21,7 @@ import SolacePasswordInput from '../../common/solaceui/SolacePasswordInput';
 import SolaceText from '../../common/solaceui/SolaceText';
 import SolaceButton from '../../common/solaceui/SolaceButton';
 import SolaceLoader from '../../common/solaceui/SolaceLoader';
+import {TEST_PASSWORD} from '../../../utils/constants';
 
 export type Props = {
   navigation: any;
@@ -39,6 +48,11 @@ const Login: React.FC<Props> = ({navigation}) => {
   const handleSignIn = async () => {
     try {
       setIsLoading(true);
+      const appState = await StorageGetItem('appstate');
+      if (appState === AppState.TESTING) {
+        handleTestSignIn();
+        return;
+      }
       const awsCognito = new AwsCognito();
       awsCognito.setCognitoUser(username);
       dispatch(setAwsCognito(awsCognito));
@@ -70,6 +84,15 @@ const Login: React.FC<Props> = ({navigation}) => {
 
   const isDisable = () => {
     return !username || !password || isLoading;
+  };
+
+  const handleTestSignIn = async () => {
+    const solaceName = state.user?.solaceName;
+    if (password === TEST_PASSWORD && username === solaceName) {
+      dispatch(setAccountStatus(AccountStatus.ACTIVE));
+    } else {
+      showMessage({message: 'email/password is wrong', type: 'danger'});
+    }
   };
 
   return (

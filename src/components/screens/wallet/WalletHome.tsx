@@ -4,6 +4,7 @@ import React, {useContext, useEffect, useState} from 'react';
 
 import {
   AccountStatus,
+  AppState,
   GlobalContext,
 } from '../../../state/contexts/GlobalContext';
 import {
@@ -12,7 +13,7 @@ import {
   setUser,
 } from '../../../state/actions/global';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {StorageClearAll} from '../../../utils/storage';
+import {StorageClearAll, StorageGetItem} from '../../../utils/storage';
 import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import SolaceIcon from '../../common/solaceui/SolaceIcon';
 import SolaceText from '../../common/solaceui/SolaceText';
@@ -69,23 +70,36 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
   }, [dispatch]);
 
   const getIncubationTime = async () => {
-    const data = await sdk?.fetchWalletData();
-    const date = moment(new Date(data?.createdAt * 1000))
-      // .add(12, 'h')
-      .format('DD MMM HH:mm');
-    console.log(date);
-    setIncubationDate(date);
+    try {
+      const data = await sdk?.fetchWalletData();
+      const date = moment(new Date(data?.createdAt * 1000))
+        // .add(12, 'h')
+        .format('DD MMM HH:mm');
+      console.log(date);
+      setIncubationDate(date);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   useEffect(() => {
-    console.log('getting');
-    getIncubationTime();
+    try {
+      console.log('getting');
+      getIncubationTime();
+    } catch (e) {
+      console.log(e);
+    }
   }, []);
 
   const logout = async () => {
-    await StorageClearAll();
-    dispatch(clearData());
-    dispatch(setAccountStatus(AccountStatus.NEW));
+    const appState = await StorageGetItem('appstate');
+    if (appState === AppState.TESTING) {
+      dispatch(setAccountStatus(AccountStatus.NEW));
+    } else {
+      await StorageClearAll();
+      dispatch(clearData());
+      dispatch(setAccountStatus(AccountStatus.NEW));
+    }
   };
 
   return (
@@ -130,7 +144,7 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
       </View>
       <View style={[globalStyles.fullCenter, {flex: 0.7}]}>
         <SolaceText size="xl" weight="bold">
-          $240.04
+          $0.00
         </SolaceText>
         <View
           style={[globalStyles.rowSpaceBetween, {marginTop: 20, width: '70%'}]}>
