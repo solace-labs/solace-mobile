@@ -17,8 +17,9 @@ export class GoogleApi {
     try {
       GoogleSignin.configure({
         scopes: [
-          'https://www.googleapis.com/auth/drive',
-          'https://www.googleapis.com/auth/drive.appfolder',
+          'https://www.googleapis.com/auth/drive.file',
+          // 'https://www.googleapis.com/auth/drive',
+          // 'https://www.googleapis.com/auth/drive.appfolder',
         ], // what API you want to access on behalf of the user, default is email and profile
         // webClientId: GOOGLE_WEB_CLIENT_ID, // client ID of type WEB for your server (needed to verify user ID and offline access)
         webClientId: GOOGLE_WEB_CLIENT_ID,

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {View, Image, StyleSheet} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 
@@ -38,9 +39,12 @@ export const DATA = [
 
 const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
   const [username, setUsername] = useState('user');
+  const [incubationDate, setIncubationDate] = useState(
+    new Date().toLocaleDateString(),
+  );
 
   const {
-    state: {user},
+    state: {user, sdk},
     dispatch,
   } = useContext(GlobalContext);
 
@@ -63,9 +67,14 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
     getInitialData();
   }, [dispatch]);
 
-  const getIncubationTime = () => {
-    return new Date().toLocaleTimeString();
+  const getIncubationTime = async () => {
+    const data = await sdk?.fetchWalletData();
+    setIncubationDate(new Date(data?.createdAt * 1000).toLocaleTimeString());
   };
+
+  useEffect(() => {
+    getIncubationTime();
+  }, []);
 
   const logout = async () => {
     await StorageClearAll();
@@ -83,11 +92,12 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
           name="lock"
         />
         <View style={globalStyles.rowCenter}>
-          <SolaceStatus type="warning" style={{marginRight: 8}} />
-          <SolaceText size="xs">incubation ends: </SolaceText>
+          <SolaceStatus type="success" style={{marginRight: 8}} />
+          <SolaceText size="xs">incubation ends at </SolaceText>
           <SolaceText size="xs" weight="bold">
             {/* {new Date().toLocaleTimeString()} */}
-            {getIncubationTime()}
+            {/* {getIncubationTime()} */}
+            {incubationDate}
           </SolaceText>
         </View>
         <SolaceIcon
@@ -114,7 +124,7 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
       </View>
       <View style={[globalStyles.fullCenter, {flex: 0.7}]}>
         <SolaceText size="xl" weight="bold">
-          $0.04
+          $240.04
         </SolaceText>
         <View
           style={[globalStyles.rowSpaceBetween, {marginTop: 20, width: '70%'}]}>

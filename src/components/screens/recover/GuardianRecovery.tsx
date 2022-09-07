@@ -31,7 +31,7 @@ const GuardianRecovery: React.FC<Props> = ({navigation}) => {
     try {
       setLoading({
         message: 'recovering...',
-        value: false,
+        value: true,
       });
       const newSDK = new SolaceSDK({
         network: NETWORK,

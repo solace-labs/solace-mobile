@@ -88,6 +88,7 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
         return;
       }
     } catch (e: any) {
+      console.log('ERRROR: ', e);
       if (!e.message.startsWith('RNGoogleSignInError')) {
         showMessage({
           message: e.message,
