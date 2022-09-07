@@ -19,6 +19,7 @@ import SolaceText from '../../common/solaceui/SolaceText';
 import WalletActivity from '../../wallet/WalletActivity';
 import globalStyles from '../../../utils/global_styles';
 import SolaceStatus from '../../common/solaceui/SolaceStatus';
+import moment from 'moment';
 
 export type Props = {
   navigation: any;
@@ -69,7 +70,10 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
 
   const getIncubationTime = async () => {
     const data = await sdk?.fetchWalletData();
-    setIncubationDate(new Date(data?.createdAt * 1000).toLocaleTimeString());
+    const date = moment(new Date(data?.createdAt * 1000))
+      .add(12, 'h')
+      .format('DD MMM HH:mm');
+    setIncubationDate(date);
   };
 
   useEffect(() => {

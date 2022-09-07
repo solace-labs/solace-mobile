@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CodePushDeploymentKey</key>
-	<string>uLKuf3wLw8a0mH_l-PDsf8PraahnUZV9f6eKq</string>
+	<string>oEed69cIQoPplAwLT3wEANwyQJ4Bg2F5-F9aC</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -36,7 +36,7 @@
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>LSApplicationCategoryType</key>
-	<string/>
+	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -51,7 +51,7 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Poppins-Black.ttf</string>
