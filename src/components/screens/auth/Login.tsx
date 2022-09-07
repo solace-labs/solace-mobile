@@ -21,7 +21,7 @@ export type Props = {
 const Login: React.FC<Props> = ({navigation}) => {
   const {state, dispatch} = useContext(GlobalContext);
   const [username, setUsername] = useState(state.user?.solaceName!);
-  const [password, setPassword] = useState('ankitN1311@');
+  const [password, setPassword] = useState('');
   const [active, setActive] = useState('password');
   const [isLoading, setIsLoading] = useState(false);
 
