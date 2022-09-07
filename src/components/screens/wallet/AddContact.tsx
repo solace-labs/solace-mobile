@@ -80,7 +80,8 @@ const AddContactScreen: React.FC<Props> = ({navigation}) => {
         return;
       }
       showMessage({
-        message: 'need guardian approval',
+        message:
+          'do a transaction with the given address to add it to trusted list',
         type: 'warning',
       });
       setLoading(initialLoading);
