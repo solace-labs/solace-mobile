@@ -21,6 +21,7 @@
 		397CA152565D4F8CB9FF2248 /* SpaceMono-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AE74CED710574181BF056631 /* SpaceMono-Italic.ttf */; };
 		3A4E1796E5824EA8B3538198 /* Poppins-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C4033029EF9D466FABF0615E /* Poppins-MediumItalic.ttf */; };
 		3F0725D52D8640EFA955FCD6 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 42859061D7704492BAA861D0 /* Poppins-Bold.ttf */; };
+		47A0C0EA28C87E0C00AC87C6 /* AppCenter-Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 47A0C0E928C87E0C00AC87C6 /* AppCenter-Config.plist */; };
 		48A4BC47C17443418B3A5B75 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3C415725602447659B534B7C /* Entypo.ttf */; };
 		5820A9C3A8BE420797A2272D /* Poppins-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 308705EE83F04BA1AB7F54CB /* Poppins-LightItalic.ttf */; };
 		5F52488BB6A34587A4307110 /* Poppins-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6DD1392D3DD44F21BFC30B22 /* Poppins-BoldItalic.ttf */; };
@@ -91,6 +92,7 @@
 		3F64C7BB684A45FCB1FB6990 /* Poppins-ExtraLightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraLightItalic.ttf"; path = "../assets/fonts/Poppins-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
 		414C05E433AD40389620DED6 /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-SemiBold.ttf"; path = "../assets/fonts/Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
 		42859061D7704492BAA861D0 /* Poppins-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Bold.ttf"; path = "../assets/fonts/Poppins-Bold.ttf"; sourceTree = "<group>"; };
+		47A0C0E928C87E0C00AC87C6 /* AppCenter-Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "AppCenter-Config.plist"; sourceTree = "<group>"; };
 		4A9BB584CED449CDAD9C86F1 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		4EEEDBE0447D4676BBBD7865 /* Poppins-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Light.ttf"; path = "../assets/fonts/Poppins-Light.ttf"; sourceTree = "<group>"; };
 		60C33AD899EEA7B369370EC7 /* libPods-solace.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-solace.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -240,6 +242,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				47A0C0E928C87E0C00AC87C6 /* AppCenter-Config.plist */,
 				13B07FAE1A68108700A75B9A /* solace */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* solaceTests */,
@@ -385,6 +388,7 @@
 				FAF89E866CE94F5DBFB6D609 /* Poppins-Medium.ttf in Resources */,
 				3A4E1796E5824EA8B3538198 /* Poppins-MediumItalic.ttf in Resources */,
 				ACB4C4D845EB495DBE900B03 /* Poppins-Regular.ttf in Resources */,
+				47A0C0EA28C87E0C00AC87C6 /* AppCenter-Config.plist in Resources */,
 				19B1FADE18C94A9A9B7122BB /* Poppins-SemiBold.ttf in Resources */,
 				D631F79B994E40048E767C0F /* Poppins-SemiBoldItalic.ttf in Resources */,
 				2DA0BFCC218840EFB745F32E /* Poppins-Thin.ttf in Resources */,
@@ -666,7 +670,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = T2UY6KVKWP;
+				DEVELOPMENT_TEAM = T87J857XJD;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = solace/Info.plist;
@@ -694,7 +698,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = T2UY6KVKWP;
+				DEVELOPMENT_TEAM = T87J857XJD;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = solace/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
