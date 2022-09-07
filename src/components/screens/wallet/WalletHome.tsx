@@ -17,6 +17,7 @@ import SolaceIcon from '../../common/solaceui/SolaceIcon';
 import SolaceText from '../../common/solaceui/SolaceText';
 import WalletActivity from '../../wallet/WalletActivity';
 import globalStyles from '../../../utils/global_styles';
+import SolaceStatus from '../../common/solaceui/SolaceStatus';
 
 export type Props = {
   navigation: any;
@@ -62,6 +63,10 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
     getInitialData();
   }, [dispatch]);
 
+  const getIncubationTime = () => {
+    return new Date().toLocaleTimeString();
+  };
+
   const logout = async () => {
     await StorageClearAll();
     dispatch(clearData());
@@ -77,6 +82,14 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
           variant="antdesign"
           name="lock"
         />
+        <View style={globalStyles.rowCenter}>
+          <SolaceStatus type="warning" style={{marginRight: 8}} />
+          <SolaceText size="xs">incubation ends: </SolaceText>
+          <SolaceText size="xs" weight="bold">
+            {/* {new Date().toLocaleTimeString()} */}
+            {getIncubationTime()}
+          </SolaceText>
+        </View>
         <SolaceIcon
           onPress={() => logout()}
           type="normal"
