@@ -43,6 +43,7 @@ const SendScreen: React.FC<Props> = ({navigation}) => {
   const [address, setAddress] = useState(state.sdk?.wallet.toString() ?? '');
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [loading, setLoading] = useState(false);
+
   const handleGoBack = () => {
     navigation.goBack();
   };
@@ -56,39 +57,6 @@ const SendScreen: React.FC<Props> = ({navigation}) => {
     showMessage({
       message: 'address copied',
     });
-  };
-
-  const getAccounts = async () => {
-    try {
-      setLoading(true);
-      const sdk = state.sdk;
-      const splTokenAddress = new PublicKey(SPL_TOKEN);
-      const tokenAccount = await sdk?.getTokenAccount(splTokenAddress);
-      const accountInfo = await sdk?.getTokenAccountInfo(splTokenAddress);
-      // if (!accountInfo) {
-      //   const feePayer = await getFeePayer();
-      //   const tx = await sdk?.createTokenAccount(
-      //     {
-      //       tokenAccount: tokenAccount!,
-      //       tokenMint: splTokenAddress,
-      //     },
-      //     feePayer,
-      //   );
-      //   await relayTransaction(tx);
-      //   setLoading(false);
-      //   return;
-      // }
-      const balance = +accountInfo!.amount.toString() / LAMPORTS_PER_SOL;
-      setAccounts([
-        {amount: balance, tokenAddress: splTokenAddress.toString()},
-      ]);
-      setLoading(false);
-    } catch (e) {
-      console.log(e);
-      setLoading(false);
-      showMessage({message: 'some error try again', type: 'warning'});
-    }
-    // constsdk?.getTokenAccountInfo();
   };
 
   const getAllAccounts = async () => {
@@ -157,7 +125,7 @@ const SendScreen: React.FC<Props> = ({navigation}) => {
           // endClick={handleAdd}
         />
         <SolaceLoader text="getting tokens">
-          <ActivityIndicator size="small" style={{marginLeft: 8}} />
+          <ActivityIndicator size="small" />
         </SolaceLoader>
       </SolaceContainer>
     );
@@ -182,8 +150,12 @@ const SendScreen: React.FC<Props> = ({navigation}) => {
               <RefreshControl refreshing={loading} onRefresh={handleRefresh} />
             }
             bounces={true}
-            style={{margin: 8, width: '100%'}}>
-            <View style={[globalStyles.rowCenter, {justifyContent: 'center'}]}>
+            style={{marginTop: -50, width: '100%'}}>
+            <View
+              style={[
+                globalStyles.rowCenter,
+                {justifyContent: 'center', marginBottom: 20},
+              ]}>
               <SolaceText size="sm" weight="extralight">
                 pull to refresh
               </SolaceText>

@@ -2,7 +2,7 @@ import {View} from 'react-native';
 import React, {useContext, useState} from 'react';
 
 import {GlobalContext} from '../../../state/contexts/GlobalContext';
-import {addNewContact} from '../../../state/actions/global';
+import {addNewContact, setSDK} from '../../../state/actions/global';
 import {showMessage} from 'react-native-flash-message';
 import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import SolaceButton from '../../common/solaceui/SolaceButton';
@@ -10,30 +10,86 @@ import SolaceText from '../../common/solaceui/SolaceText';
 import TopNavbar from '../../common/TopNavbar';
 import SolaceInput from '../../common/solaceui/SolaceInput';
 import SolaceCustomInput from '../../common/solaceui/SolaceCustomInput';
+import {relayTransaction} from '../../../utils/relayer';
+import {confirmTransaction, getFeePayer} from '../../../utils/apis';
+import {PublicKey, SolaceSDK} from 'solace-sdk';
+import SolaceLoader from '../../common/solaceui/SolaceLoader';
+import moment from 'moment';
 
 export type Props = {
   navigation: any;
 };
 
-const AddContactScreen: React.FC<Props> = ({navigation}) => {
-  const [name, setName] = useState('');
-  const [address, setAddress] = useState('');
-  const {dispatch} = useContext(GlobalContext);
+export type WalletDataType = Awaited<
+  ReturnType<typeof SolaceSDK.fetchDataForWallet>
+>;
 
-  const addContact = () => {
-    if (name && address) {
-      const newContact = {
-        id: new Date().getTime().toString() + Math.random().toString(),
-        name,
-        address,
-        username: `${name.split(' ')[0]}.solace.money`,
-      };
-      dispatch(addNewContact(newContact));
-      navigation.navigate('Send');
+const AddContactScreen: React.FC<Props> = ({navigation}) => {
+  const initialLoading = {message: '', value: false};
+  const [address, setAddress] = useState('');
+  const [loading, setLoading] = useState(initialLoading);
+  const {state, dispatch} = useContext(GlobalContext);
+
+  const addContact = async () => {
+    const sdk = state.sdk!;
+    const feePayer = await getFeePayer();
+    const pubKey = new PublicKey(address);
+    const tx = await sdk.addTrustedPubkey(pubKey, feePayer);
+    const transactionId = await relayTransaction(tx);
+    setLoading({message: 'finalizing... please wait', value: true});
+    await confirmTransaction(transactionId);
+    navigation.goBack();
+  };
+
+  const inHistory = (data: WalletDataType) => {
+    const present = data.pubkeyHistory.find(
+      pubkey => pubkey.toString() === address,
+    );
+    if (present) {
+      return true;
     } else {
+      return false;
+    }
+  };
+
+  const checkIncubationMode = (data: WalletDataType) => {
+    const incubationDate = moment(new Date(data.createdAt * 1000)).add(12, 'h');
+    const current = moment(new Date());
+    const difference = incubationDate.diff(current);
+    if (difference < 0 && data.incubationMode) {
+      return true;
+    } else if (inHistory(data)) {
+      return true;
+    }
+    return false;
+  };
+
+  const handleAdd = async () => {
+    try {
+      setLoading({
+        message: 'adding contact...',
+        value: true,
+      });
+      const sdk = state.sdk!;
+      const data = await sdk.fetchWalletData();
+      const inIncubation = checkIncubationMode(data);
+      console.log('incubation', inIncubation);
+      if (inIncubation) {
+        await addContact();
+        setLoading(initialLoading);
+        return;
+      }
       showMessage({
-        message: 'Please enter all the details',
-        type: 'info',
+        message: 'need guardian approval',
+        type: 'warning',
+      });
+      setLoading(initialLoading);
+    } catch (e: any) {
+      console.log(e);
+      setLoading(initialLoading);
+      showMessage({
+        message: 'address is not valid',
+        type: 'danger',
       });
     }
   };
@@ -50,12 +106,12 @@ const AddContactScreen: React.FC<Props> = ({navigation}) => {
         startClick={handleGoBack}
       />
       <View style={{flex: 1, marginTop: 16}}>
-        <SolaceInput
+        {/* <SolaceInput
           mb={16}
           value={name}
           onChangeText={setName}
           placeholder="name"
-        />
+        /> */}
         <SolaceCustomInput
           iconName="line-scan"
           placeholder="address"
@@ -73,14 +129,15 @@ const AddContactScreen: React.FC<Props> = ({navigation}) => {
             network
           </SolaceText>
           <SolaceText type="secondary" weight="bold" variant="solana-green">
-            solana
+            solana testnet
           </SolaceText>
         </View>
+        {loading.value && <SolaceLoader text={loading.message} />}
       </View>
       <SolaceButton
-        onPress={addContact}
-        // loading={loading.value}
-        disabled={!address || !name}>
+        onPress={handleAdd}
+        loading={loading.value}
+        disabled={!address}>
         <SolaceText type="secondary" weight="bold" variant="dark">
           save contact
         </SolaceText>

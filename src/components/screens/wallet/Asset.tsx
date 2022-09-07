@@ -24,11 +24,17 @@ import SolaceLoader from '../../common/solaceui/SolaceLoader';
 
 const AssetScreen = () => {
   const navigation = useNavigation();
+  const navState = navigation.getState();
+  const params = navState.routes.find(route => route.name === 'Asset')
+    ?.params as any;
+  const asset = params.asset;
+  const contact = params.contact;
+  const shortAsset = asset.slice(0, 4) + '...' + asset.slice(-4);
   const {state, dispatch} = useContext(GlobalContext);
   const [amount, setAmount] = useState('');
   const [maxBalance, setMaxBalance] = useState(0);
   const [recipientAddress, setRecipientAddress] = useState(
-    'GNgMfSSJ4NjSuu1EdHj94P6TzQS24KH38y1si2CMrUsF',
+    contact ? contact : 'GNgMfSSJ4NjSuu1EdHj94P6TzQS24KH38y1si2CMrUsF',
   );
   // const [recipientAddress, setRecipientAddress] = useState('');
   const [loading, setLoading] = useState(false);
@@ -36,11 +42,6 @@ const AssetScreen = () => {
     message: '',
     value: false,
   });
-  const navState = navigation.getState();
-  const params = navState.routes.find(route => route.name === 'Asset')
-    ?.params as any;
-  const asset = params.id;
-  const shortAsset = asset.slice(0, 4) + '...' + asset.slice(-4);
 
   const handleGoBack = () => {
     navigation.goBack();

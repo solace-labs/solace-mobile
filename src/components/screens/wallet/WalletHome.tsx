@@ -41,7 +41,7 @@ export const DATA = [
 const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
   const [username, setUsername] = useState('user');
   const [incubationDate, setIncubationDate] = useState(
-    new Date().toLocaleDateString(),
+    moment(new Date()).format('DD MMM HH:mm'),
   );
 
   const {
@@ -71,12 +71,14 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
   const getIncubationTime = async () => {
     const data = await sdk?.fetchWalletData();
     const date = moment(new Date(data?.createdAt * 1000))
-      .add(12, 'h')
+      // .add(12, 'h')
       .format('DD MMM HH:mm');
+    console.log(date);
     setIncubationDate(date);
   };
 
   useEffect(() => {
+    console.log('getting');
     getIncubationTime();
   }, []);
 

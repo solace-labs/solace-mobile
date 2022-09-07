@@ -115,7 +115,7 @@ const RecieveScreen: React.FC<Props> = ({navigation}) => {
           endClick={handleAdd}
         />
         <SolaceLoader text={loading.message}>
-          <ActivityIndicator size="small" style={{marginTop: 8}} />
+          <ActivityIndicator size="small" />
         </SolaceLoader>
       </SolaceContainer>
     );
@@ -137,7 +137,7 @@ const RecieveScreen: React.FC<Props> = ({navigation}) => {
         endClick={handleAdd}
       />
       <View style={globalStyles.fullCenter}>
-        {accounts && accounts.length > 0 ? (
+        {accounts && accounts.length > 1 ? (
           <>
             <ScrollView
               refreshControl={
@@ -147,9 +147,12 @@ const RecieveScreen: React.FC<Props> = ({navigation}) => {
                 />
               }
               bounces={true}
-              style={{margin: 8, width: '100%'}}>
+              style={{marginTop: -50, width: '100%'}}>
               <View
-                style={[globalStyles.rowCenter, {justifyContent: 'center'}]}>
+                style={[
+                  globalStyles.rowCenter,
+                  {justifyContent: 'center', marginBottom: 20},
+                ]}>
                 <SolaceText size="sm" weight="extralight">
                   pull to refresh
                 </SolaceText>
