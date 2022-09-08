@@ -34,7 +34,8 @@ const AssetScreen = () => {
   const [amount, setAmount] = useState('');
   const [maxBalance, setMaxBalance] = useState(0);
   const [recipientAddress, setRecipientAddress] = useState(
-    contact ? contact : 'GNgMfSSJ4NjSuu1EdHj94P6TzQS24KH38y1si2CMrUsF',
+    contact ? contact : '',
+    // 'GNgMfSSJ4NjSuu1EdHj94P6TzQS24KH38y1si2CMrUsF'
   );
   // const [recipientAddress, setRecipientAddress] = useState('');
   const [loading, setLoading] = useState(false);

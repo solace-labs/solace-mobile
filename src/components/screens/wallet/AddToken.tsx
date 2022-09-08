@@ -21,7 +21,8 @@ export type Props = {
 const AddToken: React.FC<Props> = ({navigation}) => {
   const initialLoading = {message: '', value: false};
   const [address, setAddress] = useState(
-    'DB6BcxUpHDSxEFpqDRjm98HTvX2JZapbBNN8RcR4K11z',
+    // 'DB6BcxUpHDSxEFpqDRjm98HTvX2JZapbBNN8RcR4K11z',
+    '',
   );
   const [loading, setLoading] = useState(initialLoading);
   const {state} = useContext(GlobalContext);

@@ -22,6 +22,7 @@ import Header from '../../common/Header';
 import {EMAIL_REGEX, OTP_REGEX, PASSWORD_REGEX} from '../../../utils/constants';
 import SolaceLoader from '../../common/solaceui/SolaceLoader';
 import {StorageSetItem} from '../../../utils/storage';
+import {Colors} from '../../../utils/colors';
 
 export type Props = {
   navigation: any;
@@ -170,6 +171,7 @@ const EmailScreen: React.FC<Props> = ({navigation}) => {
           mt={16}
           value={username.value}
           onChangeText={text => validateUsername(text)}
+          style={[!username.isValid ? {borderBottomColor: 'red'} : {}]}
         />
         <SolaceInput
           placeholder="email address"
@@ -177,6 +179,7 @@ const EmailScreen: React.FC<Props> = ({navigation}) => {
           mt={16}
           value={email.value}
           onChangeText={text => validateEmail(text)}
+          style={[!email.isValid ? {borderBottomColor: 'red'} : {}]}
         />
         <SolacePasswordInput
           placeholder="password"
@@ -184,6 +187,7 @@ const EmailScreen: React.FC<Props> = ({navigation}) => {
           onFocus={() => setActive('password')}
           onChangeText={text => validatePassword(text)}
           mt={16}
+          style={[!password.isValid ? {borderBottomColor: 'red'} : {}]}
         />
         {!password.isValid && (
           <SolaceText

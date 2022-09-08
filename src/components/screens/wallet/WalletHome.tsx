@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {View, Image, StyleSheet} from 'react-native';
+import {View, Image, TouchableOpacity, Alert} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 
 import {
@@ -20,6 +20,9 @@ import WalletActivity from '../../wallet/WalletActivity';
 import globalStyles from '../../../utils/global_styles';
 import SolaceStatus from '../../common/solaceui/SolaceStatus';
 import moment from 'moment';
+import {WalletDataType} from './AddContact';
+import Clipboard from '@react-native-community/clipboard';
+import {showMessage} from 'react-native-flash-message';
 
 export type Props = {
   navigation: any;
@@ -39,10 +42,13 @@ export const DATA = [
 ];
 
 const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
+  const {state} = useContext(GlobalContext);
   const [username, setUsername] = useState('user');
   const [incubationDate, setIncubationDate] = useState(
     moment(new Date()).format('DD MMM HH:mm'),
   );
+
+  const [showIncubation, setShowIncubation] = useState(false);
 
   const {
     state: {user, sdk},
@@ -68,24 +74,95 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
     getInitialData();
   }, [dispatch]);
 
-  const getIncubationTime = async () => {
-    const data = await sdk?.fetchWalletData();
-    const date = moment(new Date(data?.createdAt * 1000))
-      // .add(12, 'h')
+  const getIncubationTime = async (createdAt: number) => {
+    const date = moment(new Date(createdAt * 1000))
+      .add(12, 'h')
       .format('DD MMM HH:mm');
     console.log(date);
     setIncubationDate(date);
   };
 
+  const checkIncubationMode = async (data: WalletDataType) => {
+    const date = moment(new Date(data.createdAt * 1000)).add(12, 'h');
+    const current = moment(new Date());
+    const difference = date.diff(current);
+    if (difference > 0 && data.incubationMode) {
+      return true;
+    }
+    return false;
+  };
+
+  const init = async () => {
+    const data = await sdk!.fetchWalletData();
+    console.log(sdk!.wallet);
+    const isIncubationMode = await checkIncubationMode(data);
+    setShowIncubation(isIncubationMode);
+    await getIncubationTime(data.createdAt);
+  };
+
   useEffect(() => {
-    console.log('getting');
-    getIncubationTime();
+    init();
   }, []);
 
+  const endIncubation = async () => {
+    // Alert.alert();
+  };
+
+  const handleIncubationEnd = async () => {
+    Alert.alert(
+      'end incubation?',
+      '',
+      // 'you will have to retrieve your wallet using google drive.',
+      [
+        {
+          text: 'No',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'Yes',
+          onPress: async () => {
+            await endIncubation();
+            // await StorageClearAll();
+            // dispatch(clearData());
+            // dispatch(setAccountStatus(AccountStatus.NEW));
+          },
+        },
+      ],
+    );
+  };
+
   const logout = async () => {
-    await StorageClearAll();
-    dispatch(clearData());
-    dispatch(setAccountStatus(AccountStatus.NEW));
+    Alert.alert(
+      'are you sure you want log logout?',
+      'you will have to retrieve your wallet using google drive.',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: async () => {
+            await StorageClearAll();
+            dispatch(clearData());
+            dispatch(setAccountStatus(AccountStatus.NEW));
+          },
+        },
+      ],
+    );
+  };
+
+  const adrs = sdk!.wallet.toString();
+  const shortaddress = adrs.slice(0, 5) + '...' + adrs.slice(-5);
+
+  const copy = () => {
+    Clipboard.setString(adrs);
+    showMessage({
+      message: 'wallet address copied!',
+      type: 'info',
+    });
   };
 
   return (
@@ -97,15 +174,21 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
           variant="antdesign"
           name="lock"
         />
-        <View style={globalStyles.rowCenter}>
-          <SolaceStatus type="success" style={{marginRight: 8}} />
-          <SolaceText size="xs">incubation ends at </SolaceText>
+        <TouchableOpacity
+          style={globalStyles.rowCenter}
+          // onPress={handleIncubationEnd}
+        >
+          <SolaceStatus
+            type={showIncubation ? 'success' : 'error'}
+            style={{marginRight: 8}}
+          />
+          <SolaceText size="xs">
+            incubation {showIncubation ? 'ends at' : 'ended on'}{' '}
+          </SolaceText>
           <SolaceText size="xs" weight="bold">
-            {/* {new Date().toLocaleTimeString()} */}
-            {/* {getIncubationTime()} */}
             {incubationDate}
           </SolaceText>
-        </View>
+        </TouchableOpacity>
         <SolaceIcon
           onPress={() => logout()}
           type="normal"
@@ -125,9 +208,13 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
         />
         <SolaceText weight="semibold" size="sm">
           {user?.solaceName ? user.solaceName : username}
-          {/* .solace.money */}
         </SolaceText>
       </View>
+      <TouchableOpacity onPress={copy}>
+        <SolaceText type="secondary" weight="bold">
+          {shortaddress}
+        </SolaceText>
+      </TouchableOpacity>
       <View style={[globalStyles.fullCenter, {flex: 0.7}]}>
         <SolaceText size="xl" weight="bold">
           $0.00

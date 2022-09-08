@@ -56,7 +56,7 @@ const AddContactScreen: React.FC<Props> = ({navigation}) => {
     const incubationDate = moment(new Date(data.createdAt * 1000)).add(12, 'h');
     const current = moment(new Date());
     const difference = incubationDate.diff(current);
-    if (difference < 0 && data.incubationMode) {
+    if (difference > 0 && data.incubationMode) {
       return true;
     } else if (inHistory(data)) {
       return true;

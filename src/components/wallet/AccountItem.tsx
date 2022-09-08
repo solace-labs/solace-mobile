@@ -29,7 +29,7 @@ const AccountItem: React.FC<Props> = ({
       // setModalVisible(true);
       navigation.navigate('Contact', {asset: tokenAddress.toString()});
     } else if (type === 'recieve') {
-      navigation.navigate('RecieveItem');
+      navigation.navigate('RecieveItem', {token: tokenAddress.toString()});
     }
   };
 
