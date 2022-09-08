@@ -73,6 +73,7 @@ const RecieveScreen: React.FC<Props> = ({navigation}) => {
         const accountInfo = await SolaceSDK.getAccountInfo(accountInfoBuffer);
         const balance = +accountInfo.amount.toString() / LAMPORTS_PER_SOL;
         const tokenAddress = accountInfo.mint.toString();
+        console.log(tokenAddress);
         accs.push({
           amount: balance,
           tokenAddress,
@@ -137,7 +138,7 @@ const RecieveScreen: React.FC<Props> = ({navigation}) => {
         endClick={handleAdd}
       />
       <View style={globalStyles.fullCenter}>
-        {accounts && accounts.length > 1 ? (
+        {accounts && accounts.length > 0 ? (
           <>
             <ScrollView
               refreshControl={

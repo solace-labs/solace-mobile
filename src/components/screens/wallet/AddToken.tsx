@@ -48,6 +48,7 @@ const AddToken: React.FC<Props> = ({navigation}) => {
       setLoading({message: 'finalizing... please wait', value: true});
       await confirmTransaction(transactionId);
       setLoading(initialLoading);
+      navigation.goBack();
     } catch (e: any) {
       setLoading(initialLoading);
       showMessage({

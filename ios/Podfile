@@ -22,6 +22,8 @@ target 'solace' do
 
 
 
+  pod 'CodePush', :path => '../node_modules/react-native-code-push'
+
   target 'solaceTests' do
     inherit! :complete
     # Pods for testing

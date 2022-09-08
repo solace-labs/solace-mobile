@@ -163,6 +163,21 @@ const ContactScreen: React.FC<Props> = () => {
               </SolaceText>{' '}
               to send
             </SolaceText>
+            <TouchableOpacity onPress={sendToUntrusted} style={{marginTop: 20}}>
+              <SolaceText
+                size="sm"
+                type="secondary"
+                variant="normal"
+                weight="bold"
+                mb={8}
+                style={{
+                  textDecorationLine: 'underline',
+                  textDecorationColor: Colors.background.light,
+                  textDecorationStyle: 'solid',
+                }}>
+                send to untrusted wallet?
+              </SolaceText>
+            </TouchableOpacity>
           </View>
         )}
       </View>
