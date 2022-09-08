@@ -130,7 +130,7 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
       </View>
       <View style={[globalStyles.fullCenter, {flex: 0.7}]}>
         <SolaceText size="xl" weight="bold">
-          $240.04
+          $0.00
         </SolaceText>
         <View
           style={[globalStyles.rowSpaceBetween, {marginTop: 20, width: '70%'}]}>
