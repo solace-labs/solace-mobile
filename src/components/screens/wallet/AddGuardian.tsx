@@ -97,6 +97,7 @@ const AddGuardian: React.FC<Props> = ({navigation}) => {
           iconName="line-scan"
           iconType="mci"
           value={address}
+          placeholder="wallet address of guardian"
           onChangeText={setAddress}
         />
         {loading.value && <SolaceLoader text={loading.message} />}
