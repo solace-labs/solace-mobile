@@ -68,11 +68,13 @@ const Login: React.FC<Props> = ({navigation}) => {
     const user = await StorageGetItem('user');
     console.log(user);
     if (password === TEST_PASSWORD && username === user.solaceName) {
+      setIsLoading(false);
       navigation.reset({
         index: 0,
         routes: [{name: 'CreateWallet'}],
       });
     } else {
+      setIsLoading(false);
       showMessage({message: 'email/password is wrong', type: 'danger'});
     }
   };

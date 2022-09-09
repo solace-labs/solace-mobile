@@ -187,8 +187,8 @@ const GlobalProvider = ({children}: {children: any}) => {
       return;
     }
     /** NEW USER */
-    await StorageClearAll();
-    dispatch(clearData());
+    // await StorageClearAll();
+    // dispatch(clearData());
     dispatch(setAccountStatus(AccountStatus.NEW));
   }, [checkInRecoverMode, checkRecovery, isUserValid]);
 
