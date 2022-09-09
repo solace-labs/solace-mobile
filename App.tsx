@@ -5,8 +5,8 @@ import GlobalProvider from './src/state/contexts/GlobalContext';
 import codePush from 'react-native-code-push';
 
 let CodePushOptions = {
-  checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
-  mandatoryInstallMode: codePush.InstallMode.IMMEDIATE,
+  checkFrequency: codePush.CheckFrequency.ON_APP_START,
+  mandatoryInstallMode: codePush.InstallMode.ON_NEXT_RESTART,
   updateDialog: {
     appendReleaseDescription: true,
     title: 'a new update is available!',
