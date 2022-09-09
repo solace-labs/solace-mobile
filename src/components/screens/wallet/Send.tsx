@@ -9,7 +9,6 @@ import SolaceCustomInput from '../../common/solaceui/SolaceCustomInput';
 import SolaceText from '../../common/solaceui/SolaceText';
 import SolaceIcon from '../../common/solaceui/SolaceIcon';
 import globalStyles from '../../../utils/global_styles';
-
 export type Props = {
   navigation: any;
 };

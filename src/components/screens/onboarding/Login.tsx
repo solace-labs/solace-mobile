@@ -1,11 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {View} from 'react-native';
 import React, {useContext, useState} from 'react';
-import {GlobalContext} from '../../../state/contexts/GlobalContext';
+import {AppState, GlobalContext} from '../../../state/contexts/GlobalContext';
 import {setAwsCognito, setUser} from '../../../state/actions/global';
 import {AwsCognito} from '../../../utils/aws_cognito';
 import {showMessage} from 'react-native-flash-message';
-import {StorageSetItem} from '../../../utils/storage';
+import {StorageGetItem, StorageSetItem} from '../../../utils/storage';
 import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import Header from '../../common/Header';
 import SolaceInput from '../../common/solaceui/SolaceInput';
@@ -13,51 +13,32 @@ import SolacePasswordInput from '../../common/solaceui/SolacePasswordInput';
 import SolaceText from '../../common/solaceui/SolaceText';
 import SolaceButton from '../../common/solaceui/SolaceButton';
 import SolaceLoader from '../../common/solaceui/SolaceLoader';
+import {TEST_PASSWORD} from '../../../utils/constants';
 
 export type Props = {
   navigation: any;
 };
 
 const Login: React.FC<Props> = ({navigation}) => {
-  const [username, setUsername] = useState({
-    value: '',
-    isValid: false,
-  });
-  const [password, setPassword] = useState({
-    value: '',
-    isValid: true,
-  });
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [active, setActive] = useState('username');
   const [isLoading, setIsLoading] = useState(false);
   const {state, dispatch} = useContext(GlobalContext);
 
-  const validateUsername = (text: string) => {
-    setUsername({
-      value: text,
-      isValid: false,
-    });
-  };
-
-  const validatePassword = (text: string) => {
-    let reg =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&#]{8,}$/;
-    setPassword({
-      value: text,
-      isValid: reg.test(text),
-    });
-  };
-
   const handleSignIn = async () => {
     try {
       setIsLoading(true);
+      const appState = await StorageGetItem('appstate');
+      console.log('ologin', appState);
+      if (appState === AppState.TESTING) {
+        handleTestSignIn();
+        return;
+      }
       const awsCognito = new AwsCognito();
-      awsCognito.setCognitoUser(username.value);
+      awsCognito.setCognitoUser(username);
       dispatch(setAwsCognito(awsCognito));
-      console.log(username.value, password.value);
-      const response = await awsCognito?.emailLogin(
-        username.value,
-        password.value,
-      );
+      const response = await awsCognito?.emailLogin(username, password);
       const {
         accessToken: {jwtToken: accesstoken},
         idToken: {jwtToken: idtoken},
@@ -68,7 +49,7 @@ const Login: React.FC<Props> = ({navigation}) => {
         idtoken,
         refreshtoken,
       });
-      dispatch(setUser({...state.user, solaceName: username.value}));
+      dispatch(setUser({...state.user, solaceName: username}));
       setIsLoading(false);
       navigation.reset({
         index: 0,
@@ -83,8 +64,23 @@ const Login: React.FC<Props> = ({navigation}) => {
     }
   };
 
+  const handleTestSignIn = async () => {
+    const user = await StorageGetItem('user');
+    console.log(user);
+    if (password === TEST_PASSWORD && username === user.solaceName) {
+      setIsLoading(false);
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'CreateWallet'}],
+      });
+    } else {
+      setIsLoading(false);
+      showMessage({message: 'email/password is wrong', type: 'danger'});
+    }
+  };
+
   const isDisable = () => {
-    return !password.isValid || isLoading;
+    return !username || !password || isLoading;
   };
 
   return (
@@ -100,14 +96,14 @@ const Login: React.FC<Props> = ({navigation}) => {
           placeholder="username"
           onFocus={() => setActive('username')}
           mt={16}
-          value={username.value}
-          onChangeText={text => validateUsername(text)}
+          value={username}
+          onChangeText={text => setUsername(text)}
         />
         <SolacePasswordInput
           placeholder="password"
-          value={password.value}
+          value={password}
           onFocus={() => setActive('password')}
-          onChangeText={text => validatePassword(text)}
+          onChangeText={text => setPassword(text)}
           mt={16}
         />
         {isLoading && <SolaceLoader text="signing in..." />}

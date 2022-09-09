@@ -1,5 +1,6 @@
-import React, {FC} from 'react';
-import {View, TouchableOpacity, Image, ScrollView} from 'react-native';
+import React, {FC, useContext} from 'react';
+import {View, TouchableOpacity, Image, ScrollView, Linking} from 'react-native';
+import {GlobalContext} from '../../state/contexts/GlobalContext';
 import globalStyles from '../../utils/global_styles';
 import SolaceText from '../common/solaceui/SolaceText';
 import {DATA} from '../screens/wallet/WalletHome';
@@ -10,6 +11,7 @@ type Props = {
 };
 
 const WalletActivity: FC<Props> = ({data}) => {
+  const {state} = useContext(GlobalContext);
   if (data.length > 0) {
     return (
       <ScrollView>
@@ -19,6 +21,19 @@ const WalletActivity: FC<Props> = ({data}) => {
       </ScrollView>
     );
   }
+
+  const openLink = () => {
+    const link = `https://solscan.io/account/${
+      state.sdk!.wallet
+    }?cluster=testnet`;
+    Linking.canOpenURL(link).then(supported => {
+      if (supported) {
+        Linking.openURL(link);
+      } else {
+        console.log("Don't know how to open URI: " + link);
+      }
+    });
+  };
 
   return (
     <View style={{flex: 1, justifyContent: 'space-between'}}>
@@ -45,9 +60,14 @@ const WalletActivity: FC<Props> = ({data}) => {
           resizeMode: 'contain',
         }}
       />
-      <SolaceText type="secondary" size="sm" mb={16}>
+      <SolaceText
+        type="secondary"
+        size="sm"
+        mb={16}
+        style={{justifyContent: 'center', alignItems: 'center'}}>
         visit{' '}
         <SolaceText
+          onPress={openLink}
           type="secondary"
           size="sm"
           variant="white"

@@ -65,6 +65,7 @@ const SolaceInput: FC<SolaceInputProps> = ({
       placeholderTextColor={Colors.text.normal}
       autoCorrect={false}
       autoCapitalize={'none'}
+      autoComplete="off"
       style={[
         variantStyle(),
         fullWidthStyle(),

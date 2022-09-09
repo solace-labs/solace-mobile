@@ -18,8 +18,10 @@ import PasscodeContainer, {
 } from '../../common/PasscodeContainer';
 import SolaceLoader from '../../common/solaceui/SolaceLoader';
 import globalStyles from '../../../utils/global_styles';
+import {useNavigation} from '@react-navigation/native';
 
 const MainPasscodeScreen = () => {
+  const navigation: any = useNavigation();
   const [code, setCode] = useState('');
   const {state, dispatch} = useContext(GlobalContext);
   const [loading, setLoading] = useState({
@@ -29,14 +31,12 @@ const MainPasscodeScreen = () => {
 
   const retrieveAccount = async (user: User) => {
     try {
-      console.log('RETRIEVE ACCOUNT', user);
       setLoading({
         value: true,
         message: 'logging you in',
       });
       const privateKey = state.user?.ownerPrivateKey!;
       const solaceName = state.user?.solaceName!;
-      console.log({privateKey});
       const keypair = KeyPair.fromSecretKey(
         Uint8Array.from(privateKey.split(',').map(e => +e)),
       );
@@ -45,19 +45,24 @@ const MainPasscodeScreen = () => {
         owner: keypair,
         programAddress: PROGRAM_ADDRESS,
       });
-      console.log({sdk});
+      const data = await sdk.fetchWalletData();
+      console.log('WALLET ADDRESS', sdk.wallet);
       dispatch(setSDK(sdk));
       setLoading({
         value: false,
         message: '',
       });
       dispatch(setAccountStatus(AccountStatus.ACTIVE));
-    } catch (e) {
+    } catch (e: any) {
       setLoading({
         value: false,
         message: '',
       });
       setCode('');
+      if (e.message === 'Request failed with status code 401') {
+        navigation.navigate('AuthLoading');
+        return;
+      }
       showMessage({
         message: 'error retrieving accout, contact solace team',
         type: 'default',
@@ -90,6 +95,7 @@ const MainPasscodeScreen = () => {
   };
 
   useEffect(() => {
+    console.log('INSIDE THIS');
     if (filled) {
       checkPinReady();
     }
@@ -97,7 +103,7 @@ const MainPasscodeScreen = () => {
 
   return (
     <SolaceContainer>
-      <View style={globalStyles.fullCenter}>
+      <View style={[globalStyles.fullCenter, {flex: 0.5}]}>
         <Image
           source={require('../../../../assets/images/solace/solace-icon.png')}
         />
@@ -106,15 +112,15 @@ const MainPasscodeScreen = () => {
         </SolaceText>
       </View>
       <View style={{flex: 1}}>
-        <SolaceText variant="white" size="lg" weight="semibold">
+        <SolaceText variant="white" size="xl" weight="medium">
           enter passcode
         </SolaceText>
         <PasscodeContainer code={code} setCode={setCode} />
         {loading.value && (
           <SolaceLoader
-            style={{justifyContent: 'flex-start'}}
+            style={{justifyContent: 'flex-start', marginTop: 24}}
             text={loading.message}>
-            <ActivityIndicator style={{paddingLeft: 8}} size="small" />
+            <ActivityIndicator style={{marginTop: 8}} size="small" />
           </SolaceLoader>
         )}
       </View>

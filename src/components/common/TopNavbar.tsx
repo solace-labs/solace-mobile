@@ -1,5 +1,6 @@
 import React, {FC} from 'react';
 import {View} from 'react-native';
+import {Colors} from '../../utils/colors';
 import globalStyles from '../../utils/global_styles';
 import SolaceIcon from './solaceui/SolaceIcon';
 import SolaceText from './solaceui/SolaceText';
@@ -24,7 +25,11 @@ const TopNavbar: FC<Props> = ({
   endClick,
 }) => {
   return (
-    <View style={globalStyles.rowSpaceBetween}>
+    <View
+      style={[
+        globalStyles.rowSpaceBetween,
+        {backgroundColor: Colors.background.dark, zIndex: 50},
+      ]}>
       <View style={globalStyles.rowCenter}>
         <SolaceIcon
           name={startIcon || 'questioncircleo'}

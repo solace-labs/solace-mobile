@@ -9,12 +9,14 @@ type Props = {
   iconName: string;
   iconType?: 'antdesign' | 'mci';
   iconColor?: keyof typeof Colors.text;
+  handleIconPress?: () => void;
 } & SolaceInputProps;
 
 const SolaceCustomInput: FC<Props> = ({
   iconName,
   iconType = 'antdesign',
   iconColor = 'normal',
+  handleIconPress,
   ...props
 }) => {
   const getIcon = () => {
@@ -22,7 +24,6 @@ const SolaceCustomInput: FC<Props> = ({
       fontSize: 20,
       color: Colors.text[iconColor || 'light'],
     };
-    console.log({iconType, iconColor, iconName});
     switch (iconType) {
       case 'antdesign': {
         return (
@@ -44,7 +45,7 @@ const SolaceCustomInput: FC<Props> = ({
   return (
     <View>
       <View style={styles.inputWrap}>
-        <TouchableOpacity style={styles.iconPosition}>
+        <TouchableOpacity style={styles.iconPosition} onPress={handleIconPress}>
           {getIcon()}
         </TouchableOpacity>
         <SolaceInput {...props} style={styles.inputStyle} />

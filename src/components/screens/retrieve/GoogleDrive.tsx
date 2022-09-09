@@ -55,10 +55,6 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
         const encryptedSolaceName = await googleApi.getFileData(
           SOLACE_NAME_FILENAME,
         );
-        console.log({
-          encryptedSecretKey,
-          encryptedSolaceName,
-        });
         dispatch(
           setRetrieveData({
             ...state.retrieveData,
@@ -92,6 +88,7 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
         return;
       }
     } catch (e: any) {
+      console.log('ERRROR: ', e);
       if (!e.message.startsWith('RNGoogleSignInError')) {
         showMessage({
           message: e.message,

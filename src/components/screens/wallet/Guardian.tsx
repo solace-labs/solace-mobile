@@ -2,7 +2,7 @@
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 
-import {GlobalContext} from '../../../state/contexts/GlobalContext';
+import {AppState, GlobalContext} from '../../../state/contexts/GlobalContext';
 import GuardianTab from '../../wallet/GuardianTab';
 import GuardianSecondTab from '../../wallet/GuardianSecondTab';
 import {PublicKey} from 'solace-sdk';
@@ -11,6 +11,7 @@ import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import SolaceButton from '../../common/solaceui/SolaceButton';
 import SolaceText from '../../common/solaceui/SolaceText';
 import TopNavbar from '../../common/TopNavbar';
+import {StorageDeleteItem, StorageGetItem} from '../../../utils/storage';
 
 export type Props = {
   navigation: any;
@@ -29,8 +30,8 @@ const Guardian: React.FC<Props> = ({navigation}) => {
   const [guarding, setGuarding] = useState<PublicKeyType[]>([]);
 
   const getGuardians = async () => {
-    console.log('here');
     setLoading(true);
+    const appstate = await StorageGetItem('appstate');
     try {
       const sdk = state.sdk!;
       if (!sdk) {
@@ -39,15 +40,11 @@ const Guardian: React.FC<Props> = ({navigation}) => {
           type: 'danger',
         });
       }
-      console.log('SDK', sdk);
-      // const data = await sdk.fetchWalletData();
-      // console.log({data});
       const {
         pendingGuardians,
         approvedGuardians,
         guarding: whoIProtect,
       } = await sdk.fetchWalletData();
-      console.log({pendingGuardians, approvedGuardians, guarding});
       setGuardians({
         approved: approvedGuardians,
         pending: pendingGuardians,
@@ -55,18 +52,19 @@ const Guardian: React.FC<Props> = ({navigation}) => {
       setGuarding(whoIProtect);
       setLoading(false);
     } catch (e) {
-      showMessage({
-        message: 'some error fetching guardians',
-        type: 'danger',
-      });
-      console.log('Error during fetching guardian: ', e);
+      if (!(appstate === AppState.TESTING)) {
+        showMessage({
+          message: 'some error fetching guardians',
+          type: 'danger',
+        });
+      }
       setLoading(false);
     }
   };
 
   useEffect(() => {
     const willFocusSubscription = navigation.addListener('focus', async () => {
-      // await getGuardians();
+      await getGuardians();
     });
     return willFocusSubscription;
   }, [navigation]);

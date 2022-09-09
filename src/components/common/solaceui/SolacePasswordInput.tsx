@@ -31,6 +31,7 @@ const SolacePasswordInput: FC<PInputProps> = ({
     <View style={{position: 'relative'}}>
       <SolaceInput
         secureTextEntry={passwordVisibility}
+        style={style}
         {...passwordInputProps}
       />
       <Pressable onPress={handlePasswordVisibility} style={eyeIconStyle}>

@@ -17,8 +17,8 @@ const SolaceLoader: FC<Props> = ({text, children, style, ...textProps}) => {
       ]}>
       <SolaceText variant="normal" type="secondary" {...textProps}>
         {text}
-        {children}
       </SolaceText>
+      {children}
     </View>
   );
 };

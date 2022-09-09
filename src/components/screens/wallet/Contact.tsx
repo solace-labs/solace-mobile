@@ -1,82 +1,187 @@
-import {View, TouchableOpacity, Image} from 'react-native';
-import React, {useContext, useEffect} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import {
+  View,
+  TouchableOpacity,
+  Image,
+  RefreshControl,
+  ScrollView,
+  ActivityIndicator,
+} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
 
 import {GlobalContext} from '../../../state/contexts/GlobalContext';
-import {getContact} from '../../../state/actions/global';
 import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import TopNavbar from '../../common/TopNavbar';
-import WalletActivity from '../../wallet/WalletActivity';
 import SolaceText from '../../common/solaceui/SolaceText';
-import SolaceIcon from '../../common/solaceui/SolaceIcon';
 import globalStyles from '../../../utils/global_styles';
+import {PublicKeyType} from './Guardian';
+import ContactItem from '../../wallet/ContactItem';
+import WalletActivity from '../../wallet/WalletActivity';
+import SolaceIcon from '../../common/solaceui/SolaceIcon';
+import SolaceLoader from '../../common/solaceui/SolaceLoader';
+import {Colors} from '../../../utils/colors';
+import {useNavigation} from '@react-navigation/native';
 
 export type Props = {
-  navigation: any;
   route: any;
 };
 
-const ContactScreen: React.FC<Props> = ({route, navigation}) => {
-  const {state, dispatch} = useContext(GlobalContext);
+const ContactScreen: React.FC<Props> = () => {
+  const navigation: any = useNavigation();
+  const initialState = {message: '', value: false};
+  const {state} = useContext(GlobalContext);
+  const [contacts, setContacts] = useState<PublicKeyType[]>([]);
+  const [loading, setLoading] = useState(initialState);
+  const navState = navigation.getState();
+  const params = navState.routes.find((route: any) => route.name === 'Contact')
+    ?.params as any;
+  const asset = params.asset;
+
+  // useEffect(() => {
+  //   const id = route?.params?.id;
+  //   dispatch(getContact(id));
+  // }, [dispatch, route?.params?.id]);
+
+  const getContacts = async () => {
+    setLoading({message: 'getting trusted contacts...', value: true});
+    try {
+      const walletData = await state.sdk?.fetchWalletData();
+      console.log('Trusted Wallet: ', walletData!.trustedPubkeys);
+      // setContacts(walletData!.trustedPubkeys);
+      setContacts(walletData?.trustedPubkeys!);
+      setLoading(initialState);
+    } catch (e: any) {
+      setLoading(initialState);
+      console.log('Error: ', e);
+    }
+  };
 
   useEffect(() => {
-    const id = route?.params?.id;
-    dispatch(getContact(id));
-  }, [dispatch, route?.params?.id]);
+    getContacts();
+  }, []);
 
   const handleGoBack = () => {
     navigation.goBack();
   };
 
+  const handleAdd = () => {
+    navigation.navigate('AddContact');
+  };
+
+  const handleRefresh = async () => {
+    await getContacts();
+  };
+
+  const sendToUntrusted = () => {
+    navigation.navigate('Asset', {asset: asset.toString()});
+  };
+
+  if (loading.value) {
+    return (
+      <SolaceContainer>
+        <TopNavbar
+          startIcon="back"
+          endIcon="plus"
+          text="trusted contacts"
+          startClick={handleGoBack}
+          endClick={handleAdd}
+        />
+        <SolaceLoader text={loading.message}>
+          <ActivityIndicator size="small" />
+        </SolaceLoader>
+        {/* <WalletActivity data={[]} /> */}
+      </SolaceContainer>
+    );
+  }
+
   return (
     <SolaceContainer>
-      <TopNavbar startIcon="back" text="" startClick={handleGoBack} />
-      <View style={{flex: 1}}>
-        <View style={[globalStyles.rowSpaceBetween, {marginTop: 20}]}>
-          <SolaceText size="lg" weight="semibold">
-            {state.contact ? state.contact?.name : 'john doe'}
-          </SolaceText>
-          <SolaceText type="secondary" variant="normal" weight="bold">
-            edit
-          </SolaceText>
-        </View>
-        <SolaceText align="left" mt={16}>
-          select address
-        </SolaceText>
-        <View style={{marginTop: 20}}>
-          <TouchableOpacity
-            style={globalStyles.rowCenter}
-            onPress={() => navigation.navigate('Asset')}>
-            <View style={globalStyles.avatar}>
-              <Image
-                source={require('../../../../assets/images/solace/solana-icon.png')}
-                style={{
-                  width: 40,
-                  resizeMode: 'contain',
-                }}
+      <TopNavbar
+        startIcon="back"
+        text="trusted contacts"
+        endIcon="plus"
+        endClick={handleAdd}
+        startClick={handleGoBack}
+      />
+      <View style={globalStyles.fullCenter}>
+        {contacts && contacts.length > 0 ? (
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={loading.value}
+                onRefresh={handleRefresh}
               />
+            }
+            bounces={true}
+            style={{marginTop: -50, width: '100%'}}>
+            <View
+              style={[
+                globalStyles.rowCenter,
+                {justifyContent: 'center', marginBottom: 20},
+              ]}>
+              <SolaceText size="sm" weight="extralight">
+                pull to refresh
+              </SolaceText>
+              <SolaceIcon type="dark" name="down" />
             </View>
-            <SolaceText
-              size="md"
-              type="secondary"
-              weight="bold"
-              variant="light">
-              {state.contact ? state.contact.username : 'john.solace.money'}
+            <TouchableOpacity onPress={sendToUntrusted}>
+              <SolaceText
+                size="sm"
+                type="secondary"
+                variant="normal"
+                weight="bold"
+                mb={8}
+                style={{
+                  textDecorationLine: 'underline',
+                  textDecorationColor: Colors.background.light,
+                  textDecorationStyle: 'solid',
+                }}>
+                send to untrusted wallet?
+              </SolaceText>
+            </TouchableOpacity>
+            {contacts.map((contact, index) => {
+              return (
+                <ContactItem contact={contact} key={index} asset={asset} />
+              );
+            })}
+          </ScrollView>
+        ) : (
+          <View style={{flex: 1, width: '100%'}}>
+            <Image
+              source={require('../../../../assets/images/solace/send-money.png')}
+              style={globalStyles.image}
+            />
+            <SolaceText type="secondary" size="sm">
+              <SolaceText
+                onPress={handleAdd}
+                type="secondary"
+                size="sm"
+                variant="white"
+                style={{textDecorationLine: 'underline'}}
+                weight="bold">
+                add a contact
+              </SolaceText>{' '}
+              to send
             </SolaceText>
-          </TouchableOpacity>
-        </View>
-        <View style={{marginTop: 20}}>
-          <TouchableOpacity
-            style={{flexDirection: 'row', alignItems: 'center'}}
-            // onPress={() => navigation.navigate('Contact', {id: contact.id})}>
-          >
-            <SolaceIcon name="plus" type="dark" />
-            <SolaceText type="secondary" variant="normal" weight="bold">
-              add address
-            </SolaceText>
-          </TouchableOpacity>
-        </View>
+            <TouchableOpacity onPress={sendToUntrusted} style={{marginTop: 20}}>
+              <SolaceText
+                size="sm"
+                type="secondary"
+                variant="normal"
+                weight="bold"
+                mb={8}
+                style={{
+                  textDecorationLine: 'underline',
+                  textDecorationColor: Colors.background.light,
+                  textDecorationStyle: 'solid',
+                }}>
+                send to untrusted wallet?
+              </SolaceText>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
-      <WalletActivity data={[]} />
+      {/* <WalletActivity data={[]} /> */}
     </SolaceContainer>
   );
 };

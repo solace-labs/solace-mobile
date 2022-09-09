@@ -7,13 +7,13 @@ import React, {
   useReducer,
 } from 'react';
 import {Contact} from '../../components/wallet/ContactItem';
-import {setAccountStatus, setUser} from '../actions/global';
+import {clearData, setAccountStatus, setUser} from '../actions/global';
 import globalReducer from '../reducers/global';
 import {KeyPair, SolaceSDK} from 'solace-sdk';
 import {AwsCognito} from '../../utils/aws_cognito';
 import {GoogleApi} from '../../utils/google_apis';
 import {NETWORK, PROGRAM_ADDRESS} from '../../utils/constants';
-import {StorageGetItem} from '../../utils/storage';
+import {StorageClearAll, StorageGetItem} from '../../utils/storage';
 
 type InitialStateType = {
   accountStatus: AccountStatus;
@@ -46,7 +46,6 @@ export type User = {
   publicKey?: string;
   isWalletCreated: boolean;
   pin: string;
-  inRecovery?: boolean;
 };
 
 export enum AccountStatus {
@@ -58,6 +57,14 @@ export enum AccountStatus {
   SIGNED_UP = 'SIGNED_UP',
   LOGGED_ID = 'LOGGED_ID',
   RETRIEVE = 'RETRIEVE',
+}
+
+export enum AppState {
+  SIGNUP = 'SIGNUP',
+  GDRIVE = 'GDRIVE',
+  ONBOARDED = 'ONBOARDED',
+  RECOVERY = 'RECOVERY',
+  TESTING = 'TESTING',
 }
 
 export const initialState = {
@@ -79,6 +86,13 @@ export const initialState = {
   ],
 };
 
+export const getKeypairFromPrivateKey = (user: User) => {
+  const privateKey = user.ownerPrivateKey;
+  return KeyPair.fromSecretKey(
+    Uint8Array.from(privateKey.split(',').map(e => +e)),
+  );
+};
+
 export const GlobalContext = createContext<{
   state: InitialStateType;
   dispatch: Dispatch<any>;
@@ -86,16 +100,19 @@ export const GlobalContext = createContext<{
 
 const GlobalProvider = ({children}: {children: any}) => {
   const [state, dispatch] = useReducer(globalReducer, initialState);
-  console.log({state});
 
+  /** valid recover mode */
   const checkInRecoverMode = useCallback(async () => {
     const storedUser: User = await StorageGetItem('user');
+    const appState: AppState = await StorageGetItem('appstate');
     return (storedUser &&
-      storedUser.inRecovery &&
+      appState &&
+      appState === AppState.RECOVERY &&
       storedUser.solaceName &&
       storedUser.ownerPrivateKey) as boolean;
   }, []);
 
+  /** Valid logged in user */
   const isUserValid = useCallback(async () => {
     const storedUser: User = await StorageGetItem('user');
     return (storedUser &&
@@ -105,37 +122,98 @@ const GlobalProvider = ({children}: {children: any}) => {
       storedUser.isWalletCreated) as boolean;
   }, []);
 
+  const isGdriveUserValid = async () => {
+    const storedUser: User = await StorageGetItem('user');
+    const appState: AppState = await StorageGetItem('appstate');
+    return (storedUser &&
+      appState &&
+      appState === AppState.GDRIVE &&
+      storedUser.pin &&
+      storedUser.solaceName &&
+      storedUser.ownerPrivateKey) as boolean;
+  };
+
   const checkRecovery = useCallback(async () => {
     const storedUser: User = await StorageGetItem('user');
     const privateKey = storedUser.ownerPrivateKey! as string;
     const solaceName = storedUser.solaceName!;
-    console.log('checking recovery', privateKey);
     const keypair = KeyPair.fromSecretKey(
       Uint8Array.from(privateKey.split(',').map(e => +e)),
     );
-    console.log(keypair.publicKey.toString());
     const sdk = await SolaceSDK.retrieveFromName(solaceName, {
       network: NETWORK,
       owner: keypair,
       programAddress: PROGRAM_ADDRESS,
     });
     const res = await sdk.fetchWalletData();
-    console.log(res);
+    if (res && res.recoveryMode) {
+      dispatch(setAccountStatus(AccountStatus.RECOVERY));
+    }
   }, []);
 
   const init = useCallback(async () => {
+    /*** GETDATA */
+    // const appstate = await StorageGetItem('appstate');
+    // const storeduser = await StorageGetItem('user');
+    // console.log('appstate', appstate);
+    // console.log('storeduser', storeduser);
+    // await StorageClearAll();
+    // await StorageSetItem('appstate', AppState.ONBOARDED);
     const storedUser: User = await StorageGetItem('user');
-    console.log({storedUser});
+    const appState: AppState = await StorageGetItem('appstate');
+    if (appState === AppState.TESTING) {
+      dispatch(setAccountStatus(AccountStatus.EXISITING));
+      return;
+    }
+
+    /** RECOVERY CHECK */
     const inRecoveryMode = await checkInRecoverMode();
     if (inRecoveryMode) {
-      checkRecovery();
-    } else if (await isUserValid()) {
+      dispatch(setAccountStatus(AccountStatus.RECOVERY));
+      return;
+    }
+    /** LOGGED IN CHECK */
+    const userValid = await isUserValid();
+    if (userValid && appState === AppState.ONBOARDED) {
       dispatch(setUser(storedUser));
       dispatch(setAccountStatus(AccountStatus.EXISITING));
-    } else {
-      dispatch(setAccountStatus(AccountStatus.NEW));
+      return;
     }
+    /**  GDRIVE ALREADY BACKED UP */
+    const gdriveUserValid = await isGdriveUserValid();
+    if (gdriveUserValid && appState === AppState.GDRIVE) {
+      dispatch(setUser(storedUser));
+      dispatch(setAccountStatus(AccountStatus.SIGNED_UP));
+      return;
+    }
+    /** NEW USER */
+    // await StorageClearAll();
+    // dispatch(clearData());
+    dispatch(setAccountStatus(AccountStatus.NEW));
   }, [checkInRecoverMode, checkRecovery, isUserValid]);
+
+  /** ONLY FOR DEVELOPMENT USE */
+  const checking = async () => {
+    /*** GETDATA */
+    // const appstate = await StorageGetItem('appstate');
+    // const storeduser = await StorageGetItem('user');
+    // console.log(appstate);
+    // console.log(storeduser);
+    /*** LOGOUT */
+    // await StorageClearAll();
+    /*** LOGIN */
+    // await StorageSetItem('appstate', AppState.ONBOARDED);
+    // await StorageSetItem('user', {
+    //   email: 'ankit.negi@onpar.in',
+    //   isWalletCreated: true,
+    //   ownerPrivateKey:
+    //     '182,177,209,146,232,29,199,170,151,161,22,146,203,238,222,240,212,83,59,9,170,179,80,154,16,15,205,81,49,85,99,216,205,53,40,98,14,176,223,191,216,223,218,61,109,178,102,218,255,88,222,12,99,251,125,67,199,123,78,250,251,19,162,6',
+    //   pin: '12341234',
+    //   solaceName: 'solace8',
+    // });
+    // const datatoencrypt =
+    //   '182,177,209,146,232,29,199,170,151,161,22,146,203,238,222,240,212,83,59,9,170,179,80,154,16,15,205,81,49,85,99,216,205,53,40,98,14,176,223,191,216,223,218,61,109,178,102,218,255,88,222,12,99,251,125,67,199,123,78,250,251,19,162,6';
+  };
 
   useEffect(() => {
     init();

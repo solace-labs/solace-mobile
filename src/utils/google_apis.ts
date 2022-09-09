@@ -5,7 +5,11 @@ import {
   MimeTypes,
 } from '@robinbobin/react-native-google-drive-api-wrapper';
 import {showMessage} from 'react-native-flash-message';
-import {GOOGLE_IOS_CLIENT_ID, GOOGLE_WEB_CLIENT_ID} from './constants';
+import {
+  GOOGLE_ANDROID_CLIENT_ID,
+  GOOGLE_IOS_CLIENT_ID,
+  GOOGLE_WEB_CLIENT_ID,
+} from './constants';
 
 export class GoogleApi {
   gdrive = new GDrive();
@@ -13,10 +17,13 @@ export class GoogleApi {
     try {
       GoogleSignin.configure({
         scopes: [
-          'https://www.googleapis.com/auth/drive',
-          'https://www.googleapis.com/auth/drive.appfolder',
+          'https://www.googleapis.com/auth/drive.file',
+          // 'https://www.googleapis.com/auth/drive',
+          // 'https://www.googleapis.com/auth/drive.appfolder',
         ], // what API you want to access on behalf of the user, default is email and profile
-        webClientId: GOOGLE_WEB_CLIENT_ID, // client ID of type WEB for your server (needed to verify user ID and offline access)
+        // webClientId: GOOGLE_WEB_CLIENT_ID, // client ID of type WEB for your server (needed to verify user ID and offline access)
+        webClientId: GOOGLE_WEB_CLIENT_ID,
+        // androidClientId: G,
         offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
         hostedDomain: '', // specifies a hosted domain restriction
         forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs link below *.
