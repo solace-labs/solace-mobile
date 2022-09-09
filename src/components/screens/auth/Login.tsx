@@ -33,7 +33,6 @@ const Login: React.FC<Props> = ({navigation}) => {
   const [password, setPassword] = useState('');
   const [active, setActive] = useState('password');
   const [isLoading, setIsLoading] = useState(false);
-  console.log('AUTH LOGIN:');
 
   const handleSignIn = async () => {
     try {

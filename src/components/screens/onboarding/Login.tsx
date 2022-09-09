@@ -24,7 +24,6 @@ const Login: React.FC<Props> = ({navigation}) => {
   const [password, setPassword] = useState('');
   const [active, setActive] = useState('username');
   const [isLoading, setIsLoading] = useState(false);
-  console.log('ONBOARD LOGIN');
   const {state, dispatch} = useContext(GlobalContext);
 
   const handleSignIn = async () => {

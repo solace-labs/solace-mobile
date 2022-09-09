@@ -38,10 +38,8 @@ const AirdropScreen: React.FC<Props> = ({navigation}) => {
       const {publicKey} = keypair;
       const publicKeyString = publicKey.toString();
       /** Requesting Airdrop */
-      console.log('REQUESTING');
       const data = await requestAirdrop(publicKeyString);
       /** Airdrop confirmation */
-      console.log('AIRDROP CONFIRMATION');
       await confirmTransaction(data);
       navigation.reset({
         index: 0,
