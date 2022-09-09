@@ -7,11 +7,15 @@ import {
   getKeypairFromPrivateKey,
   GlobalContext,
 } from '../../../state/contexts/GlobalContext';
-import {PublicKey, SolaceSDK} from 'solace-sdk';
+import {KeyPair, PublicKey, SolaceSDK} from 'solace-sdk';
 import {showMessage} from 'react-native-flash-message';
 import {relayTransaction} from '../../../utils/relayer';
 import {StorageGetItem, StorageSetItem} from '../../../utils/storage';
-import {NETWORK, PROGRAM_ADDRESS} from '../../../utils/constants';
+import {
+  NETWORK,
+  PROGRAM_ADDRESS,
+  TEST_PRIVATE_KEY,
+} from '../../../utils/constants';
 import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import SolaceLoader from '../../common/solaceui/SolaceLoader';
 import SolaceButton from '../../common/solaceui/SolaceButton';
@@ -88,6 +92,32 @@ const CreateWalletScreen: React.FC = () => {
     }
   };
 
+  const createTestWallet = async () => {
+    setLoading({message: 'creating...', value: true});
+    const privateK = Uint8Array.from(TEST_PRIVATE_KEY.split(',').map(e => +e));
+    const keypair = KeyPair.fromSecretKey(privateK);
+    const sdk = await SolaceSDK.retrieveFromName(state.user?.solaceName!, {
+      network: NETWORK,
+      owner: keypair,
+      programAddress: PROGRAM_ADDRESS,
+    });
+    dispatch(
+      setUser({
+        ...state.user,
+        isWalletCreated: true,
+        ownerPrivateKey: TEST_PRIVATE_KEY,
+      }),
+    );
+    await StorageSetItem('user', {
+      ...state.user,
+      isWalletCreated: true,
+      ownerPrivateKey: TEST_PRIVATE_KEY,
+    });
+    dispatch(setSDK(sdk));
+    setLoading({message: '', value: false});
+    dispatch(setAccountStatus(AccountStatus.EXISITING));
+  };
+
   return (
     <SolaceContainer>
       <View style={{flex: 1}}>
@@ -98,8 +128,13 @@ const CreateWalletScreen: React.FC = () => {
         {loading.value && <SolaceLoader text={loading.message} />}
       </View>
       <SolaceButton
-        onPress={() => {
-          handleClick();
+        onPress={async () => {
+          const appState = await StorageGetItem('appstate');
+          if (appState === AppState.TESTING) {
+            createTestWallet();
+          } else {
+            handleClick();
+          }
         }}
         loading={loading.value}
         disabled={loading.value}>

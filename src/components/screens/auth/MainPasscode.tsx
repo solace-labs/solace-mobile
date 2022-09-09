@@ -95,6 +95,7 @@ const MainPasscodeScreen = () => {
   };
 
   useEffect(() => {
+    console.log('INSIDE THIS');
     if (filled) {
       checkPinReady();
     }

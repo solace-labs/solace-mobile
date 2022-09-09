@@ -18,8 +18,8 @@ export type Props = {
 
 const AddGuardian: React.FC<Props> = ({navigation}) => {
   const [address, setAddress] = useState(
-    // 'GNgMfSSJ4NjSuu1EdHj94P6TzQS24KH38y1si2CMrUsF',
-    '',
+    'GNgMfSSJ4NjSuu1EdHj94P6TzQS24KH38y1si2CMrUsF',
+    // '',
   );
   const {state} = useContext(GlobalContext);
   const [loading, setLoading] = useState({

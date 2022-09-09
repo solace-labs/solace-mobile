@@ -41,6 +41,7 @@ const PasscodeScreen: React.FC<Props> = ({navigation}) => {
         message: 'logging you in...',
         value: true,
       });
+      console.log(encryptedSecretKey);
       const secretKey = await decryptKey(encryptedSecretKey, code);
       const solaceName = await decryptKey(encryptedSolaceName, code);
       const user = {
@@ -78,6 +79,7 @@ const PasscodeScreen: React.FC<Props> = ({navigation}) => {
   const filled = code.length === PASSCODE_LENGTH;
 
   useEffect(() => {
+    console.log('HERE');
     if (filled) {
       decryptStoredData();
     }

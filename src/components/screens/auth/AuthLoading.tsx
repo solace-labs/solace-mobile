@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect} from 'react';
 import {showMessage} from 'react-native-flash-message';
+import {AppState} from '../../../state/contexts/GlobalContext';
 import {getFeePayer} from '../../../utils/apis';
 import {StorageDeleteItem, StorageGetItem} from '../../../utils/storage';
 import Loading from '../loading/Loading';
@@ -14,8 +15,14 @@ const AuthLoading: React.FC<Props> = ({navigation}) => {
     try {
       console.log('COMING HERE');
       await getFeePayer();
+      const appState = await StorageGetItem('appState');
       const tokens = await StorageGetItem('tokens');
-      if (tokens) {
+      if (appState === AppState.TESTING) {
+        navigation.reset({
+          index: 0,
+          routes: [{name: 'Login'}],
+        });
+      } else if (tokens) {
         navigation.reset({
           index: 0,
           routes: [{name: 'MainPasscode'}],

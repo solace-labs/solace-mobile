@@ -70,6 +70,7 @@ export enum AppState {
   GDRIVE = 'GDRIVE',
   ONBOARDED = 'ONBOARDED',
   RECOVERY = 'RECOVERY',
+  TESTING = 'TESTING',
 }
 
 export const initialState = {
@@ -158,10 +159,10 @@ const GlobalProvider = ({children}: {children: any}) => {
 
   const init = useCallback(async () => {
     /*** GETDATA */
-    // const appstate = await StorageGetItem('appstate');
-    // const storeduser = await StorageGetItem('user');
-    // console.log(appstate);
-    // console.log(storeduser);
+    const appstate = await StorageGetItem('appstate');
+    const storeduser = await StorageGetItem('user');
+    console.log('appstate', appstate);
+    console.log('storeduser', storeduser);
     // await StorageClearAll();
     // await StorageSetItem('appstate', AppState.ONBOARDED);
     const storedUser: User = await StorageGetItem('user');

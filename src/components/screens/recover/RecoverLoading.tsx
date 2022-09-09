@@ -9,9 +9,11 @@ export type Props = {
 };
 
 const RecoverLoading: React.FC<Props> = ({navigation}) => {
+  console.log('RECOVER LOADING');
   const getTokens = async () => {
     try {
       const appState: AppState = await StorageGetItem('appstate');
+      console.log('coming in recover loading', appState);
       if (appState === AppState.RECOVERY) {
         navigation.reset({
           index: 0,

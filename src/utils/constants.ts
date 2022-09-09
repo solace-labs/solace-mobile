@@ -1,5 +1,10 @@
 import {PublicKey} from 'solace-sdk';
 
+export const TEST_PRIVATE_KEY =
+  '182,177,209,146,232,29,199,170,151,161,22,146,203,238,222,240,212,83,59,9,170,179,80,154,16,15,205,81,49,85,99,216,205,53,40,98,14,176,223,191,216,223,218,61,109,178,102,218,255,88,222,12,99,251,125,67,199,123,78,250,251,19,162,6';
+export const TEST_PASSWORD = 'test@solace';
+export const TEST_EMAIL = 'test@solace.money';
+
 /** Solace sdk constants */
 export const NETWORK: 'testnet' | 'local' = 'testnet';
 export const PROGRAM_ADDRESS =

@@ -42,7 +42,7 @@ const RecieveItem: React.FC<Props> = ({route, navigation}) => {
     try {
       const splTokenAddress = new PublicKey(spltoken);
       const tokenAccount = await state.sdk?.getTokenAccount(splTokenAddress);
-      console.log(setAddressToken);
+      console.log(addressToken);
       setAddressToken(tokenAccount!.toString());
       setLoading(false);
     } catch (e) {

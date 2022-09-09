@@ -11,6 +11,7 @@ export type Props = {
 const OnboardLoading: React.FC<Props> = ({navigation}) => {
   const getTokens = async () => {
     const appState: AppState = await StorageGetItem('appstate');
+    console.log('state', appState);
     const tokens = await StorageGetItem('tokens');
     if (appState === AppState.GDRIVE) {
       if (tokens) {
