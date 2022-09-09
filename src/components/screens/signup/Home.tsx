@@ -2,6 +2,7 @@ import {View, Image} from 'react-native';
 import React, {useContext} from 'react';
 import {
   AccountStatus,
+  AppState,
   GlobalContext,
 } from '../../../state/contexts/GlobalContext';
 import {setAccountStatus} from '../../../state/actions/global';
@@ -9,6 +10,7 @@ import SolaceButton from '../../common/solaceui/SolaceButton';
 import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import SolaceText from '../../common/solaceui/SolaceText';
 import globalStyles from '../../../utils/global_styles';
+import {StorageGetItem} from '../../../utils/storage';
 
 export type Props = {
   navigation: any;
@@ -35,7 +37,14 @@ const HomeScreen: React.FC<Props> = ({navigation}) => {
       <SolaceButton
         mt={16}
         variant="dark"
-        onPress={() => dispatch(setAccountStatus(AccountStatus.RETRIEVE))}>
+        onPress={async () => {
+          const appState = await StorageGetItem('appstate');
+          if (appState === AppState.TESTING) {
+            dispatch(setAccountStatus(AccountStatus.RECOVERY));
+          } else {
+            dispatch(setAccountStatus(AccountStatus.RETRIEVE));
+          }
+        }}>
         <SolaceText type="secondary" weight="bold">
           retrieve your wallet
         </SolaceText>

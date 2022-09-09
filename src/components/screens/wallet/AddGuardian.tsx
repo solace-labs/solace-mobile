@@ -1,6 +1,6 @@
 import {View} from 'react-native';
 import React, {useContext, useState} from 'react';
-import {GlobalContext} from '../../../state/contexts/GlobalContext';
+import {AppState, GlobalContext} from '../../../state/contexts/GlobalContext';
 import {PublicKey, SolaceSDK} from 'solace-sdk';
 import {relayTransaction, requestGuardian} from '../../../utils/relayer';
 import {showMessage} from 'react-native-flash-message';
@@ -11,6 +11,7 @@ import SolaceText from '../../common/solaceui/SolaceText';
 import SolaceLoader from '../../common/solaceui/SolaceLoader';
 import TopNavbar from '../../common/TopNavbar';
 import SolaceCustomInput from '../../common/solaceui/SolaceCustomInput';
+import {StorageGetItem} from '../../../utils/storage';
 
 export type Props = {
   navigation: any;
@@ -32,6 +33,7 @@ const AddGuardian: React.FC<Props> = ({navigation}) => {
       message: 'adding guardian...',
       value: true,
     });
+    const appstate = await StorageGetItem('appstate');
     const sdk = state.sdk!;
     const walletName = state.user?.solaceName!;
     const solaceWalletAddress = sdk.wallet.toString();
@@ -65,10 +67,17 @@ const AddGuardian: React.FC<Props> = ({navigation}) => {
         message: '',
         value: false,
       });
-      showMessage({
-        message: 'service unavilable. try again later',
-        type: 'warning',
-      });
+      if (!(appstate === AppState.TESTING)) {
+        showMessage({
+          message: 'service unavilable. try again later',
+          type: 'warning',
+        });
+      } else {
+        showMessage({
+          message: 'do a transaction first',
+          type: 'info',
+        });
+      }
     }
   };
 

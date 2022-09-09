@@ -2,7 +2,7 @@
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 
-import {GlobalContext} from '../../../state/contexts/GlobalContext';
+import {AppState, GlobalContext} from '../../../state/contexts/GlobalContext';
 import GuardianTab from '../../wallet/GuardianTab';
 import GuardianSecondTab from '../../wallet/GuardianSecondTab';
 import {PublicKey} from 'solace-sdk';
@@ -11,6 +11,7 @@ import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import SolaceButton from '../../common/solaceui/SolaceButton';
 import SolaceText from '../../common/solaceui/SolaceText';
 import TopNavbar from '../../common/TopNavbar';
+import {StorageDeleteItem, StorageGetItem} from '../../../utils/storage';
 
 export type Props = {
   navigation: any;
@@ -30,6 +31,7 @@ const Guardian: React.FC<Props> = ({navigation}) => {
 
   const getGuardians = async () => {
     setLoading(true);
+    const appstate = await StorageGetItem('appstate');
     try {
       const sdk = state.sdk!;
       if (!sdk) {
@@ -50,10 +52,12 @@ const Guardian: React.FC<Props> = ({navigation}) => {
       setGuarding(whoIProtect);
       setLoading(false);
     } catch (e) {
-      showMessage({
-        message: 'some error fetching guardians',
-        type: 'danger',
-      });
+      if (!(appstate === AppState.TESTING)) {
+        showMessage({
+          message: 'some error fetching guardians',
+          type: 'danger',
+        });
+      }
       setLoading(false);
     }
   };

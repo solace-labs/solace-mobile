@@ -4,6 +4,7 @@ import React, {useContext, useEffect, useState} from 'react';
 
 import {
   AccountStatus,
+  AppState,
   GlobalContext,
 } from '../../../state/contexts/GlobalContext';
 import {
@@ -12,7 +13,7 @@ import {
   setUser,
 } from '../../../state/actions/global';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {StorageClearAll} from '../../../utils/storage';
+import {StorageClearAll, StorageGetItem} from '../../../utils/storage';
 import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import SolaceIcon from '../../common/solaceui/SolaceIcon';
 import SolaceText from '../../common/solaceui/SolaceText';
@@ -101,7 +102,11 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
   };
 
   useEffect(() => {
-    init();
+    try {
+      init();
+    } catch (e) {
+      console.log('error during incubation get', e);
+    }
   }, []);
 
   const endIncubation = async () => {
@@ -145,9 +150,14 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
         {
           text: 'OK',
           onPress: async () => {
-            await StorageClearAll();
-            dispatch(clearData());
-            dispatch(setAccountStatus(AccountStatus.NEW));
+            const appState = await StorageGetItem('appstate');
+            if (appState === AppState.TESTING) {
+              dispatch(setAccountStatus(AccountStatus.NEW));
+            } else {
+              await StorageClearAll();
+              dispatch(clearData());
+              dispatch(setAccountStatus(AccountStatus.NEW));
+            }
           },
         },
       ],

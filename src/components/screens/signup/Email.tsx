@@ -19,8 +19,13 @@ import SolaceInput from '../../common/solaceui/SolaceInput';
 import SolacePasswordInput from '../../common/solaceui/SolacePasswordInput';
 import SolaceText from '../../common/solaceui/SolaceText';
 import Header from '../../common/Header';
-import {EMAIL_REGEX, OTP_REGEX, PASSWORD_REGEX} from '../../../utils/constants';
-import SolaceLoader from '../../common/solaceui/SolaceLoader';
+import {
+  EMAIL_REGEX,
+  OTP_REGEX,
+  PASSWORD_REGEX,
+  TEST_EMAIL,
+  TEST_PASSWORD,
+} from '../../../utils/constants';
 import {StorageSetItem} from '../../../utils/storage';
 import {Colors} from '../../../utils/colors';
 
@@ -80,41 +85,51 @@ const EmailScreen: React.FC<Props> = ({navigation}) => {
   };
 
   const handleMailSubmit = async () => {
-    const awsCognito = new AwsCognito();
-    awsCognito.setCognitoUser(username.value);
-    dispatch(setAwsCognito(awsCognito));
-    if (!awsCognito) {
-      showMessage({
-        message: 'server error! try again later',
-        type: 'danger',
+    if (email.value === TEST_EMAIL && password.value === TEST_PASSWORD) {
+      await StorageSetItem('appstate', AppState.TESTING);
+      await StorageSetItem('user', {
+        email: email.value,
+        solaceName: username.value,
       });
-      return;
+      dispatch(setUser({email: email.value, solaceName: username.value}));
+      dispatch(setAccountStatus(AccountStatus.SIGNED_UP));
+    } else {
+      const awsCognito = new AwsCognito();
+      awsCognito.setCognitoUser(username.value);
+      dispatch(setAwsCognito(awsCognito));
+      if (!awsCognito) {
+        showMessage({
+          message: 'server error! try again later',
+          type: 'danger',
+        });
+        return;
+      }
+      try {
+        setIsLoading(true);
+        const response = await awsCognito?.emailSignUp(
+          username.value,
+          email.value,
+          password.value,
+        );
+        dispatch(
+          setUser({
+            solaceName: username.value,
+            email: email.value,
+          }),
+        );
+        setIsOtpSent(true);
+        showMessage({
+          message: 'OTP sent to the provided mail',
+          type: 'success',
+        });
+      } catch (e: any) {
+        showMessage({
+          message: e.message,
+          type: 'danger',
+        });
+      }
+      setIsLoading(false);
     }
-    try {
-      setIsLoading(true);
-      const response = await awsCognito?.emailSignUp(
-        username.value,
-        email.value,
-        password.value,
-      );
-      dispatch(
-        setUser({
-          solaceName: username.value,
-          email: email.value,
-        }),
-      );
-      setIsOtpSent(true);
-      showMessage({
-        message: 'OTP sent to the provided mail',
-        type: 'success',
-      });
-    } catch (e: any) {
-      showMessage({
-        message: e.message,
-        type: 'danger',
-      });
-    }
-    setIsLoading(false);
   };
 
   const handleVerifyOtp = async () => {
@@ -147,6 +162,9 @@ const EmailScreen: React.FC<Props> = ({navigation}) => {
   };
 
   const isDisable = () => {
+    if (email.value === TEST_EMAIL && password.value === TEST_PASSWORD) {
+      return false;
+    }
     return (
       !username.isValid ||
       !email.isValid ||
@@ -187,9 +205,13 @@ const EmailScreen: React.FC<Props> = ({navigation}) => {
           onFocus={() => setActive('password')}
           onChangeText={text => validatePassword(text)}
           mt={16}
-          style={[!password.isValid ? {borderBottomColor: 'red'} : {}]}
+          style={[
+            !password.isValid && !(password.value === TEST_PASSWORD)
+              ? {borderBottomColor: 'red'}
+              : {},
+          ]}
         />
-        {!password.isValid && (
+        {!password.isValid && !(password.value === TEST_PASSWORD) && (
           <SolaceText
             type="secondary"
             size="xs"
@@ -216,6 +238,7 @@ const EmailScreen: React.FC<Props> = ({navigation}) => {
           <ActivityIndicator size="small" color="#fff" />
         </View>
       )}
+
       <SolaceButton
         onPress={() => {
           isOtpSent ? handleVerifyOtp() : handleMailSubmit();

@@ -13,7 +13,12 @@ const OnboardLoading: React.FC<Props> = ({navigation}) => {
     const appState: AppState = await StorageGetItem('appstate');
     console.log('state', appState);
     const tokens = await StorageGetItem('tokens');
-    if (appState === AppState.GDRIVE) {
+    if (appState === AppState.TESTING) {
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'Login'}],
+      });
+    } else if (appState === AppState.GDRIVE) {
       if (tokens) {
         navigation.reset({
           index: 0,

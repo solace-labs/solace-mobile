@@ -13,7 +13,6 @@ export type Props = {
 const AuthLoading: React.FC<Props> = ({navigation}) => {
   const getTokens = async () => {
     try {
-      console.log('COMING HERE');
       await getFeePayer();
       const appState = await StorageGetItem('appState');
       const tokens = await StorageGetItem('tokens');
