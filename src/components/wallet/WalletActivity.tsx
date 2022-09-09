@@ -65,7 +65,7 @@ const WalletActivity: FC<Props> = ({data}) => {
         size="sm"
         mb={16}
         style={{justifyContent: 'center', alignItems: 'center'}}>
-        visit
+        visit{' '}
         <SolaceText
           onPress={openLink}
           type="secondary"
@@ -74,7 +74,7 @@ const WalletActivity: FC<Props> = ({data}) => {
           style={{textDecorationLine: 'underline'}}
           weight="bold">
           solscan
-        </SolaceText>
+        </SolaceText>{' '}
         to view your transaction history
       </SolaceText>
     </View>

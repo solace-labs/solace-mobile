@@ -42,6 +42,7 @@ const RecieveItem: React.FC<Props> = ({route, navigation}) => {
     try {
       const splTokenAddress = new PublicKey(spltoken);
       const tokenAccount = await state.sdk?.getTokenAccount(splTokenAddress);
+      console.log(setAddressToken);
       setAddressToken(tokenAccount!.toString());
       setLoading(false);
     } catch (e) {
@@ -98,7 +99,10 @@ const RecieveItem: React.FC<Props> = ({route, navigation}) => {
         <View style={globalStyles.fullCenter}>
           <View style={[globalStyles.rowCenter, {flex: 0.5}]}>
             <View style={{borderColor: 'white', borderWidth: 5}}>
-              <QRCode value={addressToken ?? address} size={300} />
+              <QRCode
+                value={addressToken ? addressToken : 'no-address'}
+                size={300}
+              />
             </View>
           </View>
           <View style={[globalStyles.fullWidth, {flex: 0.5, paddingTop: 12}]}>
