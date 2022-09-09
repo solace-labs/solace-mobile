@@ -30,6 +30,7 @@ const Login: React.FC<Props> = ({navigation}) => {
     try {
       setIsLoading(true);
       const appState = await StorageGetItem('appstate');
+      console.log('ologin', appState);
       if (appState === AppState.TESTING) {
         handleTestSignIn();
         return;
@@ -64,8 +65,9 @@ const Login: React.FC<Props> = ({navigation}) => {
   };
 
   const handleTestSignIn = async () => {
-    const solaceName = state.user?.solaceName;
-    if (password === TEST_PASSWORD && username === solaceName) {
+    const user = await StorageGetItem('user');
+    console.log(user);
+    if (password === TEST_PASSWORD && username === user.solaceName) {
       navigation.reset({
         index: 0,
         routes: [{name: 'CreateWallet'}],

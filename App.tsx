@@ -6,9 +6,9 @@ import codePush from 'react-native-code-push';
 
 let CodePushOptions = {
   checkFrequency: codePush.CheckFrequency.ON_APP_START,
-  mandatoryInstallMode: codePush.InstallMode.ON_NEXT_RESTART,
+  mandatoryInstallMode: codePush.InstallMode.IMMEDIATE,
   updateDialog: {
-    appendReleaseDescription: true,
+    // appendReleaseDescription: true,
     title: 'a new update is available!',
   },
 };

@@ -3,7 +3,7 @@ import {Linking} from 'react-native';
 import {showMessage} from 'react-native-flash-message';
 import {PublicKey, SolaceSDK} from 'solace-sdk';
 import {PublicKeyType} from '../components/screens/wallet/Guardian';
-import {Tokens, User} from '../state/contexts/GlobalContext';
+import {AppState, Tokens, User} from '../state/contexts/GlobalContext';
 import {AwsCognito} from './aws_cognito';
 import {NETWORK} from './constants';
 import {getMeta} from './relayer';
@@ -72,7 +72,11 @@ export const confirmTransaction = async (transactionId: string) => {
   }
 };
 
-export const getFeePayer = async (): Promise<PublicKeyType> => {
+export const getFeePayer = async (): Promise<PublicKeyType | void> => {
+  const appstate = await StorageGetItem('appstate');
+  if (appstate === AppState.TESTING) {
+    return;
+  }
   try {
     const {feePayer} = await getMeta();
     return new PublicKey(feePayer);
