@@ -187,8 +187,7 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
           style={imageStyle}
         />
         <Header
-          heading="secure your vautt"
-          // subHeading="store your encrypted key in google drive so you can recover your wallet if you lose your device"
+          heading="secure your vault"
           subHeading="solace uses cloud storage providers to store your password encrypted private key. this feature is in beta and will be optional in future releases"
         />
         {loading.value && <SolaceLoader text={loading.message} />}

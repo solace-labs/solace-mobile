@@ -105,7 +105,7 @@ const GuardianTab: React.FC<Props> = ({guardians, loading}) => {
           style={globalStyles.image}
         />
         <SolaceText type="secondary" size="sm" weight="bold" variant="normal">
-          you need 1 guardian approval for solace wallet recovery or to approve
+          you need 1 guardian approval for solace vault recovery or to approve
           an untrusted transaction
         </SolaceText>
       </View>

@@ -153,8 +153,8 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
 
   const logout = async () => {
     Alert.alert(
-      'are you sure you want log logout?',
-      'you will have to retrieve your wallet using google drive.',
+      'are you sure you want to logout?',
+      'you will have to retrieve your vault using google drive.',
       [
         {
           text: 'Cancel',

@@ -45,7 +45,7 @@ const WalletActivity: FC<Props> = ({data}) => {
     <View style={{flex: 1, justifyContent: 'space-between'}}>
       <View style={globalStyles.rowSpaceBetween}>
         <SolaceText weight="semibold" size="lg">
-          wallet activity
+          vault activity
         </SolaceText>
         <TouchableOpacity>
           {/* see more */}
