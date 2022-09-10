@@ -20,14 +20,19 @@ let App = () => {
 
   const update = async () => {
     setUpdating(true);
-    await codePush.sync({
-      installMode: codePush.InstallMode.IMMEDIATE,
-      updateDialog: {
-        appendReleaseDescription: true,
-        title: 'a new update is available!',
-      },
-    });
-    setUpdating(false);
+    try {
+      await codePush.sync({
+        installMode: codePush.InstallMode.IMMEDIATE,
+        updateDialog: {
+          appendReleaseDescription: true,
+          title: 'a new update is available!',
+        },
+      });
+      setUpdating(false);
+    } catch (e) {
+      setUpdating(false);
+      console.log('ERROR DURING UPDATE', e);
+    }
   };
 
   useEffect(() => {
