@@ -157,10 +157,10 @@ const GlobalProvider = ({
       return;
     }
     /*** GETDATA */
-    const appstate = await StorageGetItem('appstate');
-    const storeduser = await StorageGetItem('user');
-    console.log('appstate', appstate);
-    console.log('storeduser', storeduser);
+    // const appstate = await StorageGetItem('appstate');
+    // const storeduser = await StorageGetItem('user');
+    // console.log('appstate', appstate);
+    // console.log('storeduser', storeduser);
     // await StorageClearAll();
     // await StorageSetItem('appstate', AppState.ONBOARDED);
     const storedUser: User = await StorageGetItem('user');
