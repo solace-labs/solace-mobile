@@ -114,6 +114,12 @@ const AddContactScreen: React.FC<Props> = ({navigation}) => {
           placeholder="name"
         /> */}
         <SolaceCustomInput
+          handleIconPress={() => {
+            showMessage({
+              message: 'scan coming soon...',
+              type: 'info',
+            });
+          }}
           iconName="line-scan"
           placeholder="address"
           iconType="mci"

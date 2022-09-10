@@ -69,6 +69,12 @@ const AddToken: React.FC<Props> = ({navigation}) => {
       <View style={{flex: 1, marginTop: 16}}>
         <SolaceCustomInput
           iconName="line-scan"
+          handleIconPress={() => {
+            showMessage({
+              message: 'scan coming soon...',
+              type: 'info',
+            });
+          }}
           placeholder="address"
           iconType="mci"
           value={address}

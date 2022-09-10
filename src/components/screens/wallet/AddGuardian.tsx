@@ -96,6 +96,12 @@ const AddGuardian: React.FC<Props> = ({navigation}) => {
         <SolaceCustomInput
           iconName="line-scan"
           iconType="mci"
+          handleIconPress={() => {
+            showMessage({
+              message: 'scan coming soon...',
+              type: 'info',
+            });
+          }}
           value={address}
           placeholder="wallet address of guardian"
           onChangeText={setAddress}

@@ -1,5 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {View, Image, TouchableOpacity, Alert} from 'react-native';
+import {
+  View,
+  Image,
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 
 import {
@@ -49,6 +55,7 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
     moment(new Date()).format('DD MMM HH:mm'),
   );
 
+  const [loadingIncubation, setLoadingIncubation] = useState(true);
   const [showIncubation, setShowIncubation] = useState(false);
 
   const {
@@ -94,11 +101,18 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
   };
 
   const init = async () => {
-    const data = await sdk!.fetchWalletData();
-    console.log(sdk!.wallet);
-    const isIncubationMode = await checkIncubationMode(data);
-    setShowIncubation(isIncubationMode);
-    await getIncubationTime(data.createdAt);
+    setLoadingIncubation(true);
+    try {
+      const data = await sdk!.fetchWalletData();
+      console.log(sdk!.wallet);
+      const isIncubationMode = await checkIncubationMode(data);
+      setShowIncubation(isIncubationMode);
+      await getIncubationTime(data.createdAt);
+      setLoadingIncubation(false);
+    } catch (e) {
+      console.log('error fetching incubation', e);
+      setLoadingIncubation(false);
+    }
   };
 
   useEffect(() => {
@@ -184,21 +198,26 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
           variant="antdesign"
           name="lock"
         />
-        <TouchableOpacity
-          style={globalStyles.rowCenter}
-          // onPress={handleIncubationEnd}
-        >
-          <SolaceStatus
-            type={showIncubation ? 'success' : 'error'}
-            style={{marginRight: 8}}
-          />
-          <SolaceText size="xs">
-            incubation {showIncubation ? 'ends at' : 'ended on'}{' '}
-          </SolaceText>
-          <SolaceText size="xs" weight="bold">
-            {incubationDate}
-          </SolaceText>
-        </TouchableOpacity>
+        {loadingIncubation ? (
+          <ActivityIndicator size="small" />
+        ) : (
+          <TouchableOpacity
+            style={globalStyles.rowCenter}
+            // onPress={handleIncubationEnd}
+          >
+            <SolaceStatus
+              type={showIncubation ? 'success' : 'error'}
+              style={{marginRight: 8}}
+            />
+            <SolaceText size="xs">
+              incubation {showIncubation ? 'ends at' : 'ended on'}{' '}
+            </SolaceText>
+            <SolaceText size="xs" weight="bold">
+              {incubationDate}
+            </SolaceText>
+          </TouchableOpacity>
+        )}
+
         <SolaceIcon
           onPress={() => logout()}
           type="normal"
@@ -239,7 +258,12 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
             subText="send"
           />
           <SolaceIcon
-            onPress={() => {}}
+            onPress={() => {
+              showMessage({
+                message: 'coming soon...',
+                type: 'info',
+              });
+            }}
             type="light"
             name="line-scan"
             variant="mci"

@@ -157,6 +157,12 @@ const AssetScreen = () => {
             iconName="line-scan"
             placeholder="recipient's address"
             iconType="mci"
+            handleIconPress={() => {
+              showMessage({
+                message: 'scan coming soon...',
+                type: 'info',
+              });
+            }}
             value={recipientAddress}
             onChangeText={setRecipientAddress}
           />
