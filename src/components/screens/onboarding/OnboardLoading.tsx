@@ -16,7 +16,7 @@ const OnboardLoading: React.FC<Props> = ({navigation}) => {
     if (appState === AppState.TESTING) {
       navigation.reset({
         index: 0,
-        routes: [{name: 'Login'}],
+        routes: [{name: 'CreateWallet'}],
       });
     } else if (appState === AppState.GDRIVE) {
       if (tokens) {
