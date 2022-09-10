@@ -8,12 +8,15 @@ import SignUpStack from './SignUp';
 import LoadingStack from './Loading';
 import RetrieveStack from './Retrieve';
 import RecoverStack from './Recover';
+import UpdateStack from './Update';
 
 const Navigation = () => {
   const {state} = useContext(GlobalContext);
 
   const renderContent = () => {
     switch (state.accountStatus) {
+      case AccountStatus.UPDATE:
+        return <UpdateStack />;
       case AccountStatus.LOADING:
         return <LoadingStack />;
       case AccountStatus.NEW:

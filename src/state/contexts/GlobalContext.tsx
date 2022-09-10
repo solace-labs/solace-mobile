@@ -57,6 +57,7 @@ export enum AccountStatus {
   SIGNED_UP = 'SIGNED_UP',
   LOGGED_ID = 'LOGGED_ID',
   RETRIEVE = 'RETRIEVE',
+  UPDATE = 'UPDATE',
 }
 
 export enum AppState {
@@ -98,9 +99,15 @@ export const GlobalContext = createContext<{
   dispatch: Dispatch<any>;
 }>({state: initialState, dispatch: () => {}});
 
-const GlobalProvider = ({children}: {children: any}) => {
+const GlobalProvider = ({
+  children,
+  updating,
+}: {
+  children: any;
+  updating: boolean;
+}) => {
   const [state, dispatch] = useReducer(globalReducer, initialState);
-
+  console.log({updating});
   /** valid recover mode */
   const checkInRecoverMode = useCallback(async () => {
     const storedUser: User = await StorageGetItem('user');
@@ -152,6 +159,11 @@ const GlobalProvider = ({children}: {children: any}) => {
   }, []);
 
   const init = useCallback(async () => {
+    console.log('init', updating);
+    if (updating) {
+      dispatch(setAccountStatus(AccountStatus.UPDATE));
+      return;
+    }
     /*** GETDATA */
     // const appstate = await StorageGetItem('appstate');
     // const storeduser = await StorageGetItem('user');
@@ -190,7 +202,7 @@ const GlobalProvider = ({children}: {children: any}) => {
     // await StorageClearAll();
     // dispatch(clearData());
     dispatch(setAccountStatus(AccountStatus.NEW));
-  }, [checkInRecoverMode, checkRecovery, isUserValid]);
+  }, [checkInRecoverMode, checkRecovery, isUserValid, updating]);
 
   /** ONLY FOR DEVELOPMENT USE */
   const checking = async () => {
@@ -217,7 +229,7 @@ const GlobalProvider = ({children}: {children: any}) => {
 
   useEffect(() => {
     init();
-  }, []);
+  }, [updating]);
 
   return (
     <GlobalContext.Provider value={{state, dispatch}}>
