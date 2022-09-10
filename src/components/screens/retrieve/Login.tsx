@@ -3,6 +3,7 @@ import {View} from 'react-native';
 import React, {useContext, useState} from 'react';
 import {
   AccountStatus,
+  AppState,
   GlobalContext,
 } from '../../../state/contexts/GlobalContext';
 import {
@@ -20,6 +21,7 @@ import SolacePasswordInput from '../../common/solaceui/SolacePasswordInput';
 import SolaceLoader from '../../common/solaceui/SolaceLoader';
 import SolaceButton from '../../common/solaceui/SolaceButton';
 import SolaceText from '../../common/solaceui/SolaceText';
+import {decryptKey} from '../../../utils/aes_encryption';
 
 export type Props = {
   navigation: any;
@@ -27,10 +29,48 @@ export type Props = {
 
 const Login: React.FC<Props> = ({navigation}) => {
   const {state, dispatch} = useContext(GlobalContext);
-  const [username, setUsername] = useState(state.user?.solaceName!);
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [active, setActive] = useState('password');
   const [isLoading, setIsLoading] = useState(false);
+
+  const decryptStoredData = async () => {
+    try {
+      const {encryptedSecretKey, encryptedSolaceName} = state.retrieveData!;
+      console.log(encryptedSecretKey);
+      const secretKey = await decryptKey(encryptedSecretKey, password);
+      const solaceName = await decryptKey(encryptedSolaceName, password);
+      const user = {
+        solaceName,
+        ownerPrivateKey: secretKey,
+        isWalletCreated: true,
+      };
+      if (solaceName !== username.trim()) {
+        showMessage({
+          message: 'username is incorrect',
+          type: 'danger',
+        });
+        setIsLoading(false);
+        return;
+      }
+      await StorageSetItem('appstate', AppState.ONBOARDED);
+      dispatch(setUser(user));
+      await StorageSetItem('user', user);
+      setIsLoading(false);
+      showMessage({
+        message: 'successfully retrieved account. login again please',
+        type: 'success',
+      });
+      dispatch(setAccountStatus(AccountStatus.EXISITING));
+    } catch (e: any) {
+      setIsLoading(false);
+      console.log(e.message);
+      showMessage({
+        message: 'incorrect password/username. please try again',
+        type: 'danger',
+      });
+    }
+  };
 
   const handleSignIn = async () => {
     try {
@@ -47,12 +87,8 @@ const Login: React.FC<Props> = ({navigation}) => {
         refreshToken: {token: refreshtoken},
       } = response;
       await StorageSetItem('tokens', {accesstoken, idtoken, refreshtoken});
-      dispatch(setUser({...state.user, solaceName: username}));
-      setIsLoading(false);
-      navigation.reset({
-        index: 0,
-        routes: [{name: 'Loading'}],
-      });
+      await decryptStoredData();
+      // dispatch(setUser({...state.user, solaceName: username}));
     } catch (e: any) {
       setIsLoading(false);
       showMessage({
@@ -73,10 +109,9 @@ const Login: React.FC<Props> = ({navigation}) => {
           heading={`enter ${
             active === 'username' ? 'solace username' : 'password'
           }`}
-          subHeading="sign in to your account"
+          subHeading="enter credentials to retrieve account"
         />
         <SolaceInput
-          // editable={}
           placeholder="username"
           onFocus={() => setActive('username')}
           mt={16}
@@ -99,7 +134,7 @@ const Login: React.FC<Props> = ({navigation}) => {
         loading={isLoading}
         disabled={isDisable()}>
         <SolaceText type="secondary" weight="bold" variant="dark">
-          sign in
+          retrieve?
         </SolaceText>
       </SolaceButton>
     </SolaceContainer>

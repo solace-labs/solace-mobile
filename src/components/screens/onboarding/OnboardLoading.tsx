@@ -9,37 +9,23 @@ export type Props = {
 };
 
 const OnboardLoading: React.FC<Props> = ({navigation}) => {
-  const getTokens = async () => {
+  const getScreen = async () => {
     const appState: AppState = await StorageGetItem('appstate');
-    console.log('state', appState);
-    const tokens = await StorageGetItem('tokens');
     if (appState === AppState.TESTING) {
       navigation.reset({
         index: 0,
         routes: [{name: 'CreateWallet'}],
       });
-    } else if (appState === AppState.GDRIVE) {
-      if (tokens) {
-        navigation.reset({
-          index: 0,
-          routes: [{name: 'CreateWallet'}],
-        });
-      } else {
-        navigation.reset({
-          index: 0,
-          routes: [{name: 'Login'}],
-        });
-      }
     } else {
       navigation.reset({
         index: 0,
-        routes: [{name: 'Passcode'}],
+        routes: [{name: 'Login'}],
       });
     }
   };
 
   useEffect(() => {
-    getTokens();
+    getScreen();
   }, []);
 
   return <Loading />;

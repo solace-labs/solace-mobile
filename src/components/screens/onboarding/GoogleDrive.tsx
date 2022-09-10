@@ -45,7 +45,6 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
       const {secretKey} = keypair;
       const secretKeyString = secretKey.toString();
       /** Google Drive Storage of Private Key and Solace Name */
-      console.log('STORING');
       await storeToGoogleDrive(secretKeyString);
       // dispatch(
       //   setUser({
@@ -95,11 +94,9 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
         const appState = await StorageGetItem('appstate');
         if (appState === AppState.RECOVERY) {
           const user: User = {
-            pin,
             solaceName: username,
             ownerPrivateKey: secretKey,
             isWalletCreated: true,
-            email: state.user?.email!,
           };
           await StorageSetItem('appstate', AppState.ONBOARDED);
           await StorageSetItem('user', user);
@@ -110,14 +107,12 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
         dispatch(
           setUser({
             ...state.user,
-            isWalletCreated: false,
             ownerPrivateKey: secretKey,
           }),
         );
         await StorageSetItem('appstate', AppState.GDRIVE);
         await StorageSetItem('user', {
           ...state.user,
-          isWalletCreated: false,
           ownerPrivateKey: secretKey,
         });
         showMessage({
@@ -192,8 +187,9 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
           style={imageStyle}
         />
         <Header
-          heading="secure your wallet"
-          subHeading="store your encrypted key in google drive so you can recover your wallet if you lose your device"
+          heading="secure your vautt"
+          // subHeading="store your encrypted key in google drive so you can recover your wallet if you lose your device"
+          subHeading="solace uses cloud storage providers to store your password encrypted private key. this feature is in beta and will be optional in future releases"
         />
         {loading.value && <SolaceLoader text={loading.message} />}
       </View>

@@ -40,7 +40,7 @@ const GuardianRecovery: React.FC<Props> = ({navigation}) => {
       });
       const username = state.user?.solaceName!;
       const feePayer = await getFeePayer();
-      const tx = await newSDK.recoverWallet(username, feePayer);
+      const tx = await newSDK.recoverWallet(username, feePayer!);
       console.log({tx});
       const res = await relayTransaction(tx);
       console.log({res});

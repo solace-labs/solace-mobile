@@ -40,12 +40,10 @@ export type Tokens = {
 };
 
 export type User = {
-  email: string;
   solaceName: string;
   ownerPrivateKey: string;
-  publicKey?: string;
   isWalletCreated: boolean;
-  pin: string;
+  pin?: string;
 };
 
 export enum AccountStatus {
@@ -71,7 +69,6 @@ export enum AppState {
 export const initialState = {
   accountStatus: AccountStatus.LOADING,
   user: {
-    email: '',
     solaceName: '',
     ownerPrivateKey: '',
     isWalletCreated: false,
@@ -107,7 +104,6 @@ const GlobalProvider = ({
   updating: boolean;
 }) => {
   const [state, dispatch] = useReducer(globalReducer, initialState);
-  console.log({updating});
   /** valid recover mode */
   const checkInRecoverMode = useCallback(async () => {
     const storedUser: User = await StorageGetItem('user');
@@ -123,7 +119,6 @@ const GlobalProvider = ({
   const isUserValid = useCallback(async () => {
     const storedUser: User = await StorageGetItem('user');
     return (storedUser &&
-      storedUser.pin &&
       storedUser.solaceName &&
       storedUser.ownerPrivateKey &&
       storedUser.isWalletCreated) as boolean;
@@ -135,9 +130,7 @@ const GlobalProvider = ({
     return (storedUser &&
       appState &&
       appState === AppState.GDRIVE &&
-      storedUser.pin &&
-      storedUser.solaceName &&
-      storedUser.ownerPrivateKey) as boolean;
+      storedUser.solaceName) as boolean;
   };
 
   const checkRecovery = useCallback(async () => {
@@ -159,22 +152,31 @@ const GlobalProvider = ({
   }, []);
 
   const init = useCallback(async () => {
-    console.log('init', updating);
     if (updating) {
       dispatch(setAccountStatus(AccountStatus.UPDATE));
       return;
     }
     /*** GETDATA */
-    // const appstate = await StorageGetItem('appstate');
-    // const storeduser = await StorageGetItem('user');
-    // console.log('appstate', appstate);
-    // console.log('storeduser', storeduser);
+    const appstate = await StorageGetItem('appstate');
+    const storeduser = await StorageGetItem('user');
+    console.log('appstate', appstate);
+    console.log('storeduser', storeduser);
     // await StorageClearAll();
     // await StorageSetItem('appstate', AppState.ONBOARDED);
     const storedUser: User = await StorageGetItem('user');
     const appState: AppState = await StorageGetItem('appstate');
     if (appState === AppState.TESTING) {
       dispatch(setAccountStatus(AccountStatus.EXISITING));
+      return;
+    }
+
+    if (
+      appState === AppState.SIGNUP &&
+      storedUser &&
+      storedUser.solaceName &&
+      storedUser.solaceName.trim().length > 0
+    ) {
+      dispatch(setAccountStatus(AccountStatus.SIGNED_UP));
       return;
     }
 
@@ -199,8 +201,8 @@ const GlobalProvider = ({
       return;
     }
     /** NEW USER */
-    // await StorageClearAll();
-    // dispatch(clearData());
+    await StorageClearAll();
+    dispatch(clearData());
     dispatch(setAccountStatus(AccountStatus.NEW));
   }, [checkInRecoverMode, checkRecovery, isUserValid, updating]);
 

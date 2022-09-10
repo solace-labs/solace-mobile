@@ -96,7 +96,7 @@ const AssetScreen = () => {
           reciever,
           recieverTokenAccount,
         },
-        feePayer,
+        feePayer!,
       );
       const response = await relayTransaction(tx);
       setSendLoading({

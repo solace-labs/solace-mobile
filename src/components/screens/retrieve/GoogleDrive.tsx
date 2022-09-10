@@ -67,15 +67,13 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
           message: 'retrieve now',
         });
         showMessage({
-          message: 'Successfully retrieved from google drive',
+          message: 'successfully retrieved from google drive',
           type: 'success',
         });
-        setTimeout(() => {
-          navigation.reset({
-            index: 0,
-            routes: [{name: 'Passcode'}],
-          });
-        }, 1000);
+        navigation.reset({
+          index: 0,
+          routes: [{name: 'Login'}],
+        });
       } else {
         showMessage({
           message: 'There is no solace backup found in google drive',
@@ -120,8 +118,8 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
           style={imageStyle}
         />
         <Header
-          heading="retrieve your wallet"
-          subHeading="retrieve your encrypted key from google drive so you can access your wallet"
+          heading="retrieve your vault"
+          subHeading="retrieve your encrypted key from google drive so you can access your vault"
         />
         {loading.value && <SolaceLoader text={loading.message} />}
       </View>

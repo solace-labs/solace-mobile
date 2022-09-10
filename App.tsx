@@ -17,6 +17,7 @@ let CodePushOptions = {
 let App = () => {
   // const isDarkMode = useColorScheme() === 'dark';
   const [updating, setUpdating] = useState(true);
+  // const [updating, setUpdating] = useState(false);
 
   const update = async () => {
     setUpdating(true);

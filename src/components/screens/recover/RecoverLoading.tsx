@@ -9,7 +9,6 @@ export type Props = {
 };
 
 const RecoverLoading: React.FC<Props> = ({navigation}) => {
-  console.log('RECOVER LOADING');
   const getTokens = async () => {
     try {
       const appState: AppState = await StorageGetItem('appstate');

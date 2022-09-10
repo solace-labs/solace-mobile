@@ -49,12 +49,20 @@ const Login: React.FC<Props> = ({navigation}) => {
         idtoken,
         refreshtoken,
       });
-      dispatch(setUser({...state.user, solaceName: username}));
+      dispatch(setUser({...state.user, solaceName: username, pin: password}));
+      await StorageSetItem('user', {...state.user, solaceName: username});
       setIsLoading(false);
-      navigation.reset({
-        index: 0,
-        routes: [{name: 'GoogleDrive'}],
-      });
+      if (appState === AppState.GDRIVE) {
+        navigation.reset({
+          index: 0,
+          routes: [{name: 'CreateWallet'}],
+        });
+      } else {
+        navigation.reset({
+          index: 0,
+          routes: [{name: 'GoogleDrive'}],
+        });
+      }
     } catch (e: any) {
       showMessage({
         message: e.message,

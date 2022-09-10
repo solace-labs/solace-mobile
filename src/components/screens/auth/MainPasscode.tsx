@@ -45,7 +45,7 @@ const MainPasscodeScreen = () => {
         owner: keypair,
         programAddress: PROGRAM_ADDRESS,
       });
-      const data = await sdk.fetchWalletData();
+      // const data = await sdk.fetchWalletData();
       console.log('WALLET ADDRESS', sdk.wallet);
       dispatch(setSDK(sdk));
       setLoading({
@@ -95,7 +95,6 @@ const MainPasscodeScreen = () => {
   };
 
   useEffect(() => {
-    console.log('INSIDE THIS');
     if (filled) {
       checkPinReady();
     }

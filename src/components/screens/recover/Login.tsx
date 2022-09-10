@@ -34,7 +34,6 @@ const Login: React.FC<Props> = ({navigation}) => {
   const [isLoading, setIsLoading] = useState(false);
   const {state, dispatch} = useContext(GlobalContext);
 
-  console.log('RECOVER LOGIN');
   const checkInRecoveryMode = async () => {
     const appState: AppState = await StorageGetItem('appstate');
     if (appState === AppState.RECOVERY) {

@@ -16,7 +16,7 @@ const Loading = () => {
         </SolaceText>
       </View>
       <View style={{flex: 1}}>
-        <SolaceText>downloading updates...</SolaceText>
+        <SolaceText>checking and downloading updates...</SolaceText>
         <ActivityIndicator size="small" style={{marginTop: 10}} />
       </View>
     </SolaceContainer>

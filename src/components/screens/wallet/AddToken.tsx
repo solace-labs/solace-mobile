@@ -43,7 +43,7 @@ const AddToken: React.FC<Props> = ({navigation}) => {
           tokenAccount: tokenAccount!,
           tokenMint: splTokenAddress,
         },
-        feePayer,
+        feePayer!,
       );
       const transactionId = await relayTransaction(tx);
       setLoading({message: 'finalizing... please wait', value: true});

@@ -38,23 +38,23 @@ const CreateWalletScreen: React.FC = () => {
   const handleClick = async () => {
     try {
       dispatch(setUser(await StorageGetItem('user')));
-      setLoading({message: 'creating wallet...', value: true});
+      setLoading({message: 'creating vault...', value: true});
       const keypair = getKeypairFromPrivateKey(state.user!);
       const feePayer = await getFeePayer();
-      const {sdk, transactionId} = await createWallet(keypair, feePayer);
-      setLoading({message: 'finalizing wallet...please wait', value: true});
+      const {sdk, transactionId} = await createWallet(keypair, feePayer!);
+      setLoading({message: 'finalizing vault...please wait', value: true});
       await confirmTransaction(transactionId);
       const awsCognito = state.awsCognito!;
       await awsCognito.updateAttribute('address', sdk.wallet.toString());
       dispatch(setSDK(sdk));
       dispatch(setUser({...state.user, isWalletCreated: true}));
-      showMessage({
-        message: 'wallet created',
-        type: 'success',
-      });
       await StorageSetItem('appstate', AppState.ONBOARDED);
       await StorageSetItem('user', {...state.user, isWalletCreated: true});
       resetLoading();
+      showMessage({
+        message: 'vault created',
+        type: 'success',
+      });
       dispatch(setAccountStatus(AccountStatus.EXISITING));
     } catch (e) {
       console.log('MAIN ERROR: ', e);
@@ -122,8 +122,9 @@ const CreateWalletScreen: React.FC = () => {
     <SolaceContainer>
       <View style={{flex: 1}}>
         <Header
-          heading="create wallet"
-          subHeading="store your encrypted key in google drive so you can recover your wallet if you lose your device"
+          heading="create vault"
+          subHeading="once your vault is created, it will be in “incubation mode”. you can add any number of guardians or trusted addresses when in this mode. 
+          incubation mode ends in 12 hours after you create the vault"
         />
         {loading.value && <SolaceLoader text={loading.message} />}
       </View>

@@ -59,8 +59,8 @@ const RecoverScreen: React.FC<Props> = ({navigation}) => {
     <SolaceContainer>
       <View style={{flex: 1}}>
         <Header
-          heading="recovering your wallet"
-          subHeading="please request your guardians to approve your solace wallet recovery. in the mean time, your funds will be protected by the"
+          heading="recovering your vault"
+          subHeading="please request your guardians to approve your solace vault recovery. in the mean time, your funds will be protected by the"
         />
         <SolaceText type="secondary" weight="bold" align="left">
           safe mode

@@ -89,7 +89,7 @@ const AirdropScreen: React.FC<Props> = ({navigation}) => {
       <View style={{flex: 1}}>
         <Header
           heading="request airdrop"
-          subHeading="store your encrypted key in google drive so you can recover your wallet if you lose your device"
+          subHeading="store your encrypted key in google drive so you can recover your vault if you lose your device"
         />
         {loading.value && <SolaceLoader text={loading.message} />}
       </View>

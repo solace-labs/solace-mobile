@@ -31,7 +31,7 @@ const HomeScreen: React.FC<Props> = ({navigation}) => {
       </View>
       <SolaceButton onPress={() => navigation.navigate('Email')}>
         <SolaceText type="secondary" variant="dark" weight="bold">
-          create new wallet
+          create new vault
         </SolaceText>
       </SolaceButton>
       <SolaceButton
@@ -46,7 +46,7 @@ const HomeScreen: React.FC<Props> = ({navigation}) => {
           }
         }}>
         <SolaceText type="secondary" weight="bold">
-          retrieve your wallet
+          retrieve your vault
         </SolaceText>
       </SolaceButton>
     </SolaceContainer>

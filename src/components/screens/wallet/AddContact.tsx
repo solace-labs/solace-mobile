@@ -34,7 +34,7 @@ const AddContactScreen: React.FC<Props> = ({navigation}) => {
     const sdk = state.sdk!;
     const feePayer = await getFeePayer();
     const pubKey = new PublicKey(address);
-    const tx = await sdk.addTrustedPubkey(pubKey, feePayer);
+    const tx = await sdk.addTrustedPubkey(pubKey, feePayer!);
     const transactionId = await relayTransaction(tx);
     setLoading({message: 'finalizing... please wait', value: true});
     await confirmTransaction(transactionId);
