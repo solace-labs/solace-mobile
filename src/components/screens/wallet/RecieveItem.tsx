@@ -107,7 +107,7 @@ const RecieveItem: React.FC<Props> = ({route, navigation}) => {
           </View>
           <View style={[globalStyles.fullWidth, {flex: 0.5, paddingTop: 12}]}>
             <SolaceText mt={10} mb={10} type="secondary" weight="bold">
-              token address
+              associated token address
             </SolaceText>
             <SolaceCustomInput
               placeholder="username or address"
@@ -117,7 +117,7 @@ const RecieveItem: React.FC<Props> = ({route, navigation}) => {
               iconType="mci"
             />
             <SolaceText mt={20} mb={10} type="secondary" weight="bold">
-              wallet address
+              vault address
             </SolaceText>
             <SolaceCustomInput
               placeholder="username or address"
