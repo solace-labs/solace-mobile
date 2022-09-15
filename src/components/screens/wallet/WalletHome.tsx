@@ -135,8 +135,8 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
   //   }
   // }, []);
 
-  const endIncubation = async () => {
-    navigation.navigate('Incubation');
+  const endIncubation = async (show: boolean) => {
+    navigation.navigate('Incubation', {show: show ? 'yes' : 'no'});
   };
 
   const logout = async () => {
@@ -192,9 +192,7 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
           <TouchableOpacity
             style={globalStyles.rowCenter}
             onPress={() => {
-              if (showIncubation) {
-                endIncubation();
-              }
+              endIncubation(showIncubation);
             }}>
             <SolaceStatus
               type={showIncubation ? 'success' : 'error'}

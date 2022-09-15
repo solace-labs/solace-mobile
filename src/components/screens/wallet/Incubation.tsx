@@ -14,16 +14,19 @@ import {confirmTransaction, getFeePayer} from '../../../utils/apis';
 
 export type Props = {
   navigation: any;
+  route: any;
 };
 
 export type WalletDataType = Awaited<
   ReturnType<typeof SolaceSDK.fetchDataForWallet>
 >;
 
-const Incubation: React.FC<Props> = ({navigation}) => {
+const Incubation: React.FC<Props> = ({navigation, route}) => {
   const initialLoading = {message: '', value: false};
   const [loading, setLoading] = useState(initialLoading);
   const {state} = useContext(GlobalContext);
+  console.log({params: route.params});
+  const show = route.params.show;
 
   const handleIncubationEnd = async () => {
     try {
@@ -66,37 +69,44 @@ const Incubation: React.FC<Props> = ({navigation}) => {
           begins when your vault is created and ends after 12 hours of it. it
           can be ended prematurely by you anytime within that 12 hour window.
         </SolaceText>
-        <SolaceText
-          align="left"
-          weight="bold"
-          type="secondary"
-          mt={16}
-          variant="light">
-          your vault is in{' '}
-          <SolaceText
-            align="left"
-            weight="bold"
-            variant="solana-green"
-            type="secondary">
-            incubation mode
-          </SolaceText>{' '}
-          you can choose to end it now.
-        </SolaceText>
-        <SolaceText
-          align="left"
-          weight="bold"
-          type="secondary"
-          mt={16}
-          variant="awaiting">
-          are you sure you want to end incubation?
-        </SolaceText>
+        {show === 'yes' && (
+          <>
+            <SolaceText
+              align="left"
+              weight="bold"
+              type="secondary"
+              mt={16}
+              variant="light">
+              your vault is in{' '}
+              <SolaceText
+                align="left"
+                weight="bold"
+                variant="solana-green"
+                type="secondary">
+                incubation mode
+              </SolaceText>{' '}
+              you can choose to end it now.
+            </SolaceText>
+            <SolaceText
+              align="left"
+              weight="bold"
+              type="secondary"
+              mt={16}
+              variant="awaiting">
+              are you sure you want to end incubation?
+            </SolaceText>
+          </>
+        )}
+
         {loading.value && <SolaceLoader text={loading.message} />}
       </View>
-      <SolaceButton onPress={handleIncubationEnd} loading={loading.value}>
-        <SolaceText type="secondary" weight="bold" variant="dark">
-          end incubation
-        </SolaceText>
-      </SolaceButton>
+      {show === 'yes' && (
+        <SolaceButton onPress={handleIncubationEnd} loading={loading.value}>
+          <SolaceText type="secondary" weight="bold" variant="dark">
+            end incubation
+          </SolaceText>
+        </SolaceButton>
+      )}
     </SolaceContainer>
   );
 };
