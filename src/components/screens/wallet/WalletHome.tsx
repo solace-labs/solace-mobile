@@ -116,39 +116,27 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
   };
 
   useEffect(() => {
-    try {
-      init();
-    } catch (e) {
-      console.log('error during incubation get', e);
-    }
-  }, []);
+    const willFocusSubscription = navigation.addListener('focus', async () => {
+      try {
+        console.log('FETCHING AGAIN...');
+        await init();
+      } catch (e) {
+        console.log('error during incubation get', e);
+      }
+    });
+    return willFocusSubscription;
+  }, [navigation]);
+
+  // useEffect(() => {
+  //   try {
+  //     init();
+  //   } catch (e) {
+  //     console.log('error during incubation get', e);
+  //   }
+  // }, []);
 
   const endIncubation = async () => {
-    // Alert.alert();
-  };
-
-  const handleIncubationEnd = async () => {
-    Alert.alert(
-      'end incubation?',
-      '',
-      // 'you will have to retrieve your wallet using google drive.',
-      [
-        {
-          text: 'No',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-        },
-        {
-          text: 'Yes',
-          onPress: async () => {
-            await endIncubation();
-            // await StorageClearAll();
-            // dispatch(clearData());
-            // dispatch(setAccountStatus(AccountStatus.NEW));
-          },
-        },
-      ],
-    );
+    navigation.navigate('Incubation');
   };
 
   const logout = async () => {
@@ -203,18 +191,23 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
         ) : (
           <TouchableOpacity
             style={globalStyles.rowCenter}
-            // onPress={handleIncubationEnd}
-          >
+            onPress={() => {
+              if (showIncubation) {
+                endIncubation();
+              }
+            }}>
             <SolaceStatus
               type={showIncubation ? 'success' : 'error'}
               style={{marginRight: 8}}
             />
             <SolaceText size="xs">
-              incubation {showIncubation ? 'ends at' : 'ended on'}{' '}
+              incubation {showIncubation ? 'ends at' : 'ended'}{' '}
             </SolaceText>
-            <SolaceText size="xs" weight="bold">
-              {incubationDate}
-            </SolaceText>
+            {showIncubation && (
+              <SolaceText size="xs" weight="bold">
+                {incubationDate}
+              </SolaceText>
+            )}
           </TouchableOpacity>
         )}
 
