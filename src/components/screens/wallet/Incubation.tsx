@@ -28,8 +28,7 @@ const Incubation: React.FC<Props> = ({navigation, route}) => {
   const [loading, setLoading] = useState(initialLoading);
   const {state} = useContext(GlobalContext);
   console.log({params: route.params});
-  // const show = route.params.show;
-  const show = 'yes';
+  const show = route.params.show;
 
   const handleIncubationEnd = async () => {
     try {
