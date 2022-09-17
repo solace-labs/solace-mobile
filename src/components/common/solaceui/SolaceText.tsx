@@ -30,9 +30,9 @@ export type SolaceTextProps = {
   mb?: number;
 } & (SecondaryTextProps | PrimaryTextProps);
 
-type Props = SolaceTextProps & TextProps;
+export type SolaceTextCompleteProps = SolaceTextProps & TextProps;
 
-const SolaceText: FC<Props> = ({
+const SolaceText: FC<SolaceTextCompleteProps> = ({
   style,
   children,
   weight = 'regular',

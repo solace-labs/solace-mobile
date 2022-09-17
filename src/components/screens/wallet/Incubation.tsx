@@ -1,5 +1,5 @@
 import {View} from 'react-native';
-import React, {useContext, useState} from 'react';
+import React, {FC, ReactNode, useContext, useState} from 'react';
 import {showMessage} from 'react-native-flash-message';
 import {SolaceSDK} from 'solace-sdk';
 
@@ -28,8 +28,8 @@ const Incubation: React.FC<Props> = ({navigation, route}) => {
   const [loading, setLoading] = useState(initialLoading);
   const {state} = useContext(GlobalContext);
   console.log({params: route.params});
-  const show = route.params.show;
-  // const show = 'yes';
+  // const show = route.params.show;
+  const show = 'yes';
 
   const handleIncubationEnd = async () => {
     try {
@@ -68,8 +68,10 @@ const Incubation: React.FC<Props> = ({navigation, route}) => {
       <View style={{flex: 1, marginTop: 16}}>
         <SolaceText align="left" weight="bold" type="secondary" variant="light">
           during incubation mode
+        </SolaceText>
+        <View style={{flexDirection: 'column', marginTop: 12}}>
           <View style={globalStyles.rowCenter}>
-            <SolaceStatus type={'success'} style={{marginRight: 8}} />
+            <SolaceStatus type={'success'} style={{marginRight: 12}} />
             <SolaceText
               align="left"
               weight="bold"
@@ -78,8 +80,8 @@ const Incubation: React.FC<Props> = ({navigation, route}) => {
               add guardians without delay
             </SolaceText>
           </View>
-          <View style={globalStyles.rowCenter}>
-            <SolaceStatus type={'success'} style={{marginRight: 8}} />
+          <View style={[globalStyles.rowCenter, {marginTop: 12}]}>
+            <SolaceStatus type={'success'} style={{marginRight: 12}} />
             <SolaceText
               align="left"
               weight="bold"
@@ -88,7 +90,7 @@ const Incubation: React.FC<Props> = ({navigation, route}) => {
               add trusted contacts without any history with them
             </SolaceText>
           </View>
-        </SolaceText>
+        </View>
         <SolaceText
           align="left"
           weight="bold"
