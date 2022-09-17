@@ -4,6 +4,7 @@ import {
   setAccountStatus,
   setGoogleApi,
   setRetrieveData,
+  setUser,
 } from '../../../state/actions/global';
 import {
   AccountStatus,
