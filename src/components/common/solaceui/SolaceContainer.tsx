@@ -24,7 +24,7 @@ const SolaceContainer: FC<Props> = ({
 
   const defaultStyle: StyleProp<ViewStyle> = {
     backgroundColor: Colors.background.dark,
-    paddingTop: 50,
+    paddingTop: Platform.OS === 'ios' ? 50 : 0,
     flex: 1,
     alignItems: 'center',
     // borderWidth: 1,
