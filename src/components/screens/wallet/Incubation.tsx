@@ -11,6 +11,8 @@ import TopNavbar from '../../common/TopNavbar';
 import {GlobalContext} from '../../../state/contexts/GlobalContext';
 import {relayTransaction} from '../../../utils/relayer';
 import {confirmTransaction, getFeePayer} from '../../../utils/apis';
+import SolaceStatus from '../../common/solaceui/SolaceStatus';
+import globalStyles from '../../../utils/global_styles';
 
 export type Props = {
   navigation: any;
@@ -27,6 +29,7 @@ const Incubation: React.FC<Props> = ({navigation, route}) => {
   const {state} = useContext(GlobalContext);
   console.log({params: route.params});
   const show = route.params.show;
+  // const show = 'yes';
 
   const handleIncubationEnd = async () => {
     try {
@@ -64,9 +67,36 @@ const Incubation: React.FC<Props> = ({navigation, route}) => {
       <TopNavbar startIcon="back" text="incubation" startClick={handleGoBack} />
       <View style={{flex: 1, marginTop: 16}}>
         <SolaceText align="left" weight="bold" type="secondary" variant="light">
-          incubation mode is a state of your vault where you can add guardians
-          without delay and trusted contacts without any history with them. it
-          begins when your vault is created and ends after 12 hours of it. it
+          during incubation mode
+          <View style={globalStyles.rowCenter}>
+            <SolaceStatus type={'success'} style={{marginRight: 8}} />
+            <SolaceText
+              align="left"
+              weight="bold"
+              type="secondary"
+              variant="light">
+              add guardians without delay
+            </SolaceText>
+          </View>
+          <View style={globalStyles.rowCenter}>
+            <SolaceStatus type={'success'} style={{marginRight: 8}} />
+            <SolaceText
+              align="left"
+              weight="bold"
+              type="secondary"
+              variant="light">
+              add trusted contacts without any history with them
+            </SolaceText>
+          </View>
+        </SolaceText>
+        <SolaceText
+          align="left"
+          weight="bold"
+          type="secondary"
+          variant="light"
+          mt={12}
+          size="sm">
+          it begins when your vault is created and ends after 12 hours of it and
           can be ended prematurely by you anytime within that 12 hour window.
         </SolaceText>
         {show === 'yes' && (
@@ -97,7 +127,6 @@ const Incubation: React.FC<Props> = ({navigation, route}) => {
             </SolaceText>
           </>
         )}
-
         {loading.value && <SolaceLoader text={loading.message} />}
       </View>
       {show === 'yes' && (
