@@ -116,7 +116,7 @@ const Login: React.FC<Props> = ({navigation}) => {
           subHeading="sign in to your account"
         />
         <SolaceInput
-          editable={false}
+          // editable={false}
           placeholder="username"
           onFocus={() => setActive('username')}
           mt={16}
