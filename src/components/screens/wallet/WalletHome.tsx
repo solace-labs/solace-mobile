@@ -209,12 +209,25 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
           </TouchableOpacity>
         )}
 
-        <SolaceIcon
+        {/* <SolaceIcon
           onPress={() => logout()}
           type="normal"
           variant="antdesign"
           name="logout"
-        />
+        /> */}
+        <TouchableOpacity
+          onPress={() => {
+            Alert.alert('connected to NEAR');
+          }}>
+          <Image
+            source={require('../../../../assets/images/solace/nearicon.png')}
+            style={{
+              width: 50,
+              height: 50,
+              resizeMode: 'cover',
+            }}
+          />
+        </TouchableOpacity>
       </View>
       <View style={[globalStyles.fullCenter, {flex: 0.3}]}>
         <Image
