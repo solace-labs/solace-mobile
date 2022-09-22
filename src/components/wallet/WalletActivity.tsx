@@ -24,9 +24,8 @@ const WalletActivity: FC<Props> = ({data}) => {
   }
 
   const openLink = () => {
-    const link = `https://solscan.io/account/${
-      state.sdk!.wallet
-    }?cluster=testnet`;
+    const link =
+      'https://explorer.near.org/transactions/2zL61N1avdHAtC1uyu8LqciC672KuNNbwSbqBKcxZyaz';
     Linking.canOpenURL(link).then(supported => {
       if (supported) {
         Linking.openURL(link);
@@ -79,7 +78,7 @@ const WalletActivity: FC<Props> = ({data}) => {
           variant="white"
           style={{textDecorationLine: 'underline'}}
           weight="bold">
-          solscan
+          near explorer
         </SolaceText>{' '}
         to view your transaction history
       </SolaceText>
