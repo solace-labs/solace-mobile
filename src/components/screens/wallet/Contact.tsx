@@ -46,9 +46,7 @@ const ContactScreen = () => {
 
   const queryClient = useQueryClient();
   const refresh = async () => {
-    isLoading &&
-      isFetching &&
-      (await queryClient.invalidateQueries(['contacts']));
+    !isLoading && (await queryClient.invalidateQueries(['contacts']));
   };
 
   useRefreshOnFocus(refresh);

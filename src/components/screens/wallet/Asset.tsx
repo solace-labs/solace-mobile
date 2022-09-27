@@ -62,9 +62,7 @@ const AssetScreen = () => {
   const maxBalance = data ?? 0;
 
   const refetch = async () => {
-    isLoading &&
-      isFetching &&
-      (await queryClient.invalidateQueries(['maxbalance']));
+    isLoading && (await queryClient.invalidateQueries(['maxbalance']));
   };
 
   useRefreshOnFocus(refetch);

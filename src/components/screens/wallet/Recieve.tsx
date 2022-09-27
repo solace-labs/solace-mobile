@@ -63,10 +63,9 @@ const RecieveScreen = () => {
   });
 
   const queryClient = useQueryClient();
+
   const refresh = async () => {
-    isLoading &&
-      isFetching &&
-      (await queryClient.invalidateQueries(['accounts']));
+    !isLoading && (await queryClient.invalidateQueries(['accounts']));
   };
 
   useRefreshOnFocus(refresh);

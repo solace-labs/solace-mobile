@@ -56,10 +56,7 @@ const SendScreen = () => {
   };
 
   const refresh = async () => {
-    console.log('REFRESING');
-    isLoading &&
-      isFetching &&
-      (await queryClient.invalidateQueries(['accounts']));
+    !isLoading && (await queryClient.invalidateQueries(['accounts']));
   };
 
   useRefreshOnFocus(refresh);

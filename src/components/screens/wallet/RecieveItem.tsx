@@ -51,9 +51,7 @@ const RecieveItem = () => {
 
   const queryClient = useQueryClient();
   const refresh = async () => {
-    isLoading &&
-      isFetching &&
-      (await queryClient.invalidateQueries(['tokenaccount']));
+    isLoading && (await queryClient.invalidateQueries(['tokenaccount']));
   };
 
   useRefreshOnFocus(refresh);

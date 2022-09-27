@@ -12,6 +12,7 @@ export type Account = {
 };
 
 export const getAccounts = async (sdk: SolaceSDK) => {
+  console.log('GETTING ACCOUNTS');
   try {
     const allAccounts = await sdk.provider.connection.getTokenAccountsByOwner(
       sdk.wallet,
@@ -85,6 +86,7 @@ export const getMaxBalance = async (sdk: SolaceSDK, asset: string) => {
 };
 
 export const getGuardians = async (sdk: SolaceSDK) => {
+  console.log('FETCHING Guardian');
   const appstate = await StorageGetItem('appstate');
   try {
     if (!sdk) {

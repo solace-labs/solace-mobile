@@ -41,9 +41,7 @@ const Guardian = () => {
   );
 
   useRefreshOnFocus(async () => {
-    isLoading &&
-      isFetching &&
-      (await queryClient.invalidateQueries(['guardians']));
+    !isLoading && (await queryClient.invalidateQueries(['guardians']));
   });
 
   const renderTab = () => {

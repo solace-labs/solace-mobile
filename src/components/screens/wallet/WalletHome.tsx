@@ -64,9 +64,7 @@ const WalletHomeScreen = () => {
   );
 
   const refetch = async () => {
-    isLoading &&
-      isFetching &&
-      (await queryClient.invalidateQueries(['incubation']));
+    isLoading && (await queryClient.invalidateQueries(['incubation']));
   };
 
   useRefreshOnFocus(refetch);
