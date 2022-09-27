@@ -5,76 +5,61 @@ import React, {useContext, useEffect, useState} from 'react';
 import {AppState, GlobalContext} from '../../../state/contexts/GlobalContext';
 import GuardianTab from '../../wallet/GuardianTab';
 import GuardianSecondTab from '../../wallet/GuardianSecondTab';
-import {PublicKey} from 'solace-sdk';
+import {PublicKey, SolaceSDK} from 'solace-sdk';
 import {showMessage} from 'react-native-flash-message';
 import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import SolaceButton from '../../common/solaceui/SolaceButton';
 import SolaceText from '../../common/solaceui/SolaceText';
 import TopNavbar from '../../common/TopNavbar';
-import {StorageDeleteItem, StorageGetItem} from '../../../utils/storage';
+import {StorageGetItem} from '../../../utils/storage';
+import {useQuery, useQueryClient} from '@tanstack/react-query';
+import {useRefreshOnFocus} from '../../../hooks/useRefreshOnFocus';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {WalletStackParamList} from '../../../navigation/Wallet';
+import {useNavigation} from '@react-navigation/native';
+import {getGuardians} from '../../../apis/sdk';
 
-export type Props = {
-  navigation: any;
-};
+type WalletScreenProps = NativeStackScreenProps<
+  WalletStackParamList,
+  'Guardian'
+>;
 
 export type PublicKeyType = InstanceType<typeof PublicKey>;
 
-const Guardian: React.FC<Props> = ({navigation}) => {
+const Guardian = () => {
   const [activeTab, setActiveTab] = useState(1);
-  const {state, dispatch} = useContext(GlobalContext);
-  const [loading, setLoading] = useState(false);
-  const [guardians, setGuardians] = useState<{
-    approved: PublicKeyType[];
-    pending: PublicKeyType[];
-  }>({approved: [], pending: []});
-  const [guarding, setGuarding] = useState<PublicKeyType[]>([]);
+  const {state} = useContext(GlobalContext);
+  const navigation = useNavigation<WalletScreenProps['navigation']>();
+  const queryClient = useQueryClient();
 
-  const getGuardians = async () => {
-    setLoading(true);
-    const appstate = await StorageGetItem('appstate');
-    try {
-      const sdk = state.sdk!;
-      if (!sdk) {
-        showMessage({
-          message: 'wallet not setup properly. logout',
-          type: 'danger',
-        });
-      }
-      const {
-        pendingGuardians,
-        approvedGuardians,
-        guarding: whoIProtect,
-      } = await sdk.fetchWalletData();
-      setGuardians({
-        approved: approvedGuardians,
-        pending: pendingGuardians,
-      });
-      setGuarding(whoIProtect);
-      setLoading(false);
-    } catch (e) {
-      if (!(appstate === AppState.TESTING)) {
-        showMessage({
-          message: 'some error fetching guardians',
-          type: 'danger',
-        });
-      }
-      setLoading(false);
-    }
-  };
+  const {data, isLoading, isFetching} = useQuery(
+    ['guardians'],
+    () => getGuardians(state.sdk!),
+    {
+      enabled: !!state.sdk!,
+    },
+  );
 
-  useEffect(() => {
-    const willFocusSubscription = navigation.addListener('focus', async () => {
-      await getGuardians();
-    });
-    return willFocusSubscription;
-  }, [navigation]);
+  useRefreshOnFocus(async () => {
+    isLoading &&
+      isFetching &&
+      (await queryClient.invalidateQueries(['guardians']));
+  });
 
   const renderTab = () => {
     switch (activeTab) {
       case 1:
-        return <GuardianTab guardians={guardians} loading={loading} />;
+        return (
+          <GuardianTab
+            guardians={{
+              approved: data?.approved ?? [],
+              pending: data?.pending ?? [],
+            }}
+            loading={isLoading}
+          />
+        );
       case 2:
-        return <GuardianSecondTab guarding={guarding} />;
+        return <GuardianSecondTab guarding={data?.guarding ?? []} />;
       default:
         return <Text style={{color: 'white'}}>404 not found</Text>;
     }
@@ -87,7 +72,8 @@ const Guardian: React.FC<Props> = ({navigation}) => {
   return (
     <SolaceContainer>
       <TopNavbar
-        startIcon="back"
+        startIcon="ios-return-up-back"
+        startIconType="ionicons"
         endIcon="infocirlceo"
         text="guardians"
         startClick={handleGoBack}

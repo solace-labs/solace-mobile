@@ -87,10 +87,8 @@ export const airdrop = async (publicKey: string) => {
  * @returns
  */
 export const relayTransaction = async (tx: any) => {
-  console.log('RELAYING');
   if (NETWORK === 'local') {
     const keypair = KeyPair.fromSecretKey(Uint8Array.from(DEFAULT_PRIVATE_KEY));
-    console.log('DONE RELAYING');
     const res = await rlTransaction(tx, keypair);
     console.log('RES', res);
     return res;
@@ -103,7 +101,6 @@ export const relayTransaction = async (tx: any) => {
       tx,
       // headers: {Authorization: accessToken},
     );
-    console.log({res});
     return res.data;
   } catch (e: any) {
     console.log('ERROR RELAYING: ', JSON.stringify(e));

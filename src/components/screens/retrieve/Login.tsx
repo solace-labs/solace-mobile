@@ -22,13 +22,18 @@ import SolaceLoader from '../../common/solaceui/SolaceLoader';
 import SolaceButton from '../../common/solaceui/SolaceButton';
 import SolaceText from '../../common/solaceui/SolaceText';
 import {decryptKey} from '../../../utils/aes_encryption';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RetrieveStackParamList} from '../../../navigation/Retrieve';
+import {useNavigation} from '@react-navigation/native';
 
-export type Props = {
-  navigation: any;
-};
+type RetrieveScreenProps = NativeStackScreenProps<
+  RetrieveStackParamList,
+  'Login'
+>;
 
-const Login: React.FC<Props> = ({navigation}) => {
+const Login = () => {
   const {state, dispatch} = useContext(GlobalContext);
+  const navigation = useNavigation<RetrieveScreenProps['navigation']>();
   console.log('retrieve', state);
   const [username, setUsername] = useState(state.user?.solaceName!);
   const [password, setPassword] = useState('');

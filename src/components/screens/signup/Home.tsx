@@ -11,13 +11,15 @@ import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import SolaceText from '../../common/solaceui/SolaceText';
 import globalStyles from '../../../utils/global_styles';
 import {StorageGetItem} from '../../../utils/storage';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {SignUpStackParamList} from '../../../navigation/SignUp';
+import {useNavigation} from '@react-navigation/native';
 
-export type Props = {
-  navigation: any;
-};
+type SignUpScreenProps = NativeStackScreenProps<SignUpStackParamList, 'Home'>;
 
-const HomeScreen: React.FC<Props> = ({navigation}) => {
+const HomeScreen = () => {
   const {state, dispatch} = useContext(GlobalContext);
+  const navigation = useNavigation<SignUpScreenProps['navigation']>();
 
   return (
     <SolaceContainer>

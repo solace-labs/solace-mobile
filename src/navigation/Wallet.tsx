@@ -12,7 +12,21 @@ import RecieveItem from '../components/screens/wallet/RecieveItem';
 import AddToken from '../components/screens/wallet/AddToken';
 import Incubation from '../components/screens/wallet/Incubation';
 
-const Stack = createNativeStackNavigator();
+export type WalletStackParamList = {
+  Wallet: undefined;
+  Send: undefined;
+  Recieve: undefined;
+  RecieveItem: {token: string};
+  AddContact: undefined;
+  AddToken: undefined;
+  Contact: {asset: string};
+  Asset: {asset: string; contact: string};
+  AddGuardian: undefined;
+  Guardian: undefined;
+  Incubation: {show: 'yes' | 'no'};
+};
+
+const Stack = createNativeStackNavigator<WalletStackParamList>();
 
 const WalletStack = () => {
   return (

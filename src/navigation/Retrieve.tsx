@@ -4,7 +4,13 @@ import GoogleDriveScreen from '../components/screens/retrieve/GoogleDrive';
 import PasscodeScreen from '../components/screens/retrieve/Passcode';
 import Login from '../components/screens/retrieve/Login';
 
-const Stack = createNativeStackNavigator();
+export type RetrieveStackParamList = {
+  Login: undefined;
+  GoogleDrive: undefined;
+  Passcode: undefined;
+};
+
+const Stack = createNativeStackNavigator<RetrieveStackParamList>();
 
 const RetrieveStack = () => {
   return (

@@ -7,58 +7,51 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext} from 'react';
 
 import {GlobalContext} from '../../../state/contexts/GlobalContext';
 import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import TopNavbar from '../../common/TopNavbar';
 import SolaceText from '../../common/solaceui/SolaceText';
 import globalStyles from '../../../utils/global_styles';
-import {PublicKeyType} from './Guardian';
 import ContactItem from '../../wallet/ContactItem';
-import WalletActivity from '../../wallet/WalletActivity';
 import SolaceIcon from '../../common/solaceui/SolaceIcon';
 import SolaceLoader from '../../common/solaceui/SolaceLoader';
 import {Colors} from '../../../utils/colors';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {useQuery, useQueryClient} from '@tanstack/react-query';
+import {useRefreshOnFocus} from '../../../hooks/useRefreshOnFocus';
+import {getContacts} from '../../../apis/sdk';
+import {WalletStackParamList} from '../../../navigation/Wallet';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-export type Props = {
-  route: any;
-};
-
-const ContactScreen: React.FC<Props> = () => {
-  const navigation: any = useNavigation();
-  const initialState = {message: '', value: false};
+type WalletScreenProps = NativeStackScreenProps<
+  WalletStackParamList,
+  'Contact'
+>;
+const ContactScreen = () => {
   const {state} = useContext(GlobalContext);
-  const [contacts, setContacts] = useState<PublicKeyType[]>([]);
-  const [loading, setLoading] = useState(initialState);
-  const navState = navigation.getState();
-  const params = navState.routes.find((route: any) => route.name === 'Contact')
-    ?.params as any;
-  const asset = params.asset;
+  const navigation = useNavigation<WalletScreenProps['navigation']>();
+  const {
+    params: {asset},
+  } = useRoute<WalletScreenProps['route']>();
 
-  // useEffect(() => {
-  //   const id = route?.params?.id;
-  //   dispatch(getContact(id));
-  // }, [dispatch, route?.params?.id]);
+  const {
+    data: contacts,
+    isLoading,
+    isFetching,
+  } = useQuery(['contacts'], () => getContacts(state?.sdk!), {
+    enabled: !!state?.sdk,
+  });
 
-  const getContacts = async () => {
-    setLoading({message: 'getting trusted contacts...', value: true});
-    try {
-      const walletData = await state.sdk?.fetchWalletData();
-      console.log('Trusted Wallet: ', walletData!.trustedPubkeys);
-      // setContacts(walletData!.trustedPubkeys);
-      setContacts(walletData?.trustedPubkeys!);
-      setLoading(initialState);
-    } catch (e: any) {
-      setLoading(initialState);
-      console.log('Error: ', e);
-    }
+  const queryClient = useQueryClient();
+  const refresh = async () => {
+    isLoading &&
+      isFetching &&
+      (await queryClient.invalidateQueries(['contacts']));
   };
 
-  useEffect(() => {
-    getContacts();
-  }, []);
+  useRefreshOnFocus(refresh);
 
   const handleGoBack = () => {
     navigation.goBack();
@@ -68,25 +61,22 @@ const ContactScreen: React.FC<Props> = () => {
     navigation.navigate('AddContact');
   };
 
-  const handleRefresh = async () => {
-    await getContacts();
-  };
-
   const sendToUntrusted = () => {
-    navigation.navigate('Asset', {asset: asset.toString()});
+    navigation.navigate('Asset', {asset: asset.toString(), contact: ''});
   };
 
-  if (loading.value) {
+  if (isLoading) {
     return (
       <SolaceContainer>
         <TopNavbar
-          startIcon="back"
+          startIcon="ios-return-up-back"
+          startIconType="ionicons"
           endIcon="plus"
           text="trusted contacts"
           startClick={handleGoBack}
           endClick={handleAdd}
         />
-        <SolaceLoader text={loading.message}>
+        <SolaceLoader text="getting trusted contacts...">
           <ActivityIndicator size="small" />
         </SolaceLoader>
         {/* <WalletActivity data={[]} /> */}
@@ -97,7 +87,9 @@ const ContactScreen: React.FC<Props> = () => {
   return (
     <SolaceContainer>
       <TopNavbar
-        startIcon="back"
+        startIcon="ios-return-up-back"
+        startIconType="ionicons"
+        fetching={isFetching}
         text="trusted contacts"
         endIcon="plus"
         endClick={handleAdd}
@@ -107,10 +99,7 @@ const ContactScreen: React.FC<Props> = () => {
         {contacts && contacts.length > 0 ? (
           <ScrollView
             refreshControl={
-              <RefreshControl
-                refreshing={loading.value}
-                onRefresh={handleRefresh}
-              />
+              <RefreshControl refreshing={isLoading} onRefresh={refresh} />
             }
             bounces={true}
             style={{marginTop: -50, width: '100%'}}>

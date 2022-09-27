@@ -27,24 +27,27 @@ import SolaceText from '../../common/solaceui/SolaceText';
 import SolaceButton from '../../common/solaceui/SolaceButton';
 import SolaceLoader from '../../common/solaceui/SolaceLoader';
 import {TEST_PASSWORD} from '../../../utils/constants';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {OnboardingStackParamList} from '../../../navigation/Onboarding';
+import {useNavigation} from '@react-navigation/native';
 
-export type Props = {
-  navigation: any;
-};
+type OnboardingScreenProps = NativeStackScreenProps<
+  OnboardingStackParamList,
+  'Login'
+>;
 
-const Login: React.FC<Props> = ({navigation}) => {
+const Login = () => {
+  const navigation = useNavigation<OnboardingScreenProps['navigation']>();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [active, setActive] = useState('username');
   const [isLoading, setIsLoading] = useState(false);
   const {state, dispatch} = useContext(GlobalContext);
-  console.log('ONB LOGIN');
 
   const handleSignIn = async () => {
     try {
       setIsLoading(true);
       const appState = await StorageGetItem('appstate');
-      console.log('ologin', appState);
       if (appState === AppState.TESTING) {
         handleTestSignIn();
         return;

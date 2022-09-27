@@ -6,7 +6,14 @@ import Login from '../components/screens/onboarding/Login';
 import CreateWalletScreen from '../components/screens/onboarding/CreateWallet';
 import OnboardLoading from '../components/screens/onboarding/OnboardLoading';
 
-const Stack = createNativeStackNavigator();
+export type OnboardingStackParamList = {
+  OnboardLoading: undefined;
+  Login: undefined;
+  GoogleDrive: undefined;
+  CreateWallet: undefined;
+};
+
+const Stack = createNativeStackNavigator<OnboardingStackParamList>();
 const OnboardingStack = () => {
   return (
     <Stack.Navigator
@@ -16,9 +23,6 @@ const OnboardingStack = () => {
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="GoogleDrive" component={GoogleDriveScreen} />
       <Stack.Screen name="CreateWallet" component={CreateWalletScreen} />
-      {/* <Stack.Screen name="Passcode" component={PasscodeScreen} />
-      <Stack.Screen name="ConfirmPasscode" component={ConfirmPasscodeScreen} />
-      <Stack.Screen name="Airdrop" component={AirdropScreen} /> */}
     </Stack.Navigator>
   );
 };

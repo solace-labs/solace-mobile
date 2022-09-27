@@ -1,7 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useContext, useEffect} from 'react';
 import {showMessage} from 'react-native-flash-message';
 import {KeyPair, SolaceSDK} from 'solace-sdk';
+import {AuthStackParamList} from '../../../navigation/Auth';
 import {setAccountStatus, setSDK, setUser} from '../../../state/actions/global';
 import {
   AccountStatus,
@@ -22,12 +25,12 @@ import {
 } from '../../../utils/storage';
 import Loading from '../loading/Loading';
 
-export type Props = {
-  navigation: any;
-};
+type AuthScreenProps = NativeStackScreenProps<AuthStackParamList, 'Loading'>;
 
-const AuthLoading: React.FC<Props> = ({navigation}) => {
+const AuthLoading = () => {
   const {state, dispatch} = useContext(GlobalContext);
+
+  const navigation = useNavigation<AuthScreenProps['navigation']>();
 
   const createTestWallet = async () => {
     // setIsLoading({message: 'creating...', value: true});
@@ -73,7 +76,7 @@ const AuthLoading: React.FC<Props> = ({navigation}) => {
       dispatch(setAccountStatus(AccountStatus.ACTIVE));
     } catch (e: any) {
       if (e.message === 'Request failed with status code 401') {
-        navigation.navigate('AuthLoading');
+        navigation.navigate('Loading');
         return;
       }
       showMessage({

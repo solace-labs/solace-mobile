@@ -6,19 +6,19 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext} from 'react';
+import Clipboard from '@react-native-community/clipboard';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {useQuery, useQueryClient} from '@tanstack/react-query';
+import {useNavigation} from '@react-navigation/native';
+import {showMessage} from 'react-native-flash-message';
 
 import {
   AccountStatus,
   AppState,
   GlobalContext,
 } from '../../../state/contexts/GlobalContext';
-import {
-  clearData,
-  setAccountStatus,
-  setUser,
-} from '../../../state/actions/global';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {clearData, setAccountStatus} from '../../../state/actions/global';
 import {StorageClearAll, StorageGetItem} from '../../../utils/storage';
 import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import SolaceIcon from '../../common/solaceui/SolaceIcon';
@@ -26,14 +26,11 @@ import SolaceText from '../../common/solaceui/SolaceText';
 import WalletActivity from '../../wallet/WalletActivity';
 import globalStyles from '../../../utils/global_styles';
 import SolaceStatus from '../../common/solaceui/SolaceStatus';
-import moment from 'moment';
-import {WalletDataType} from './AddContact';
-import Clipboard from '@react-native-community/clipboard';
-import {showMessage} from 'react-native-flash-message';
+import {useRefreshOnFocus} from '../../../hooks/useRefreshOnFocus';
+import {getIncubationData} from '../../../apis/sdk';
+import {WalletStackParamList} from '../../../navigation/Wallet';
 
-export type Props = {
-  navigation: any;
-};
+type WalletScreenProps = NativeStackScreenProps<WalletStackParamList, 'Wallet'>;
 
 export const DATA = [
   {
@@ -48,20 +45,31 @@ export const DATA = [
   },
 ];
 
-const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
-  const {state} = useContext(GlobalContext);
-  const [username, setUsername] = useState('user');
-  const [incubationDate, setIncubationDate] = useState(
-    moment(new Date()).format('DD MMM HH:mm'),
-  );
-
-  const [loadingIncubation, setLoadingIncubation] = useState(true);
-  const [showIncubation, setShowIncubation] = useState(false);
-
+const WalletHomeScreen = () => {
   const {
     state: {user, sdk},
     dispatch,
   } = useContext(GlobalContext);
+
+  const navigation = useNavigation<WalletScreenProps['navigation']>();
+
+  const queryClient = useQueryClient();
+
+  const {data, isLoading, isFetching} = useQuery(
+    ['incubation'],
+    () => getIncubationData(sdk!),
+    {
+      enabled: sdk! !== undefined,
+    },
+  );
+
+  const refetch = async () => {
+    isLoading &&
+      isFetching &&
+      (await queryClient.invalidateQueries(['incubation']));
+  };
+
+  useRefreshOnFocus(refetch);
 
   const handleSend = () => {
     navigation.navigate('Send');
@@ -70,70 +78,6 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
   const handleRecieve = () => {
     navigation.navigate('Recieve');
   };
-
-  useEffect(() => {
-    const getInitialData = async () => {
-      const userdata = await AsyncStorage.getItem('user');
-      if (userdata) {
-        const _user = JSON.parse(userdata);
-        dispatch(setUser(_user));
-      }
-    };
-    getInitialData();
-  }, [dispatch]);
-
-  const getIncubationTime = async (createdAt: number) => {
-    const date = moment(new Date(createdAt * 1000))
-      .add(12, 'h')
-      .format('DD MMM HH:mm');
-    console.log(date);
-    setIncubationDate(date);
-  };
-
-  const checkIncubationMode = async (data: WalletDataType) => {
-    const date = moment(new Date(data.createdAt * 1000)).add(12, 'h');
-    const current = moment(new Date());
-    const difference = date.diff(current);
-    if (difference > 0 && data.incubationMode) {
-      return true;
-    }
-    return false;
-  };
-
-  const init = async () => {
-    setLoadingIncubation(true);
-    try {
-      const data = await sdk!.fetchWalletData();
-      console.log(sdk!.wallet);
-      const isIncubationMode = await checkIncubationMode(data);
-      setShowIncubation(isIncubationMode);
-      await getIncubationTime(data.createdAt);
-      setLoadingIncubation(false);
-    } catch (e) {
-      console.log('error fetching incubation', e);
-      setLoadingIncubation(false);
-    }
-  };
-
-  useEffect(() => {
-    const willFocusSubscription = navigation.addListener('focus', async () => {
-      try {
-        console.log('FETCHING AGAIN...');
-        await init();
-      } catch (e) {
-        console.log('error during incubation get', e);
-      }
-    });
-    return willFocusSubscription;
-  }, [navigation]);
-
-  // useEffect(() => {
-  //   try {
-  //     init();
-  //   } catch (e) {
-  //     console.log('error during incubation get', e);
-  //   }
-  // }, []);
 
   const endIncubation = async (show: boolean) => {
     navigation.navigate('Incubation', {show: show ? 'yes' : 'no'});
@@ -186,28 +130,31 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
           variant="antdesign"
           name="lock"
         />
-        {loadingIncubation ? (
+        {isLoading ? (
           <ActivityIndicator size="small" />
         ) : (
           <TouchableOpacity
             style={globalStyles.rowCenter}
             onPress={() => {
-              endIncubation(showIncubation);
+              endIncubation(data?.inIncubation ?? false);
             }}>
             <SolaceStatus
-              type={showIncubation ? 'success' : 'error'}
+              type={data?.inIncubation ? 'success' : 'error'}
               style={{marginRight: 8}}
             />
             <SolaceText size="xs">
-              incubation {showIncubation ? 'ends at' : 'ended'}{' '}
+              incubation {data?.inIncubation ? 'ends at' : 'ended'}{' '}
             </SolaceText>
-            {showIncubation && (
+            {data?.inIncubation && (
               <SolaceText size="xs" weight="bold">
-                {incubationDate}
+                {data?.endTime}
               </SolaceText>
             )}
           </TouchableOpacity>
         )}
+        {/* {isFetching && (
+          <ActivityIndicator size="small" color={Colors.text.approved} />
+        )} */}
 
         <SolaceIcon
           onPress={() => logout()}
@@ -227,7 +174,7 @@ const WalletHomeScreen: React.FC<Props> = ({navigation}) => {
           }}
         />
         <SolaceText weight="semibold" size="sm">
-          {user?.solaceName ? user.solaceName : username}
+          {user?.solaceName ? user.solaceName : 'solaceuser'}
         </SolaceText>
       </View>
       <TouchableOpacity onPress={copy}>

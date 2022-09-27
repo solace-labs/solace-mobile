@@ -12,12 +12,18 @@ import {
 import {KeyPair, SolaceSDK} from 'solace-sdk';
 import {NETWORK, PROGRAM_ADDRESS} from '../../../utils/constants';
 import {setAccountStatus} from '../../../state/actions/global';
-export type Props = {
-  navigation: any;
-};
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RecoverStackParamList} from '../../../navigation/Recover';
+import {useNavigation} from '@react-navigation/native';
 
-const RecoverScreen: React.FC<Props> = ({navigation}) => {
+type RecoverScreenProps = NativeStackScreenProps<
+  RecoverStackParamList,
+  'Recover'
+>;
+
+const RecoverScreen = () => {
   const {state, dispatch} = useContext(GlobalContext);
+  const navigation = useNavigation<RecoverScreenProps['navigation']>();
 
   const imageStyle: StyleProp<ImageStyle> = {
     flex: 1,

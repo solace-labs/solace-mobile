@@ -3,6 +3,8 @@ import {View, Image} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import {showMessage} from 'react-native-flash-message';
 import {SolaceSDK} from 'solace-sdk';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {useNavigation} from '@react-navigation/native';
 
 import {
   setAccountStatus,
@@ -27,13 +29,16 @@ import SolaceButton from '../../common/solaceui/SolaceButton';
 import SolaceText from '../../common/solaceui/SolaceText';
 import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import Header from '../../common/Header';
+import {OnboardingStackParamList} from '../../../navigation/Onboarding';
 
-export type Props = {
-  navigation: any;
-};
+type OnboardingScreenProps = NativeStackScreenProps<
+  OnboardingStackParamList,
+  'GoogleDrive'
+>;
 
-const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
+const GoogleDriveScreen = () => {
   const {state, dispatch} = useContext(GlobalContext);
+  const navigation = useNavigation<OnboardingScreenProps['navigation']>();
   const [loading, setLoading] = useState({
     value: false,
     message: 'enable now',

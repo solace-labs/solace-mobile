@@ -18,42 +18,45 @@ import QRCode from 'react-native-qrcode-svg';
 import SolaceButton from '../../common/solaceui/SolaceButton';
 import SolaceLoader from '../../common/solaceui/SolaceLoader';
 import {setAccountStatus} from '../../../state/actions/global';
+import {useQuery, useQueryClient} from '@tanstack/react-query';
+import {getTokenAccount} from '../../../apis/sdk';
+import {useRefreshOnFocus} from '../../../hooks/useRefreshOnFocus';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {WalletStackParamList} from '../../../navigation/Wallet';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
-export type Props = {
-  navigation: any;
-  route: any;
-};
+type WalletScreenProps = NativeStackScreenProps<
+  WalletStackParamList,
+  'RecieveItem'
+>;
 
 export type Account = {
   amount: number;
   tokenAddress: string;
 };
 
-const RecieveItem: React.FC<Props> = ({route, navigation}) => {
+const RecieveItem = () => {
   const {state, dispatch} = useContext(GlobalContext);
-
+  const navigation = useNavigation<WalletScreenProps['navigation']>();
+  const route = useRoute<WalletScreenProps['route']>();
   const spltoken = route.params.token;
-  const [address, setAddress] = useState(state.sdk?.wallet!?.toString());
-  const [addressToken, setAddressToken] = useState('');
-  const [loading, setLoading] = useState(false);
 
-  const getTokenAccount = async () => {
-    setLoading(true);
-    try {
-      const splTokenAddress = new PublicKey(spltoken);
-      const tokenAccount = await state.sdk?.getTokenAccount(splTokenAddress);
-      console.log(addressToken);
-      setAddressToken(tokenAccount!.toString());
-      setLoading(false);
-    } catch (e) {
-      setLoading(false);
-      console.log(e);
-      showMessage({
-        message: 'some error try again.',
-        type: 'danger',
-      });
-    }
+  const {
+    data: addressToken,
+    isLoading,
+    isFetching,
+  } = useQuery(['tokenaccount'], () => getTokenAccount(state?.sdk!, spltoken), {
+    enabled: !!state?.sdk && !!spltoken,
+  });
+
+  const queryClient = useQueryClient();
+  const refresh = async () => {
+    isLoading &&
+      isFetching &&
+      (await queryClient.invalidateQueries(['tokenaccount']));
   };
+
+  useRefreshOnFocus(refresh);
 
   const handleGoBack = () => {
     navigation.goBack();
@@ -66,10 +69,7 @@ const RecieveItem: React.FC<Props> = ({route, navigation}) => {
     });
   };
 
-  useEffect(() => {
-    getTokenAccount();
-  }, []);
-
+  const address = state.sdk?.wallet!?.toString();
   const headerTitle = address
     ? `${address.slice(0, 5)}...${address.slice(-5)}`
     : '-';
@@ -78,7 +78,7 @@ const RecieveItem: React.FC<Props> = ({route, navigation}) => {
     dispatch(setAccountStatus(AccountStatus.EXISITING));
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <SolaceContainer>
         <SolaceLoader text="loading">
@@ -91,35 +91,49 @@ const RecieveItem: React.FC<Props> = ({route, navigation}) => {
   return (
     <SolaceContainer>
       <TopNavbar
-        startIcon="back"
+        startIcon="ios-return-up-back"
+        startIconType="ionicons"
         text={`recieve ${headerTitle}`}
         startClick={handleGoBack}
       />
       {address ? (
         <View style={globalStyles.fullCenter}>
           <View style={[globalStyles.rowCenter, {flex: 0.5}]}>
-            <View style={{borderColor: 'white', borderWidth: 5}}>
+            <View
+              style={{borderColor: 'white', borderWidth: 20, borderRadius: 20}}>
               <QRCode
                 value={addressToken ? addressToken : 'no-address'}
-                size={300}
+                size={180}
               />
             </View>
           </View>
           <View style={[globalStyles.fullWidth, {flex: 0.5, paddingTop: 12}]}>
-            <SolaceText mt={10} mb={10} type="secondary" weight="bold">
+            <SolaceText
+              mt={10}
+              mb={10}
+              type="primary"
+              weight="semibold"
+              align="left">
               associated token address
             </SolaceText>
             <SolaceCustomInput
+              editable={false}
               placeholder="username or address"
               iconName="content-copy"
               handleIconPress={() => handleCopy(address)}
               value={addressToken}
               iconType="mci"
             />
-            <SolaceText mt={20} mb={10} type="secondary" weight="bold">
+            <SolaceText
+              mt={20}
+              mb={10}
+              type="primary"
+              weight="semibold"
+              align="left">
               vault address
             </SolaceText>
             <SolaceCustomInput
+              editable={false}
               placeholder="username or address"
               iconName="content-copy"
               handleIconPress={() => handleCopy(address)}

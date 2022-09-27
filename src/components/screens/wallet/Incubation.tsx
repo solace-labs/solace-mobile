@@ -13,22 +13,27 @@ import {relayTransaction} from '../../../utils/relayer';
 import {confirmTransaction, getFeePayer} from '../../../utils/apis';
 import SolaceStatus from '../../common/solaceui/SolaceStatus';
 import globalStyles from '../../../utils/global_styles';
+import {WalletStackParamList} from '../../../navigation/Wallet';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
-export type Props = {
-  navigation: any;
-  route: any;
-};
+type WalletScreenProps = NativeStackScreenProps<
+  WalletStackParamList,
+  'Incubation'
+>;
 
 export type WalletDataType = Awaited<
   ReturnType<typeof SolaceSDK.fetchDataForWallet>
 >;
 
-const Incubation: React.FC<Props> = ({navigation, route}) => {
+const Incubation = () => {
   const initialLoading = {message: '', value: false};
   const [loading, setLoading] = useState(initialLoading);
   const {state} = useContext(GlobalContext);
-  console.log({params: route.params});
-  const show = route.params.show;
+  const navigation = useNavigation<WalletScreenProps['navigation']>();
+  const {
+    params: {show},
+  } = useRoute<WalletScreenProps['route']>();
 
   const handleIncubationEnd = async () => {
     try {
@@ -63,7 +68,12 @@ const Incubation: React.FC<Props> = ({navigation, route}) => {
 
   return (
     <SolaceContainer>
-      <TopNavbar startIcon="back" text="incubation" startClick={handleGoBack} />
+      <TopNavbar
+        startIcon="ios-return-up-back"
+        startIconType="ionicons"
+        text="incubation"
+        startClick={handleGoBack}
+      />
       <View style={{flex: 1, marginTop: 16}}>
         <SolaceText align="left" weight="bold" type="secondary" variant="light">
           during incubation mode

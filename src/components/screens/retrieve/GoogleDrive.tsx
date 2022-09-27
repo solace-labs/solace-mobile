@@ -4,7 +4,6 @@ import {
   setAccountStatus,
   setGoogleApi,
   setRetrieveData,
-  setUser,
 } from '../../../state/actions/global';
 import {
   AccountStatus,
@@ -21,12 +20,18 @@ import Header from '../../common/Header';
 import SolaceLoader from '../../common/solaceui/SolaceLoader';
 import SolaceButton from '../../common/solaceui/SolaceButton';
 import SolaceText from '../../common/solaceui/SolaceText';
-export type Props = {
-  navigation: any;
-};
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RetrieveStackParamList} from '../../../navigation/Retrieve';
+import {useNavigation} from '@react-navigation/native';
 
-const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
+type RetrieveScreenProps = NativeStackScreenProps<
+  RetrieveStackParamList,
+  'GoogleDrive'
+>;
+
+const GoogleDriveScreen = () => {
   const {state, dispatch} = useContext(GlobalContext);
+  const navigation = useNavigation<RetrieveScreenProps['navigation']>();
   const [loading, setLoading] = useState({
     value: false,
     message: 'retrieve now',

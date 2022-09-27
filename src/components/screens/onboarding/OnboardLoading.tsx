@@ -1,14 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useEffect} from 'react';
+import {OnboardingStackParamList} from '../../../navigation/Onboarding';
 import {AppState} from '../../../state/contexts/GlobalContext';
 import {StorageGetItem} from '../../../utils/storage';
 import Loading from '../loading/Loading';
 
-export type Props = {
-  navigation: any;
-};
+type OnboardingScreenProps = NativeStackScreenProps<
+  OnboardingStackParamList,
+  'OnboardLoading'
+>;
 
-const OnboardLoading: React.FC<Props> = ({navigation}) => {
+const OnboardLoading = () => {
+  const navigation = useNavigation<OnboardingScreenProps['navigation']>();
+
   const getScreen = async () => {
     const appState: AppState = await StorageGetItem('appstate');
     if (appState === AppState.TESTING) {

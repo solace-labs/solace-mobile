@@ -27,13 +27,8 @@ import {
   TEST_PASSWORD,
 } from '../../../utils/constants';
 import {StorageSetItem} from '../../../utils/storage';
-import {Colors} from '../../../utils/colors';
 
-export type Props = {
-  navigation: any;
-};
-
-const EmailScreen: React.FC<Props> = ({navigation}) => {
+const EmailScreen = () => {
   const [username, setUsername] = useState({
     value: '',
     isValid: false,
