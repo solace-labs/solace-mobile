@@ -1,7 +1,13 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Loading from '../components/screens/update/UpdateLoading';
-const Stack = createNativeStackNavigator();
+
+export type UpdateStackParamList = {
+  Loading: undefined;
+};
+
+const Stack = createNativeStackNavigator<UpdateStackParamList>();
+
 const UpdateStack = () => {
   return (
     <Stack.Navigator

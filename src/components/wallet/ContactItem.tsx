@@ -4,6 +4,8 @@ import {useNavigation} from '@react-navigation/native';
 import SolaceText from '../common/solaceui/SolaceText';
 import globalStyles from '../../utils/global_styles';
 import {PublicKeyType} from '../screens/wallet/Guardian';
+import {WalletStackParamList} from '../../navigation/Wallet';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 export type Contact = {
   id: string;
@@ -17,8 +19,13 @@ export type Props = {
   asset: string;
 };
 
+type WalletScreenProps = NativeStackScreenProps<
+  WalletStackParamList,
+  'Contact'
+>;
+
 const ContactItem: React.FC<Props> = ({contact, asset}) => {
-  const navigation: any = useNavigation();
+  const navigation = useNavigation<WalletScreenProps['navigation']>();
   const imageText = contact.toString()[0];
   const address =
     contact.toString().slice(0, 5) + '...' + contact.toString().slice(-5);

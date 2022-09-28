@@ -1,4 +1,5 @@
 import {SolaceSDK} from 'solace-sdk';
+import {Update} from '../../../App';
 import {Contact} from '../../components/wallet/ContactItem';
 import {AwsCognito} from '../../utils/aws_cognito';
 import {GoogleApi} from '../../utils/google_apis';
@@ -20,6 +21,13 @@ export const setAccountStatus = (status: AccountStatus) => {
   return {
     type: 'SET_ACCOUNT_STATUS',
     payload: status,
+  };
+};
+
+export const setUpdate = (update: Update) => {
+  return {
+    type: 'SET_UPDATE',
+    payload: update,
   };
 };
 

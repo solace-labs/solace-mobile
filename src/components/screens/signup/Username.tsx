@@ -10,10 +10,10 @@ import SolaceText from '../../common/solaceui/SolaceText';
 import SolaceInput from '../../common/solaceui/SolaceInput';
 import Header from '../../common/Header';
 import SolaceLoader from '../../common/solaceui/SolaceLoader';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {SignUpStackParamList} from '../../../navigation/SignUp';
 
-export type Props = {
-  navigation: any;
-};
+// type SignUpScreenProps = NativeStackScreenProps<SignUpStackParamList, 'User'>;
 
 export enum Status {
   INFO = 'info',
@@ -22,7 +22,7 @@ export enum Status {
   SUCCESS = 'success',
 }
 
-const UsernameScreen: React.FC<Props> = ({navigation}) => {
+const UsernameScreen = ({navigation}: {navigation: any}) => {
   const [username, setUsername] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [usernameAvailable, setUsernameAvailable] = useState(false);

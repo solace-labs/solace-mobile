@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {TouchableOpacity, View} from 'react-native';
+import {View} from 'react-native';
 import React, {useContext, useState} from 'react';
 import {
   AccountStatus,
@@ -7,51 +7,82 @@ import {
   GlobalContext,
 } from '../../../state/contexts/GlobalContext';
 import {
-  clearData,
   setAccountStatus,
   setAwsCognito,
   setUser,
 } from '../../../state/actions/global';
 import {AwsCognito} from '../../../utils/aws_cognito';
 import {showMessage} from 'react-native-flash-message';
-import {
-  StorageClearAll,
-  StorageGetItem,
-  StorageSetItem,
-} from '../../../utils/storage';
+import {StorageGetItem, StorageSetItem} from '../../../utils/storage';
 import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import Header from '../../common/Header';
 import SolaceInput from '../../common/solaceui/SolaceInput';
 import SolacePasswordInput from '../../common/solaceui/SolacePasswordInput';
-import SolaceText from '../../common/solaceui/SolaceText';
-import SolaceButton from '../../common/solaceui/SolaceButton';
 import SolaceLoader from '../../common/solaceui/SolaceLoader';
-import {TEST_PASSWORD} from '../../../utils/constants';
+import SolaceButton from '../../common/solaceui/SolaceButton';
+import SolaceText from '../../common/solaceui/SolaceText';
+import {decryptKey} from '../../../utils/aes_encryption';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {OnboardingStackParamList} from '../../../navigation/Onboarding';
+import {RetrieveStackParamList} from '../../../navigation/Retrieve';
 import {useNavigation} from '@react-navigation/native';
 
-type OnboardingScreenProps = NativeStackScreenProps<
-  OnboardingStackParamList,
+type RetrieveScreenProps = NativeStackScreenProps<
+  RetrieveStackParamList,
   'Login'
 >;
 
 const Login = () => {
-  const navigation = useNavigation<OnboardingScreenProps['navigation']>();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [active, setActive] = useState('username');
-  const [isLoading, setIsLoading] = useState(false);
   const {state, dispatch} = useContext(GlobalContext);
+  const navigation = useNavigation<RetrieveScreenProps['navigation']>();
+  console.log('retrieve', state);
+  const [username, setUsername] = useState(state.user?.solaceName!);
+  const [password, setPassword] = useState('');
+  const [active, setActive] = useState('password');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const decryptStoredData = async () => {
+    try {
+      const {encryptedSecretKey, encryptedSolaceName} = state.retrieveData!;
+      console.log(encryptedSecretKey);
+      const secretKey = await decryptKey(encryptedSecretKey, password);
+      const solaceName = await decryptKey(encryptedSolaceName, password);
+      const user = {
+        solaceName,
+        ownerPrivateKey: secretKey,
+        isWalletCreated: true,
+      };
+      if (solaceName !== username.trim()) {
+        showMessage({
+          message: 'username is incorrect',
+          type: 'danger',
+        });
+        setIsLoading(false);
+        return;
+      }
+      await StorageSetItem('appstate', AppState.ONBOARDED);
+      dispatch(setUser(user));
+      await StorageSetItem('user', user);
+      setIsLoading(false);
+      showMessage({
+        message: 'successfully retrieved account. login again please',
+        type: 'success',
+      });
+      dispatch(setAccountStatus(AccountStatus.EXISITING));
+    } catch (e: any) {
+      setIsLoading(false);
+      console.log(e.message);
+      showMessage({
+        message: 'incorrect password/username. please try again',
+        type: 'danger',
+      });
+    }
+  };
 
   const handleSignIn = async () => {
     try {
       setIsLoading(true);
       const appState = await StorageGetItem('appstate');
-      if (appState === AppState.TESTING) {
-        handleTestSignIn();
-        return;
-      }
+      console.log('login', appState);
       const awsCognito = new AwsCognito();
       awsCognito.setCognitoUser(username);
       dispatch(setAwsCognito(awsCognito));
@@ -61,57 +92,20 @@ const Login = () => {
         idToken: {jwtToken: idtoken},
         refreshToken: {token: refreshtoken},
       } = response;
-      await StorageSetItem('tokens', {
-        accesstoken,
-        idtoken,
-        refreshtoken,
-      });
-      dispatch(setUser({...state.user, solaceName: username, pin: password}));
-      await StorageSetItem('user', {...state.user, solaceName: username});
-      setIsLoading(false);
-      if (appState === AppState.GDRIVE) {
-        navigation.reset({
-          index: 0,
-          routes: [{name: 'CreateWallet'}],
-        });
-      } else {
-        navigation.reset({
-          index: 0,
-          routes: [{name: 'GoogleDrive'}],
-        });
-      }
+      await StorageSetItem('tokens', {accesstoken, idtoken, refreshtoken});
+      await decryptStoredData();
+      // dispatch(setUser({...state.user, solaceName: username}));
     } catch (e: any) {
+      setIsLoading(false);
       showMessage({
         message: e.message,
         type: 'danger',
       });
-      setIsLoading(false);
-    }
-  };
-
-  const handleTestSignIn = async () => {
-    const user = await StorageGetItem('user');
-    console.log(user);
-    if (password === TEST_PASSWORD && username === user.solaceName) {
-      setIsLoading(false);
-      navigation.reset({
-        index: 0,
-        routes: [{name: 'CreateWallet'}],
-      });
-    } else {
-      setIsLoading(false);
-      showMessage({message: 'email/password is wrong', type: 'danger'});
     }
   };
 
   const isDisable = () => {
     return !username || !password || isLoading;
-  };
-
-  const reset = async () => {
-    await StorageClearAll();
-    dispatch(clearData());
-    dispatch(setAccountStatus(AccountStatus.NEW));
   };
 
   return (
@@ -121,9 +115,10 @@ const Login = () => {
           heading={`enter ${
             active === 'username' ? 'solace username' : 'password'
           }`}
-          subHeading="sign in to your account"
+          subHeading="enter credentials to retrieve account"
         />
         <SolaceInput
+          // editable={false}
           placeholder="username"
           onFocus={() => setActive('username')}
           mt={16}
@@ -137,16 +132,6 @@ const Login = () => {
           onChangeText={text => setPassword(text)}
           mt={16}
         />
-        <TouchableOpacity onPress={reset}>
-          <SolaceText
-            type="secondary"
-            variant="normal"
-            weight="bold"
-            mt={10}
-            align="right">
-            use another account?
-          </SolaceText>
-        </TouchableOpacity>
         {isLoading && <SolaceLoader text="signing in..." />}
       </View>
       <SolaceButton
@@ -156,7 +141,7 @@ const Login = () => {
         loading={isLoading}
         disabled={isDisable()}>
         <SolaceText type="secondary" weight="bold" variant="dark">
-          sign in
+          retrieve?
         </SolaceText>
       </SolaceButton>
     </SolaceContainer>

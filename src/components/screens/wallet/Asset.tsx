@@ -11,7 +11,7 @@ import SolaceButton from '../../common/solaceui/SolaceButton';
 import SolaceText from '../../common/solaceui/SolaceText';
 import TopNavbar from '../../common/TopNavbar';
 import globalStyles from '../../../utils/global_styles';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import SolaceInput from '../../common/solaceui/SolaceInput';
 import SolaceCustomInput from '../../common/solaceui/SolaceCustomInput';
 import {PublicKey} from 'solace-sdk';
@@ -21,51 +21,54 @@ import {LAMPORTS_PER_SOL} from '../../../utils/constants';
 import {showMessage} from 'react-native-flash-message';
 import {setAccountStatus} from '../../../state/actions/global';
 import SolaceLoader from '../../common/solaceui/SolaceLoader';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {WalletStackParamList} from '../../../navigation/Wallet';
+import {useQuery, useQueryClient} from '@tanstack/react-query';
+import {useRefreshOnFocus} from '../../../hooks/useRefreshOnFocus';
+import {getMaxBalance} from '../../../apis/sdk';
+
+type WalletScreenProps = NativeStackScreenProps<WalletStackParamList, 'Asset'>;
 
 const AssetScreen = () => {
-  const navigation = useNavigation();
-  const navState = navigation.getState();
-  const params = navState.routes.find(route => route.name === 'Asset')
-    ?.params as any;
-  const asset = params.asset;
-  const contact = params.contact;
-  const shortAsset = asset.slice(0, 4) + '...' + asset.slice(-4);
   const {state, dispatch} = useContext(GlobalContext);
+  const navigation = useNavigation<WalletScreenProps['navigation']>();
+  const {
+    params: {asset, contact},
+  } = useRoute<WalletScreenProps['route']>();
+
+  const shortAsset = asset.slice(0, 4) + '...' + asset.slice(-4);
+
   const [amount, setAmount] = useState('');
-  const [maxBalance, setMaxBalance] = useState(0);
   const [recipientAddress, setRecipientAddress] = useState(
-    // contact ? contact : '',
-    'GNgMfSSJ4NjSuu1EdHj94P6TzQS24KH38y1si2CMrUsF',
+    contact ? contact : '',
+    // 'GNgMfSSJ4NjSuu1EdHj94P6TzQS24KH38y1si2CMrUsF',
   );
   // const [recipientAddress, setRecipientAddress] = useState('');
-  const [loading, setLoading] = useState(false);
   const [sendLoading, setSendLoading] = useState({
     message: '',
     value: false,
   });
 
-  const handleGoBack = () => {
-    navigation.goBack();
+  const queryClient = useQueryClient();
+
+  const {data, isLoading, isFetching} = useQuery(
+    ['maxbalance'],
+    () => getMaxBalance(state.sdk!, asset),
+    {
+      enabled: !!state.sdk,
+    },
+  );
+
+  const maxBalance = data ?? 0;
+
+  const refetch = async () => {
+    isLoading && (await queryClient.invalidateQueries(['maxbalance']));
   };
 
-  const getMaxBalance = async () => {
-    try {
-      setLoading(true);
-      const sdk = state.sdk;
-      const splTokenAddress = new PublicKey(asset);
-      const accountInfo = await sdk?.getTokenAccountInfo(splTokenAddress);
-      const balance = +accountInfo!.amount.toString() / LAMPORTS_PER_SOL;
-      setMaxBalance(balance);
-      setLoading(false);
-    } catch (e: any) {
-      console.log(e.message);
-      if (e.message === 'Request failed with status code 401') {
-        dispatch(setAccountStatus(AccountStatus.EXISITING));
-      } else {
-        setLoading(false);
-        showMessage({message: 'some error try again', type: 'warning'});
-      }
-    }
+  useRefreshOnFocus(refetch);
+
+  const handleGoBack = () => {
+    navigation.goBack();
   };
 
   const send = async () => {
@@ -96,7 +99,7 @@ const AssetScreen = () => {
           reciever,
           recieverTokenAccount,
         },
-        feePayer,
+        feePayer!,
       );
       const response = await relayTransaction(tx);
       setSendLoading({
@@ -104,9 +107,9 @@ const AssetScreen = () => {
         value: true,
       });
       await confirmTransaction(response);
-      const data = await sdk.fetchWalletData();
+      const res = await sdk.fetchWalletData();
       setSendLoading({message: '', value: false});
-      await getMaxBalance();
+      queryClient.invalidateQueries(['maxbalance']);
       navigation.goBack();
     } catch (e: any) {
       console.log('SENDING ERROR: ', e);
@@ -122,19 +125,15 @@ const AssetScreen = () => {
     }
   };
 
-  useEffect(() => {
-    getMaxBalance();
-  }, []);
-
   const isDisabled = () => {
-    if (+amount > +maxBalance) {
-      return false;
-    }
+    if (isLoading) return true;
+    if (isFetching) return true;
+    if (+amount > +maxBalance!) return false;
     return (!amount || !recipientAddress || sendLoading.value) as boolean;
   };
 
   const handleAmountChange = (amt: string) => {
-    if (+amt > +maxBalance) {
+    if (+amt > +maxBalance!) {
       showMessage({
         message: 'value must be less than total amount',
         type: 'info',
@@ -145,18 +144,29 @@ const AssetScreen = () => {
   };
 
   const handleMax = () => {
-    handleAmountChange(maxBalance.toString());
+    handleAmountChange(maxBalance!.toString());
   };
 
   return (
     <SolaceContainer>
-      <TopNavbar startIcon="back" text="send" startClick={handleGoBack} />
+      <TopNavbar
+        startIcon="ios-return-up-back"
+        startIconType="ionicons"
+        text="send"
+        startClick={handleGoBack}
+      />
       <View style={[globalStyles.fullCenter, {flex: 0.5}]}>
         <View style={globalStyles.fullWidth}>
           <SolaceCustomInput
             iconName="line-scan"
             placeholder="recipient's address"
             iconType="mci"
+            handleIconPress={() => {
+              showMessage({
+                message: 'scan coming soon...',
+                type: 'info',
+              });
+            }}
             value={recipientAddress}
             onChangeText={setRecipientAddress}
           />
@@ -176,13 +186,9 @@ const AssetScreen = () => {
           onChangeText={text => handleAmountChange(text)}
         />
         <View style={[globalStyles.rowSpaceBetween, {marginTop: 10}]}>
-          {loading ? (
-            <ActivityIndicator size="small" />
-          ) : (
-            <SolaceText type="secondary" variant="normal" weight="bold">
-              {maxBalance} available
-            </SolaceText>
-          )}
+          <SolaceText type="secondary" variant="normal" weight="bold">
+            {maxBalance} available
+          </SolaceText>
           <TouchableOpacity onPress={handleMax}>
             <SolaceText type="secondary">use max</SolaceText>
           </TouchableOpacity>

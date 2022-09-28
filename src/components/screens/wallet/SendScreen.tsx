@@ -6,43 +6,39 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext} from 'react';
+import Clipboard from '@react-native-community/clipboard';
+import {showMessage} from 'react-native-flash-message';
+import {useQuery, useQueryClient} from '@tanstack/react-query';
 
 import {GlobalContext} from '../../../state/contexts/GlobalContext';
+import globalStyles from '../../../utils/global_styles';
 import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import TopNavbar from '../../common/TopNavbar';
 import SolaceText from '../../common/solaceui/SolaceText';
-import globalStyles from '../../../utils/global_styles';
-import Clipboard from '@react-native-community/clipboard';
-import {showMessage} from 'react-native-flash-message';
-import {PublicKey, SolaceSDK} from 'solace-sdk';
-import {getFeePayer} from '../../../utils/apis';
-import {relayTransaction} from '../../../utils/relayer';
-import {
-  LAMPORTS_PER_SOL,
-  PROGRAM_ADDRESS,
-  SPL_TOKEN,
-  TOKEN_PROGRAM_ID,
-} from '../../../utils/constants';
 import AccountItem from '../../wallet/AccountItem';
 import SolaceLoader from '../../common/solaceui/SolaceLoader';
 import SolaceIcon from '../../common/solaceui/SolaceIcon';
-import {createIconSetFromFontello} from 'react-native-vector-icons';
+import {useRefreshOnFocus} from '../../../hooks/useRefreshOnFocus';
+import {getAccounts} from '../../../apis/sdk';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {WalletStackParamList} from '../../../navigation/Wallet';
+import {useNavigation} from '@react-navigation/native';
 
-export type Props = {
-  navigation: any;
-};
+type SendScreenProps = NativeStackScreenProps<WalletStackParamList, 'Send'>;
 
-export type Account = {
-  amount: number;
-  tokenAddress: string;
-};
-
-const SendScreen: React.FC<Props> = ({navigation}) => {
+const SendScreen = () => {
   const {state} = useContext(GlobalContext);
-  const [address, setAddress] = useState(state.sdk?.wallet.toString() ?? '');
-  const [accounts, setAccounts] = useState<Account[]>([]);
-  const [loading, setLoading] = useState(false);
+  const navigation = useNavigation<SendScreenProps['navigation']>();
+  const {
+    data: accounts,
+    isLoading,
+    isFetching,
+  } = useQuery(['accounts'], () => getAccounts(state?.sdk!), {
+    enabled: !!state.sdk,
+  });
+
+  const queryClient = useQueryClient();
 
   const handleGoBack = () => {
     navigation.goBack();
@@ -59,66 +55,18 @@ const SendScreen: React.FC<Props> = ({navigation}) => {
     });
   };
 
-  const getAllAccounts = async () => {
-    try {
-      setLoading(true);
-      const sdk = state.sdk!;
-      const allAccounts = await sdk.provider.connection.getTokenAccountsByOwner(
-        sdk.wallet,
-        {
-          programId: TOKEN_PROGRAM_ID,
-        },
-      );
-      const accs: Account[] = [];
-      for (let i = 0; i < allAccounts.value.length; i++) {
-        const accountInfoBuffer = Buffer.from(
-          allAccounts.value[i].account.data,
-        );
-        const accountInfo = await SolaceSDK.getAccountInfo(accountInfoBuffer);
-        const balance = +accountInfo.amount.toString() / LAMPORTS_PER_SOL;
-        const tokenAddress = accountInfo.mint.toString();
-        accs.push({
-          amount: balance,
-          tokenAddress,
-        });
-      }
-      setAccounts(accs);
-      setLoading(false);
-    } catch (e) {
-      setLoading(false);
-      console.log('ERR', e);
-      showMessage({
-        message: 'service unavilable',
-        type: 'danger',
-      });
-    }
+  const refresh = async () => {
+    !isLoading && (await queryClient.invalidateQueries(['accounts']));
   };
 
-  useEffect(() => {
-    const willFocusSubscription = navigation.addListener('focus', async () => {
-      await getAllAccounts();
-    });
-    return willFocusSubscription;
-  }, [navigation]);
+  useRefreshOnFocus(refresh);
 
-  // useEffect(() => {
-  //   getAllAccounts();
-  //   const getData = async () => {
-  //     const walletData = await state.sdk!.fetchWalletData();
-  //     console.log(walletData);
-  //   };
-  //   getData();
-  // }, []);
-
-  const handleRefresh = () => {
-    getAllAccounts();
-  };
-
-  if (loading) {
+  if (isLoading) {
     return (
       <SolaceContainer>
         <TopNavbar
-          startIcon="back"
+          startIcon="ios-return-up-back"
+          startIconType="ionicons"
           // endIcon="plus"
           text="send"
           startClick={handleGoBack}
@@ -130,15 +78,14 @@ const SendScreen: React.FC<Props> = ({navigation}) => {
       </SolaceContainer>
     );
   }
-  // const contacts = state.contacts!;
-  const contacts: any[] = [];
-  const showContacts = contacts.length > 0;
 
   return (
     <SolaceContainer>
       <TopNavbar
-        startIcon="back"
-        // endIcon="plus"
+        startIcon="ios-return-up-back"
+        startIconType="ionicons"
+        fetching={isFetching}
+        // endIcon=""
         text="send"
         startClick={handleGoBack}
         // endClick={handleAdd}
@@ -147,7 +94,7 @@ const SendScreen: React.FC<Props> = ({navigation}) => {
         {accounts && accounts.length > 0 ? (
           <ScrollView
             refreshControl={
-              <RefreshControl refreshing={loading} onRefresh={handleRefresh} />
+              <RefreshControl refreshing={isLoading} onRefresh={refresh} />
             }
             bounces={true}
             style={{marginTop: -50, width: '100%'}}>

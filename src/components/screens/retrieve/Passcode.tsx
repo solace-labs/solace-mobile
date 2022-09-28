@@ -22,11 +22,7 @@ import SolaceLoader from '../../common/solaceui/SolaceLoader';
 import SolaceText from '../../common/solaceui/SolaceText';
 import globalStyles from '../../../utils/global_styles';
 
-export type Props = {
-  navigation: any;
-};
-
-const PasscodeScreen: React.FC<Props> = ({navigation}) => {
+const PasscodeScreen = () => {
   const [code, setCode] = useState('');
   const {state, dispatch} = useContext(GlobalContext);
   const [loading, setLoading] = useState({
@@ -79,7 +75,6 @@ const PasscodeScreen: React.FC<Props> = ({navigation}) => {
   const filled = code.length === PASSCODE_LENGTH;
 
   useEffect(() => {
-    console.log('HERE');
     if (filled) {
       decryptStoredData();
     }

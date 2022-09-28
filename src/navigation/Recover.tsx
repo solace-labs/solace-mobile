@@ -5,7 +5,14 @@ import RecoverScreen from '../components/screens/recover/Recover';
 import Login from '../components/screens/recover/Login';
 import RecoverLoading from '../components/screens/recover/RecoverLoading';
 
-const Stack = createNativeStackNavigator();
+export type RecoverStackParamList = {
+  Login: undefined;
+  GuardianRecovery: undefined;
+  Recover: undefined;
+  RecoverLoading: undefined;
+};
+
+const Stack = createNativeStackNavigator<RecoverStackParamList>();
 
 const RecoverStack = () => {
   return (

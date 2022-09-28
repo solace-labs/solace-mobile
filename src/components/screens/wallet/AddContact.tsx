@@ -1,40 +1,43 @@
 import {View} from 'react-native';
 import React, {useContext, useState} from 'react';
+import moment from 'moment';
+import {PublicKey, SolaceSDK} from 'solace-sdk';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {useNavigation} from '@react-navigation/native';
 
 import {GlobalContext} from '../../../state/contexts/GlobalContext';
-import {addNewContact, setSDK} from '../../../state/actions/global';
 import {showMessage} from 'react-native-flash-message';
 import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import SolaceButton from '../../common/solaceui/SolaceButton';
 import SolaceText from '../../common/solaceui/SolaceText';
 import TopNavbar from '../../common/TopNavbar';
-import SolaceInput from '../../common/solaceui/SolaceInput';
 import SolaceCustomInput from '../../common/solaceui/SolaceCustomInput';
 import {relayTransaction} from '../../../utils/relayer';
 import {confirmTransaction, getFeePayer} from '../../../utils/apis';
-import {PublicKey, SolaceSDK} from 'solace-sdk';
 import SolaceLoader from '../../common/solaceui/SolaceLoader';
-import moment from 'moment';
+import {WalletStackParamList} from '../../../navigation/Wallet';
 
-export type Props = {
-  navigation: any;
-};
+type WalletScreenProps = NativeStackScreenProps<
+  WalletStackParamList,
+  'AddContact'
+>;
 
 export type WalletDataType = Awaited<
   ReturnType<typeof SolaceSDK.fetchDataForWallet>
 >;
 
-const AddContactScreen: React.FC<Props> = ({navigation}) => {
+const AddContactScreen = () => {
+  const navigation = useNavigation<WalletScreenProps['navigation']>();
   const initialLoading = {message: '', value: false};
   const [address, setAddress] = useState('');
   const [loading, setLoading] = useState(initialLoading);
-  const {state, dispatch} = useContext(GlobalContext);
+  const {state} = useContext(GlobalContext);
 
   const addContact = async () => {
     const sdk = state.sdk!;
     const feePayer = await getFeePayer();
     const pubKey = new PublicKey(address);
-    const tx = await sdk.addTrustedPubkey(pubKey, feePayer);
+    const tx = await sdk.addTrustedPubkey(pubKey, feePayer!);
     const transactionId = await relayTransaction(tx);
     setLoading({message: 'finalizing... please wait', value: true});
     await confirmTransaction(transactionId);
@@ -73,7 +76,6 @@ const AddContactScreen: React.FC<Props> = ({navigation}) => {
       const sdk = state.sdk!;
       const data = await sdk.fetchWalletData();
       const inIncubation = checkIncubationMode(data);
-      console.log('incubation', inIncubation);
       if (inIncubation) {
         await addContact();
         setLoading(initialLoading);
@@ -102,7 +104,8 @@ const AddContactScreen: React.FC<Props> = ({navigation}) => {
   return (
     <SolaceContainer>
       <TopNavbar
-        startIcon="back"
+        startIcon="ios-return-up-back"
+        startIconType="ionicons"
         text="save contact"
         startClick={handleGoBack}
       />
@@ -114,6 +117,12 @@ const AddContactScreen: React.FC<Props> = ({navigation}) => {
           placeholder="name"
         /> */}
         <SolaceCustomInput
+          handleIconPress={() => {
+            showMessage({
+              message: 'scan coming soon...',
+              type: 'info',
+            });
+          }}
           iconName="line-scan"
           placeholder="address"
           iconType="mci"

@@ -1,15 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useEffect} from 'react';
+import {RecoverStackParamList} from '../../../navigation/Recover';
 import {AppState} from '../../../state/contexts/GlobalContext';
 import {StorageGetItem} from '../../../utils/storage';
 import Loading from '../loading/Loading';
 
-export type Props = {
-  navigation: any;
-};
+type RecoverScreenProps = NativeStackScreenProps<
+  RecoverStackParamList,
+  'RecoverLoading'
+>;
 
-const RecoverLoading: React.FC<Props> = ({navigation}) => {
-  console.log('RECOVER LOADING');
+const RecoverLoading = () => {
+  const navigation = useNavigation<RecoverScreenProps['navigation']>();
   const getTokens = async () => {
     try {
       const appState: AppState = await StorageGetItem('appstate');

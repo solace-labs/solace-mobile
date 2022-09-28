@@ -8,6 +8,11 @@ const reducer = (state: any, action: {type: string; payload: any}) => {
         ...state,
         user: payload,
       };
+    case 'SET_UPDATE':
+      return {
+        ...state,
+        updateStatus: payload,
+      };
     case 'SET_ACCOUNT_STATUS':
       return {
         ...state,

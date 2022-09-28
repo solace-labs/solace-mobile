@@ -7,18 +7,37 @@ import React, {
   useReducer,
 } from 'react';
 import {Contact} from '../../components/wallet/ContactItem';
-import {clearData, setAccountStatus, setUser} from '../actions/global';
+import {
+  clearData,
+  setAccountStatus,
+  setUpdate,
+  setUser,
+} from '../actions/global';
 import globalReducer from '../reducers/global';
 import {KeyPair, SolaceSDK} from 'solace-sdk';
 import {AwsCognito} from '../../utils/aws_cognito';
 import {GoogleApi} from '../../utils/google_apis';
 import {NETWORK, PROGRAM_ADDRESS} from '../../utils/constants';
 import {StorageClearAll, StorageGetItem} from '../../utils/storage';
+import {Update} from '../../../App';
+
+export enum StatusEnum {
+  UP_TO_DATE = 'UP_TO_DATE',
+  UPDATE_INSTALLED = 'UPDATE_INSTALLED',
+  UPDATE_IGNORED = 'UPDATE_IGNORED',
+  UNKNOWN_ERROR = 'UNKNOWN_ERROR',
+  SYNC_IN_PROGRESS = 'SYNC_IN_PROGRESS',
+  CHECKING_FOR_UPDATE = 'CHECKING_FOR_UPDATE',
+  AWAITING_USER_ACTION = 'AWAITING_USER_ACTION',
+  DOWNLOADING_PACKAGE = 'DOWNLOADING_PACKAGE',
+  INSTALLING_UPDATE = 'INSTALLING_UPDATE',
+}
 
 type InitialStateType = {
   accountStatus: AccountStatus;
   user?: User;
   sdk?: SolaceSDK;
+  updateStatus?: Update;
   googleApi?: GoogleApi;
   contact?: Contact;
   contacts?: Contact[];
@@ -40,12 +59,10 @@ export type Tokens = {
 };
 
 export type User = {
-  email: string;
   solaceName: string;
   ownerPrivateKey: string;
-  publicKey?: string;
   isWalletCreated: boolean;
-  pin: string;
+  pin?: string;
 };
 
 export enum AccountStatus {
@@ -71,11 +88,15 @@ export enum AppState {
 export const initialState = {
   accountStatus: AccountStatus.LOADING,
   user: {
-    email: '',
     solaceName: '',
     ownerPrivateKey: '',
     isWalletCreated: false,
     pin: '',
+  },
+  updateStatus: {
+    loading: false,
+    status: StatusEnum.CHECKING_FOR_UPDATE,
+    progress: 0,
   },
   contacts: [
     {
@@ -104,10 +125,9 @@ const GlobalProvider = ({
   updating,
 }: {
   children: any;
-  updating: boolean;
+  updating: Update;
 }) => {
   const [state, dispatch] = useReducer(globalReducer, initialState);
-  console.log({updating});
   /** valid recover mode */
   const checkInRecoverMode = useCallback(async () => {
     const storedUser: User = await StorageGetItem('user');
@@ -123,7 +143,6 @@ const GlobalProvider = ({
   const isUserValid = useCallback(async () => {
     const storedUser: User = await StorageGetItem('user');
     return (storedUser &&
-      storedUser.pin &&
       storedUser.solaceName &&
       storedUser.ownerPrivateKey &&
       storedUser.isWalletCreated) as boolean;
@@ -135,9 +154,7 @@ const GlobalProvider = ({
     return (storedUser &&
       appState &&
       appState === AppState.GDRIVE &&
-      storedUser.pin &&
-      storedUser.solaceName &&
-      storedUser.ownerPrivateKey) as boolean;
+      storedUser.solaceName) as boolean;
   };
 
   const checkRecovery = useCallback(async () => {
@@ -159,8 +176,8 @@ const GlobalProvider = ({
   }, []);
 
   const init = useCallback(async () => {
-    console.log('init', updating);
-    if (updating) {
+    if (updating.loading) {
+      dispatch(setUpdate(updating));
       dispatch(setAccountStatus(AccountStatus.UPDATE));
       return;
     }
@@ -175,6 +192,16 @@ const GlobalProvider = ({
     const appState: AppState = await StorageGetItem('appstate');
     if (appState === AppState.TESTING) {
       dispatch(setAccountStatus(AccountStatus.EXISITING));
+      return;
+    }
+
+    if (
+      appState === AppState.SIGNUP &&
+      storedUser &&
+      storedUser.solaceName &&
+      storedUser.solaceName.trim().length > 0
+    ) {
+      dispatch(setAccountStatus(AccountStatus.SIGNED_UP));
       return;
     }
 
@@ -199,8 +226,8 @@ const GlobalProvider = ({
       return;
     }
     /** NEW USER */
-    // await StorageClearAll();
-    // dispatch(clearData());
+    await StorageClearAll();
+    dispatch(clearData());
     dispatch(setAccountStatus(AccountStatus.NEW));
   }, [checkInRecoverMode, checkRecovery, isUserValid, updating]);
 

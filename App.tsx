@@ -3,34 +3,99 @@ import FlashMessage from 'react-native-flash-message';
 import Navigation from './src/navigation/Navigation';
 import GlobalProvider from './src/state/contexts/GlobalContext';
 import codePush from 'react-native-code-push';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+
+// type Data = keyof typeof codePush.SyncStatus;
+// function onAppStateChange(status: any) {
+//   // React Query already supports in web browser refetch on window focus by default
+//   if (Platform.OS !== 'web') {
+//     focusManager.setFocused(status === 'active');
+//   }
+// }
+export const statusArray = [
+  'UP_TO_DATE',
+  'UPDATE_INSTALLED',
+  'UPDATE_IGNORED',
+  'UNKNOWN_ERROR',
+  'SYNC_IN_PROGRESS',
+  'CHECKING_FOR_UPDATE',
+  'AWAITING_USER_ACTION',
+  'DOWNLOADING_PACKAGE',
+  'INSTALLING_UPDATE',
+];
+
+export enum StatusEnum {
+  UP_TO_DATE = 'UP_TO_DATE',
+  UPDATE_INSTALLED = 'UPDATE_INSTALLED',
+  UPDATE_IGNORED = 'UPDATE_IGNORED',
+  UNKNOWN_ERROR = 'UNKNOWN_ERROR',
+  SYNC_IN_PROGRESS = 'SYNC_IN_PROGRESS',
+  CHECKING_FOR_UPDATE = 'CHECKING_FOR_UPDATE',
+  AWAITING_USER_ACTION = 'AWAITING_USER_ACTION',
+  DOWNLOADING_PACKAGE = 'DOWNLOADING_PACKAGE',
+  INSTALLING_UPDATE = 'INSTALLING_UPDATE',
+}
+
+const queryClient = new QueryClient();
+
+export type Update = {
+  loading: boolean;
+  status: StatusEnum;
+  progress: number;
+};
 
 let CodePushOptions = {
   checkFrequency: codePush.CheckFrequency.MANUAL,
-  // checkFrequency: codePush.CheckFrequency.ON_APP_START,
-  // mandatoryInstallMode: codePush.InstallMode.IMMEDIATE,
   updateDialog: {
-    // appendReleaseDescription: true,
     title: 'a new update is available!',
   },
 };
 
 let App = () => {
-  // const isDarkMode = useColorScheme() === 'dark';
-  const [updating, setUpdating] = useState(true);
+  const [updating, setUpdating] = useState<Update>({
+    loading: true,
+    status: StatusEnum.CHECKING_FOR_UPDATE,
+    progress: 0,
+  });
 
   const update = async () => {
-    setUpdating(true);
+    setUpdating(prev => ({
+      ...prev,
+      loading: true,
+    }));
     try {
-      await codePush.sync({
-        installMode: codePush.InstallMode.IMMEDIATE,
-        updateDialog: {
-          appendReleaseDescription: true,
-          title: 'a new update is available!',
+      await codePush.sync(
+        {
+          installMode: codePush.InstallMode.IMMEDIATE,
+          updateDialog: {
+            appendReleaseDescription: true,
+            title: 'a new update is available!',
+          },
         },
-      });
-      setUpdating(false);
+        status => {
+          setUpdating(prev => ({
+            ...prev,
+            status: statusArray[status] as StatusEnum,
+          }));
+        },
+        download => {
+          setUpdating(prev => ({
+            ...prev,
+            progress: Math.round(
+              (download.receivedBytes / download.totalBytes) * 100,
+            ),
+          }));
+        },
+      );
+      setUpdating(prev => ({
+        ...prev,
+        loading: false,
+      }));
     } catch (e) {
-      setUpdating(false);
+      setUpdating(prev => ({
+        ...prev,
+        loading: false,
+      }));
       console.log('ERROR DURING UPDATE', e);
     }
   };
@@ -40,10 +105,12 @@ let App = () => {
   }, []);
 
   return (
-    <GlobalProvider updating={updating}>
-      <Navigation />
-      <FlashMessage position="top" />
-    </GlobalProvider>
+    <QueryClientProvider client={queryClient}>
+      <GlobalProvider updating={updating}>
+        <Navigation />
+        <FlashMessage position="top" />
+      </GlobalProvider>
+    </QueryClientProvider>
   );
 };
 

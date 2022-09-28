@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import {View} from 'react-native';
+import {ActivityIndicator, View} from 'react-native';
 import {Colors} from '../../utils/colors';
 import globalStyles from '../../utils/global_styles';
 import SolaceIcon from './solaceui/SolaceIcon';
@@ -7,12 +7,13 @@ import SolaceText from './solaceui/SolaceText';
 
 type Props = {
   startIcon?: string;
-  startIconType?: 'antdesign' | 'mci';
+  startIconType?: 'antdesign' | 'mci' | 'ionicons';
   text?: string;
   endIcon?: string;
   endIconType?: 'antdesign' | 'mci';
   startClick: () => void;
   endClick?: () => void;
+  fetching?: boolean;
 };
 
 const TopNavbar: FC<Props> = ({
@@ -23,6 +24,7 @@ const TopNavbar: FC<Props> = ({
   endIcon,
   endIconType,
   endClick,
+  fetching = false,
 }) => {
   return (
     <View
@@ -37,9 +39,10 @@ const TopNavbar: FC<Props> = ({
           variant={startIconType || 'antdesign'}
           onPress={startClick}
         />
-        <SolaceText size="xl" weight="semibold" style={{marginLeft: 8}}>
+        <SolaceText size="lg" weight="semibold" style={{marginHorizontal: 8}}>
           {text}
         </SolaceText>
+        {fetching && <ActivityIndicator size="small" />}
       </View>
       {endIcon && (
         <SolaceIcon

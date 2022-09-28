@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {View} from 'react-native';
+import {TouchableOpacity, View} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import {
   AccountStatus,
@@ -7,13 +7,18 @@ import {
   GlobalContext,
 } from '../../../state/contexts/GlobalContext';
 import {
+  clearData,
   setAccountStatus,
   setAwsCognito,
   setUser,
 } from '../../../state/actions/global';
 import {AwsCognito} from '../../../utils/aws_cognito';
 import {showMessage} from 'react-native-flash-message';
-import {StorageGetItem, StorageSetItem} from '../../../utils/storage';
+import {
+  StorageClearAll,
+  StorageGetItem,
+  StorageSetItem,
+} from '../../../utils/storage';
 import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import Header from '../../common/Header';
 import SolaceInput from '../../common/solaceui/SolaceInput';
@@ -22,19 +27,23 @@ import SolaceText from '../../common/solaceui/SolaceText';
 import SolaceButton from '../../common/solaceui/SolaceButton';
 import SolaceLoader from '../../common/solaceui/SolaceLoader';
 import {TEST_PASSWORD} from '../../../utils/constants';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RecoverStackParamList} from '../../../navigation/Recover';
+import {useNavigation} from '@react-navigation/native';
 
-export type Props = {
-  navigation: any;
-};
+type RecoverScreenProps = NativeStackScreenProps<
+  RecoverStackParamList,
+  'Login'
+>;
 
-const Login: React.FC<Props> = ({navigation}) => {
-  const [username, setUsername] = useState('');
+const Login = () => {
+  const {state, dispatch} = useContext(GlobalContext);
+  const navigation = useNavigation<RecoverScreenProps['navigation']>();
+  const [username, setUsername] = useState(state.user?.solaceName!);
   const [password, setPassword] = useState('');
   const [active, setActive] = useState('username');
   const [isLoading, setIsLoading] = useState(false);
-  const {state, dispatch} = useContext(GlobalContext);
 
-  console.log('RECOVER LOGIN');
   const checkInRecoveryMode = async () => {
     const appState: AppState = await StorageGetItem('appstate');
     if (appState === AppState.RECOVERY) {
@@ -96,6 +105,12 @@ const Login: React.FC<Props> = ({navigation}) => {
     }
   };
 
+  const reset = async () => {
+    await StorageClearAll();
+    dispatch(clearData());
+    dispatch(setAccountStatus(AccountStatus.NEW));
+  };
+
   return (
     <SolaceContainer>
       <View style={{flex: 1}}>
@@ -106,6 +121,7 @@ const Login: React.FC<Props> = ({navigation}) => {
           subHeading="sign in to your account"
         />
         <SolaceInput
+          // editable={false}
           placeholder="username"
           onFocus={() => setActive('username')}
           mt={16}
@@ -119,6 +135,16 @@ const Login: React.FC<Props> = ({navigation}) => {
           onChangeText={text => setPassword(text)}
           mt={16}
         />
+        <TouchableOpacity onPress={reset}>
+          <SolaceText
+            type="secondary"
+            variant="normal"
+            weight="bold"
+            mt={10}
+            align="right">
+            use another account?
+          </SolaceText>
+        </TouchableOpacity>
         {isLoading && <SolaceLoader text="signing in..." />}
       </View>
       <SolaceButton

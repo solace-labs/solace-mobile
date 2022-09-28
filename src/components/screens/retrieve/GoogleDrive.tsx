@@ -20,12 +20,18 @@ import Header from '../../common/Header';
 import SolaceLoader from '../../common/solaceui/SolaceLoader';
 import SolaceButton from '../../common/solaceui/SolaceButton';
 import SolaceText from '../../common/solaceui/SolaceText';
-export type Props = {
-  navigation: any;
-};
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RetrieveStackParamList} from '../../../navigation/Retrieve';
+import {useNavigation} from '@react-navigation/native';
 
-const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
+type RetrieveScreenProps = NativeStackScreenProps<
+  RetrieveStackParamList,
+  'GoogleDrive'
+>;
+
+const GoogleDriveScreen = () => {
   const {state, dispatch} = useContext(GlobalContext);
+  const navigation = useNavigation<RetrieveScreenProps['navigation']>();
   const [loading, setLoading] = useState({
     value: false,
     message: 'retrieve now',
@@ -67,15 +73,13 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
           message: 'retrieve now',
         });
         showMessage({
-          message: 'Successfully retrieved from google drive',
+          message: 'successfully retrieved from google drive',
           type: 'success',
         });
-        setTimeout(() => {
-          navigation.reset({
-            index: 0,
-            routes: [{name: 'Passcode'}],
-          });
-        }, 1000);
+        navigation.reset({
+          index: 0,
+          routes: [{name: 'Login'}],
+        });
       } else {
         showMessage({
           message: 'There is no solace backup found in google drive',
@@ -120,8 +124,8 @@ const GoogleDriveScreen: React.FC<Props> = ({navigation}) => {
           style={imageStyle}
         />
         <Header
-          heading="retrieve your wallet"
-          subHeading="retrieve your encrypted key from google drive so you can access your wallet"
+          heading="retrieve your vault"
+          subHeading="retrieve your encrypted key from google drive so you can access your vault"
         />
         {loading.value && <SolaceLoader text={loading.message} />}
       </View>

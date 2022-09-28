@@ -1,5 +1,6 @@
 import React, {FC, useContext} from 'react';
 import {View, TouchableOpacity, Image, ScrollView, Linking} from 'react-native';
+import {showMessage} from 'react-native-flash-message';
 import {GlobalContext} from '../../state/contexts/GlobalContext';
 import globalStyles from '../../utils/global_styles';
 import SolaceText from '../common/solaceui/SolaceText';
@@ -31,6 +32,11 @@ const WalletActivity: FC<Props> = ({data}) => {
         Linking.openURL(link);
       } else {
         console.log("Don't know how to open URI: " + link);
+        showMessage({
+          message:
+            "can't open link. please select default browser in the setting",
+          type: 'info',
+        });
       }
     });
   };
@@ -39,7 +45,7 @@ const WalletActivity: FC<Props> = ({data}) => {
     <View style={{flex: 1, justifyContent: 'space-between'}}>
       <View style={globalStyles.rowSpaceBetween}>
         <SolaceText weight="semibold" size="lg">
-          wallet activity
+          vault activity
         </SolaceText>
         <TouchableOpacity>
           {/* see more */}

@@ -1,24 +1,29 @@
 import {View} from 'react-native';
 import React, {useContext, useState} from 'react';
+import {showMessage} from 'react-native-flash-message';
+import {PublicKey} from 'solace-sdk';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import {GlobalContext} from '../../../state/contexts/GlobalContext';
-import {showMessage} from 'react-native-flash-message';
 import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import SolaceButton from '../../common/solaceui/SolaceButton';
 import SolaceText from '../../common/solaceui/SolaceText';
 import TopNavbar from '../../common/TopNavbar';
 import SolaceCustomInput from '../../common/solaceui/SolaceCustomInput';
-import {PublicKey} from 'solace-sdk';
 import {SPL_TOKEN} from '../../../utils/constants';
 import {confirmTransaction, getFeePayer} from '../../../utils/apis';
 import {relayTransaction} from '../../../utils/relayer';
 import SolaceLoader from '../../common/solaceui/SolaceLoader';
+import {WalletStackParamList} from '../../../navigation/Wallet';
 
-export type Props = {
-  navigation: any;
-};
+type WalletScreenProps = NativeStackScreenProps<
+  WalletStackParamList,
+  'AddToken'
+>;
 
-const AddToken: React.FC<Props> = ({navigation}) => {
+const AddToken = () => {
+  const navigation = useNavigation<WalletScreenProps['navigation']>();
   const initialLoading = {message: '', value: false};
   const [address, setAddress] = useState(
     // 'DB6BcxUpHDSxEFpqDRjm98HTvX2JZapbBNN8RcR4K11z',
@@ -43,7 +48,7 @@ const AddToken: React.FC<Props> = ({navigation}) => {
           tokenAccount: tokenAccount!,
           tokenMint: splTokenAddress,
         },
-        feePayer,
+        feePayer!,
       );
       const transactionId = await relayTransaction(tx);
       setLoading({message: 'finalizing... please wait', value: true});
@@ -65,10 +70,21 @@ const AddToken: React.FC<Props> = ({navigation}) => {
 
   return (
     <SolaceContainer>
-      <TopNavbar startIcon="back" text="add token" startClick={handleGoBack} />
+      <TopNavbar
+        startIcon="ios-return-up-back"
+        startIconType="ionicons"
+        text="add token"
+        startClick={handleGoBack}
+      />
       <View style={{flex: 1, marginTop: 16}}>
         <SolaceCustomInput
           iconName="line-scan"
+          handleIconPress={() => {
+            showMessage({
+              message: 'scan coming soon...',
+              type: 'info',
+            });
+          }}
           placeholder="address"
           iconType="mci"
           value={address}

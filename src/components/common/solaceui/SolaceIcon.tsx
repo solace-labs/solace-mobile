@@ -10,6 +10,7 @@ import {
 import {Colors} from '../../../utils/colors';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Styles} from '../../../utils/styles';
 import SolaceText from './SolaceText';
 
@@ -17,7 +18,7 @@ export type SolaceIconProps = {
   children?: ReactNode;
   type?: 'light' | 'dark' | 'normal';
   size?: keyof typeof Styles.fontSize;
-  variant?: 'antdesign' | 'mci';
+  variant?: 'antdesign' | 'mci' | 'ionicons';
   name?: string;
   subText?: string;
 } & TouchableOpacityProps;
@@ -59,6 +60,9 @@ const SolaceIcon: FC<SolaceIconProps> = ({
       }
       case 'mci': {
         return <MaterialCommunityIcons name={name!} style={iconStyle} />;
+      }
+      case 'ionicons': {
+        return <Ionicons name={name!} style={iconStyle} />;
       }
       default:
         <></>;

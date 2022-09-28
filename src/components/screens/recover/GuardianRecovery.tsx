@@ -1,5 +1,5 @@
 import {View} from 'react-native';
-import React, {useContext, useState} from 'react';
+import React, {Props, useContext, useState} from 'react';
 import {showMessage} from 'react-native-flash-message';
 import {SolaceSDK} from 'solace-sdk';
 
@@ -14,12 +14,17 @@ import SolaceButton from '../../common/solaceui/SolaceButton';
 import SolaceText from '../../common/solaceui/SolaceText';
 import Header from '../../common/Header';
 import {confirmTransaction, getFeePayer} from '../../../utils/apis';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RecoverStackParamList} from '../../../navigation/Recover';
+import {useNavigation} from '@react-navigation/native';
 
-export type Props = {
-  navigation: any;
-};
+type RecoverScreenProps = NativeStackScreenProps<
+  RecoverStackParamList,
+  'Login'
+>;
 
-const GuardianRecovery: React.FC<Props> = ({navigation}) => {
+const GuardianRecovery = () => {
+  const navigation = useNavigation<RecoverScreenProps['navigation']>();
   const [loading, setLoading] = useState({
     value: false,
     message: 'recover',
@@ -40,7 +45,7 @@ const GuardianRecovery: React.FC<Props> = ({navigation}) => {
       });
       const username = state.user?.solaceName!;
       const feePayer = await getFeePayer();
-      const tx = await newSDK.recoverWallet(username, feePayer);
+      const tx = await newSDK.recoverWallet(username, feePayer!);
       console.log({tx});
       const res = await relayTransaction(tx);
       console.log({res});

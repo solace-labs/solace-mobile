@@ -7,7 +7,6 @@ import {
 } from 'react-native';
 import React from 'react';
 import {PublicKeyType} from '../screens/wallet/Guardian';
-import {SolaceSDK} from 'solace-sdk';
 import SolaceText from '../common/solaceui/SolaceText';
 import globalStyles from '../../utils/global_styles';
 

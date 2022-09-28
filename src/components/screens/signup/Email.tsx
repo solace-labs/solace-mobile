@@ -27,13 +27,8 @@ import {
   TEST_PASSWORD,
 } from '../../../utils/constants';
 import {StorageSetItem} from '../../../utils/storage';
-import {Colors} from '../../../utils/colors';
 
-export type Props = {
-  navigation: any;
-};
-
-const EmailScreen: React.FC<Props> = ({navigation}) => {
+const EmailScreen = () => {
   const [username, setUsername] = useState({
     value: '',
     isValid: false,
@@ -88,10 +83,13 @@ const EmailScreen: React.FC<Props> = ({navigation}) => {
     if (email.value === TEST_EMAIL && password.value === TEST_PASSWORD) {
       await StorageSetItem('appstate', AppState.TESTING);
       await StorageSetItem('user', {
-        email: email.value,
         solaceName: username.value,
       });
-      dispatch(setUser({email: email.value, solaceName: username.value}));
+      dispatch(
+        setUser({
+          solaceName: username.value,
+        }),
+      );
       dispatch(setAccountStatus(AccountStatus.SIGNED_UP));
     } else {
       const awsCognito = new AwsCognito();
@@ -106,7 +104,7 @@ const EmailScreen: React.FC<Props> = ({navigation}) => {
       }
       try {
         setIsLoading(true);
-        const response = await awsCognito?.emailSignUp(
+        await awsCognito?.emailSignUp(
           username.value,
           email.value,
           password.value,
@@ -114,7 +112,6 @@ const EmailScreen: React.FC<Props> = ({navigation}) => {
         dispatch(
           setUser({
             solaceName: username.value,
-            email: email.value,
           }),
         );
         setIsOtpSent(true);
@@ -143,11 +140,10 @@ const EmailScreen: React.FC<Props> = ({navigation}) => {
     }
     try {
       setIsLoading(true);
-      const response = await awsCognito?.confirmRegistration(otp.value);
+      await awsCognito?.confirmRegistration(otp.value);
       setOtp({...otp, isVerified: true});
       await StorageSetItem('user', {
         solaceName: username.value,
-        email: email.value,
       });
       await StorageSetItem('appstate', AppState.SIGNUP);
       setIsLoading(false);
