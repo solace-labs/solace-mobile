@@ -1,5 +1,13 @@
 import React, {FC, ReactNode} from 'react';
-import {Platform, ScrollView, View, ViewProps, ViewStyle} from 'react-native';
+import {
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  View,
+  ViewProps,
+  ViewStyle,
+} from 'react-native';
 import type {StyleProp} from 'react-native';
 import {Colors} from '../../../utils/colors';
 
@@ -24,28 +32,21 @@ const SolaceContainer: FC<Props> = ({
 
   const defaultStyle: StyleProp<ViewStyle> = {
     backgroundColor: Colors.background.dark,
-    paddingTop: Platform.OS === 'ios' ? 50 : 0,
     flex: 1,
     alignItems: 'center',
-    // borderWidth: 1,
-    // borderColor: 'pink',
   };
 
   const container: StyleProp<ViewStyle> = {
     flex: 1,
-    width: '90%',
-    paddingVertical: 24,
-    // borderWidth: 1,
-    // borderColor: 'white',
+    width: '100%',
+    paddingHorizontal: 16,
   };
 
   return (
-    <ScrollView
-      contentContainerStyle={[defaultStyle, style]}
-      bounces={false}
-      {...scrollViewProps}>
+    <SafeAreaView style={[defaultStyle, style]} {...scrollViewProps}>
+      <StatusBar barStyle={'light-content'} />
       <View style={[marginStyles, container]}>{children}</View>
-    </ScrollView>
+    </SafeAreaView>
   );
 };
 

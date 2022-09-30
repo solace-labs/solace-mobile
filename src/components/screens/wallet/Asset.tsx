@@ -197,6 +197,7 @@ const AssetScreen = () => {
       </View>
       <SolaceButton
         onPress={send}
+        mb={10}
         loading={sendLoading.value}
         disabled={isDisabled()}>
         <SolaceText type="secondary" weight="bold" variant="dark">
