@@ -8,6 +8,7 @@ let theme = {
     normal: '#3d3d3d',
     dark: '#131313',
     darkest: '#000000',
+    transparent: 'transparent',
   },
   text: {
     white: '#ffffff',

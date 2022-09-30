@@ -2,15 +2,15 @@ import React, {FC} from 'react';
 import {ActivityIndicator, View} from 'react-native';
 import {Colors} from '../../utils/colors';
 import globalStyles from '../../utils/global_styles';
-import SolaceIcon from './solaceui/SolaceIcon';
+import SolaceIcon, {IconType} from './solaceui/SolaceIcon';
 import SolaceText from './solaceui/SolaceText';
 
 type Props = {
   startIcon?: string;
-  startIconType?: 'antdesign' | 'mci' | 'ionicons';
+  startIconType?: IconType;
   text?: string;
   endIcon?: string;
-  endIconType?: 'antdesign' | 'mci';
+  endIconType?: IconType;
   startClick: () => void;
   endClick?: () => void;
   fetching?: boolean;
