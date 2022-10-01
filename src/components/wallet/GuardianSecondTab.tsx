@@ -9,6 +9,7 @@ import React from 'react';
 import {PublicKeyType} from '../screens/guardian/Guardian';
 import SolaceText from '../common/solaceui/SolaceText';
 import globalStyles from '../../utils/global_styles';
+import {firstCharacter, minifyAddress} from '../../utils/helpers';
 
 export type Props = {
   guarding: PublicKeyType[];
@@ -41,18 +42,13 @@ const GuardianSecondTab: React.FC<Props> = ({guarding}) => {
         <View style={guardianStyles.item}>
           <View style={guardianStyles.leftSide}>
             <View style={globalStyles.avatar}>
-              <SolaceText weight="bold" size="sm">
-                {guardian
-                  .toString()
-                  .split(' ')
-                  .map(word => word[0])
-                  .join('')
-                  .toLowerCase()}
+              <SolaceText weight="bold" size="sm" color="dark">
+                {firstCharacter(guardian)}
               </SolaceText>
             </View>
             <View>
               <SolaceText align="left" type="secondary" weight="bold" size="sm">
-                {guardian.toString().slice(0, 10)}...
+                {minifyAddress(guardian, 5)}
               </SolaceText>
               <SolaceText
                 type="secondary"

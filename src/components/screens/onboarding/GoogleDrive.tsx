@@ -201,8 +201,9 @@ const GoogleDriveScreen = () => {
       <SolaceButton
         onPress={handleClick}
         loading={loading.value}
+        background="purple"
         disabled={loading.value}>
-        <SolaceText type="secondary" weight="bold" color="dark">
+        <SolaceText type="secondary" weight="bold" color="white">
           {loading.message}
         </SolaceText>
       </SolaceButton>

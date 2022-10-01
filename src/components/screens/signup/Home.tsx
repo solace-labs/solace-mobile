@@ -31,14 +31,16 @@ const HomeScreen = () => {
           solace
         </SolaceText>
       </View>
-      <SolaceButton onPress={() => navigation.navigate('Email')}>
-        <SolaceText type="secondary" color="dark" weight="bold">
+      <SolaceButton
+        background="purple"
+        onPress={() => navigation.navigate('Email')}>
+        <SolaceText type="secondary" color="white" weight="bold">
           create new vault
         </SolaceText>
       </SolaceButton>
       <SolaceButton
         mt={16}
-        background="dark"
+        background="light"
         onPress={async () => {
           const appState = await StorageGetItem('appstate');
           if (appState === AppState.TESTING) {
@@ -47,7 +49,7 @@ const HomeScreen = () => {
             dispatch(setAccountStatus(AccountStatus.RETRIEVE));
           }
         }}>
-        <SolaceText type="secondary" weight="bold">
+        <SolaceText type="secondary" weight="bold" color="dark">
           retrieve your vault
         </SolaceText>
       </SolaceButton>

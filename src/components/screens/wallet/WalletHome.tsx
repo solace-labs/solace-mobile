@@ -33,6 +33,7 @@ import {WalletStackParamList} from '../../../navigation/Wallet';
 import {Colors} from '../../../utils/colors';
 import SolacePaper from '../../common/solaceui/SolacePaper';
 import WalletHoldings from '../../wallet/WalletHoldings';
+import {minifyAddress} from '../../../utils/helpers';
 
 type WalletScreenProps = NativeStackScreenProps<WalletStackParamList, 'Wallet'>;
 
@@ -113,7 +114,7 @@ const WalletHomeScreen = () => {
   };
 
   const adrs = sdk!.wallet.toString();
-  const shortaddress = adrs.slice(0, 5) + '...' + adrs.slice(-5);
+  const shortaddress = minifyAddress(adrs, 5);
 
   const copy = () => {
     Clipboard.setString(adrs);

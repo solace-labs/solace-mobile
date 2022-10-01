@@ -138,9 +138,10 @@ const Login = () => {
         onPress={() => {
           handleSignIn();
         }}
+        background="purple"
         loading={isLoading}
         disabled={isDisable()}>
-        <SolaceText type="secondary" weight="bold" color="dark">
+        <SolaceText type="secondary" weight="bold" color="white">
           retrieve?
         </SolaceText>
       </SolaceButton>

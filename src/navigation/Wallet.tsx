@@ -40,7 +40,7 @@ export type GuardianStackParamList = {
 export type TabParamList = {
   Home: undefined;
   Swap: undefined;
-  Guardian: undefined;
+  GuardianTab: undefined;
   Charts: undefined;
 };
 
@@ -75,7 +75,7 @@ const WalletStack = () => {
             color={focused ? Colors.text.lightorange : color}
           />
         );
-      case 'Guardian':
+      case 'GuardianTab':
         return (
           <MCI
             name="shield"
@@ -109,7 +109,13 @@ const WalletStack = () => {
         <HomeStack.Screen name="AddContact" component={AddContactScreen} />
         <HomeStack.Screen name="AddToken" component={AddToken} />
         <HomeStack.Screen name="Contact" component={ContactScreen} />
-        <HomeStack.Screen name="Send" component={SendScreen} />
+        <HomeStack.Screen
+          options={{
+            presentation: 'modal',
+          }}
+          name="Send"
+          component={SendScreen}
+        />
         <HomeStack.Screen
           options={{
             presentation: 'modal',
@@ -158,7 +164,7 @@ const WalletStack = () => {
       })}>
       <TabStack.Screen name="Home" component={HomeScreenStack} />
       <TabStack.Screen name="Swap" component={ComingSoon} />
-      <TabStack.Screen name="Guardian" component={GuardianScreenStack} />
+      <TabStack.Screen name="GuardianTab" component={GuardianScreenStack} />
       <TabStack.Screen name="Charts" component={ComingSoon} />
     </TabStack.Navigator>
   );

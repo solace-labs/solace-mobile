@@ -8,6 +8,7 @@ import globalStyles from '../../utils/global_styles';
 import {Account} from '../screens/wallet/Recieve';
 import {WalletStackParamList} from '../../navigation/Wallet';
 import SolacePaper from '../common/solaceui/SolacePaper';
+import {minifyAddress} from '../../utils/helpers';
 
 export type Props = {
   account: Account;
@@ -22,8 +23,7 @@ const AccountItem: React.FC<Props> = ({
 }) => {
   const navigation = useNavigation<WalletScreenProps['navigation']>();
 
-  const accountAddress =
-    tokenAddress.slice(0, 5) + '...' + tokenAddress.slice(-5);
+  const accountAddress = minifyAddress(tokenAddress, 5);
   const currentBalance = amount.toFixed(2);
 
   const redirectToAsset = () => {
@@ -41,7 +41,7 @@ const AccountItem: React.FC<Props> = ({
         onPress={redirectToAsset}>
         <View style={globalStyles.rowCenter}>
           <View style={globalStyles.avatar}>
-            <SolaceText type="secondary" weight="bold">
+            <SolaceText type="secondary" weight="bold" color="awaiting">
               {tokenAddress[0]}
             </SolaceText>
           </View>

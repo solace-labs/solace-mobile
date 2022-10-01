@@ -116,12 +116,13 @@ const Login = () => {
         {isLoading && <SolaceLoader text="signing in..." />}
       </View>
       <SolaceButton
+        background="purple"
         onPress={() => {
           handleSignIn();
         }}
         loading={isLoading}
         disabled={isDisable()}>
-        <SolaceText type="secondary" weight="bold" color="dark">
+        <SolaceText type="secondary" weight="bold" color="white">
           sign in
         </SolaceText>
       </SolaceButton>

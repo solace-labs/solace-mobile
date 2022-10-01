@@ -13,6 +13,7 @@ import globalStyles from '../../utils/global_styles';
 import {guardianStyles as styles} from './GuardianSecondTab';
 import Clipboard from '@react-native-community/clipboard';
 import {showMessage} from 'react-native-flash-message';
+import {firstCharacter, minifyAddress} from '../../utils/helpers';
 
 export type Props = {
   guardians: {
@@ -48,18 +49,13 @@ const GuardianTab: React.FC<Props> = ({guardians, loading}) => {
         <View style={styles.item}>
           <View style={styles.leftSide}>
             <View style={globalStyles.avatar}>
-              <SolaceText weight="bold" size="sm">
-                {guardian
-                  .toString()
-                  .split(' ')
-                  .map(word => word[0])
-                  .join('')
-                  .toLowerCase()}
+              <SolaceText weight="bold" size="sm" color="awaiting">
+                {firstCharacter(guardian)}
               </SolaceText>
             </View>
             <View>
               <SolaceText align="left" type="secondary" weight="bold" size="sm">
-                {guardian.toString().slice(0, 10)}...
+                {minifyAddress(guardian, 5)}
               </SolaceText>
               <SolaceText
                 type="secondary"

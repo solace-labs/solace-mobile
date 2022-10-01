@@ -240,8 +240,9 @@ const EmailScreen = () => {
           isOtpSent ? handleVerifyOtp() : handleMailSubmit();
         }}
         loading={isLoading}
+        background="purple"
         disabled={isDisable()}>
-        <SolaceText type="secondary" weight="bold" color="dark">
+        <SolaceText type="secondary" weight="bold" color="white">
           {isOtpSent ? 'verify otp' : 'send otp'}
         </SolaceText>
       </SolaceButton>

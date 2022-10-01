@@ -154,8 +154,9 @@ const Login = () => {
           handleSignIn();
         }}
         loading={isLoading}
+        background="purple"
         disabled={isDisable()}>
-        <SolaceText type="secondary" weight="bold" color="dark">
+        <SolaceText type="secondary" weight="bold" color="white">
           sign in
         </SolaceText>
       </SolaceButton>

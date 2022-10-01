@@ -24,6 +24,7 @@ import {useRefreshOnFocus} from '../../../hooks/useRefreshOnFocus';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {WalletStackParamList} from '../../../navigation/Wallet';
 import {useNavigation, useRoute} from '@react-navigation/native';
+import {minifyAddress} from '../../../utils/helpers';
 
 type WalletScreenProps = NativeStackScreenProps<
   WalletStackParamList,
@@ -68,9 +69,7 @@ const RecieveItem = () => {
   };
 
   const address = state.sdk?.wallet!?.toString();
-  const headerTitle = address
-    ? `${address.slice(0, 5)}...${address.slice(-5)}`
-    : '-';
+  const headerTitle = address ? `${minifyAddress(address, 5)}` : '-';
 
   const goToLogin = () => {
     dispatch(setAccountStatus(AccountStatus.EXISITING));

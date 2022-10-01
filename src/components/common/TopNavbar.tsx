@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {FC, ReactNode} from 'react';
 import {ActivityIndicator, View} from 'react-native';
 import {Colors} from '../../utils/colors';
 import globalStyles from '../../utils/global_styles';
@@ -14,6 +14,7 @@ type Props = {
   startClick?: () => void;
   endClick?: () => void;
   fetching?: boolean;
+  children?: ReactNode;
 };
 
 const TopNavbar: FC<Props> = ({
@@ -24,6 +25,7 @@ const TopNavbar: FC<Props> = ({
   endIcon,
   endIconType,
   endClick,
+  children,
   fetching = false,
 }) => {
   return (
@@ -42,9 +44,14 @@ const TopNavbar: FC<Props> = ({
             onPress={startClick}
           />
         )}
-        <SolaceText size="lg" weight="semibold" style={{marginHorizontal: 8}}>
-          {text}
-        </SolaceText>
+        {text ? (
+          <SolaceText size="lg" weight="semibold" style={{marginHorizontal: 8}}>
+            {text}
+          </SolaceText>
+        ) : (
+          children
+        )}
+
         {/* {fetching && <ActivityIndicator size="small" />} */}
       </View>
       {endIcon && (

@@ -122,7 +122,7 @@ const Incubation = () => {
               <SolaceText
                 align="left"
                 weight="bold"
-                color="solana-green"
+                color="green"
                 type="secondary">
                 incubation mode
               </SolaceText>{' '}

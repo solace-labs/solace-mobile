@@ -1,6 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {View, TouchableOpacity, ActivityIndicator} from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  ActivityIndicator,
+  Alert,
+  TextInput,
+} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 import {
   AccountStatus,
@@ -26,6 +34,8 @@ import {WalletStackParamList} from '../../../navigation/Wallet';
 import {useQuery, useQueryClient} from '@tanstack/react-query';
 import {useRefreshOnFocus} from '../../../hooks/useRefreshOnFocus';
 import {getMaxBalance} from '../../../apis/sdk';
+import {minifyAddress} from '../../../utils/helpers';
+import {Colors} from '../../../utils/colors';
 
 type SendScreenProps = NativeStackScreenProps<WalletStackParamList, 'Send'>;
 
@@ -36,11 +46,11 @@ const SendScreen = () => {
     params: {asset, contact},
   } = useRoute<SendScreenProps['route']>();
 
-  const shortAsset = asset.slice(0, 4) + '...' + asset.slice(-4);
+  const shortAsset = minifyAddress(asset, 4);
 
   const [amount, setAmount] = useState('');
   const [recipientAddress, setRecipientAddress] = useState(
-    contact ? contact : '',
+    contact ? contact : 'GNgMfSSJ4NjSuu1EdHj94P6TzQS24KH38y1si2CMrUsF',
     // 'GNgMfSSJ4NjSuu1EdHj94P6TzQS24KH38y1si2CMrUsF',
   );
   // const [recipientAddress, setRecipientAddress] = useState('');
@@ -126,85 +136,184 @@ const SendScreen = () => {
   };
 
   const isDisabled = () => {
+    if (+amount === 0) return true;
     if (isLoading) return true;
     if (isFetching) return true;
     if (+amount > +maxBalance!) return false;
     return (!amount || !recipientAddress || sendLoading.value) as boolean;
   };
 
-  const handleAmountChange = (amt: string) => {
-    if (+amt > +maxBalance!) {
-      showMessage({
-        message: 'value must be less than total amount',
-        type: 'info',
-      });
+  const handleAmountChange = (key: string, type?: 'max') => {
+    // if (+maxBalance < +(amount + key)) {
+    //   return;
+    // }
+    if (type === 'max') {
+      setAmount(key);
       return;
     }
-    setAmount(amt);
+    if (key === 'b') {
+      setAmount(amt => amt.slice(0, amt.length - 1));
+      return;
+    }
+    if ((amount + key).match(/^\d*\.?\d*$/)) {
+      setAmount(amount + key);
+      return;
+    }
   };
 
   const handleMax = () => {
-    handleAmountChange(maxBalance!.toString());
+    handleAmountChange(maxBalance!.toString(), 'max');
   };
 
   return (
-    <SolaceContainer>
+    <SolaceContainer fullWidth={true}>
       <TopNavbar
         startIcon="ios-return-up-back"
         startIconType="ionicons"
-        text="send"
+        // text={`to: (${ra})`}
         startClick={handleGoBack}
-      />
-      <View style={[globalStyles.fullCenter, {flex: 0.5}]}>
-        <View style={globalStyles.fullWidth}>
-          <SolaceCustomInput
-            iconName="line-scan"
-            placeholder="recipient's address"
-            iconType="mci"
-            handleIconPress={() => {
-              showMessage({
-                message: 'scan coming soon...',
-                type: 'info',
-              });
-            }}
-            value={recipientAddress}
-            onChangeText={setRecipientAddress}
-          />
-        </View>
-      </View>
-      <View style={{flex: 1}}>
+        endIcon="edit"
+        endIconType="feather">
+        <SolaceText size="md" weight="semibold">
+          to:{''}
+        </SolaceText>
+        <SolaceText size="md" weight="semibold" color="normal">
+          {' '}
+          ({minifyAddress(recipientAddress, 5)})
+        </SolaceText>
+      </TopNavbar>
+      <View
+        style={[
+          globalStyles.fullCenter,
+          {flex: 0.33, justifyContent: 'space-evenly'},
+        ]}>
         <View style={globalStyles.rowSpaceBetween}>
-          <SolaceText size="2xl" weight="semibold">
+          <SolaceText size="lg" weight="semibold">
             {shortAsset}
           </SolaceText>
         </View>
-        <SolaceInput
-          mt={20}
-          value={amount}
-          placeholder="0.00"
-          keyboardType="decimal-pad"
-          onChangeText={text => handleAmountChange(text)}
-        />
-        <View style={[globalStyles.rowSpaceBetween, {marginTop: 10}]}>
-          <SolaceText type="secondary" color="normal" weight="bold">
-            {maxBalance} available
+        <View
+          style={[
+            globalStyles.fullWidth,
+            {flexDirection: 'row', justifyContent: 'space-between'},
+          ]}>
+          <SolaceText style={{color: Colors.background.darkest}}>
+            amount
           </SolaceText>
+          <TextInput
+            value={amount}
+            showSoftInputOnFocus={false}
+            placeholder="0"
+            placeholderTextColor={Colors.text.normal}
+            style={{
+              fontSize: 26,
+              color: Colors.text.white,
+              fontWeight: '700',
+            }}
+            onChangeText={text => handleAmountChange(text)}
+          />
           <TouchableOpacity onPress={handleMax}>
-            <SolaceText type="secondary">use max</SolaceText>
+            <SolaceText type="secondary" size="sm" weight="bold">
+              use max
+            </SolaceText>
           </TouchableOpacity>
         </View>
-        {sendLoading.value && <SolaceLoader text={sendLoading.message} />}
       </View>
-      <SolaceButton
-        onPress={send}
-        mb={10}
-        loading={sendLoading.value}
-        disabled={isDisabled()}>
-        <SolaceText type="secondary" weight="bold" color="dark">
-          send
-        </SolaceText>
-      </SolaceButton>
+      <View
+        style={{
+          flex: 0.33,
+          borderTopWidth: 1,
+          borderColor: Colors.text.dark,
+        }}>
+        <SolaceContainer
+          style={{
+            flex: 1,
+            justifyContent: 'space-between',
+          }}>
+          <View style={[globalStyles.rowSpaceBetween, {marginTop: 12}]}>
+            <View style={globalStyles.rowCenter}>
+              <Entypo
+                name="wallet"
+                size={20}
+                color={Colors.text.normal}
+                style={{marginRight: 10}}
+              />
+              <SolaceText type="secondary" color="normal" weight="bold">
+                available balance
+              </SolaceText>
+            </View>
+            <SolaceText type="secondary" color="white" weight="bold">
+              {maxBalance}
+            </SolaceText>
+          </View>
+          {sendLoading.value && <SolaceLoader text={sendLoading.message} />}
+          <View
+            style={{flex: 1, justifyContent: 'flex-end', paddingBottom: 12}}>
+            <SolaceButton
+              onPress={send}
+              loading={sendLoading.value}
+              background="purple"
+              disabled={isDisabled()}
+              style={{padding: 10}}>
+              <SolaceText type="secondary" weight="bold" color="white">
+                confirm
+              </SolaceText>
+            </SolaceButton>
+          </View>
+        </SolaceContainer>
+      </View>
+      <View
+        style={{
+          flex: 0.33,
+          borderTopWidth: 1,
+          borderColor: Colors.text.dark,
+        }}>
+        <SolaceKeypad handleKeyChange={handleAmountChange} />
+      </View>
     </SolaceContainer>
+  );
+};
+
+const SolaceKeypad = ({
+  handleKeyChange,
+}: {
+  handleKeyChange: (key: string) => void;
+}) => {
+  const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '0', 'b'];
+  return (
+    <View
+      style={{
+        flex: 1,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+      }}>
+      {keys.map(key => {
+        return (
+          <TouchableOpacity
+            onPress={() => handleKeyChange(key)}
+            key={key}
+            style={{
+              width: '33%',
+              height: '25%',
+              alignItems: 'center',
+              justifyContent: 'center',
+              alignSelf: 'stretch',
+            }}>
+            {key === 'b' ? (
+              <MaterialIcons
+                name="keyboard-backspace"
+                color="white"
+                size={22}
+              />
+            ) : (
+              <SolaceText size="lg" type="secondary">
+                {key}
+              </SolaceText>
+            )}
+          </TouchableOpacity>
+        );
+      })}
+    </View>
   );
 };
 

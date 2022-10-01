@@ -83,23 +83,23 @@ const WalletHoldings = () => {
     });
   };
 
-  if (isLoading) {
-    return (
-      <SolaceContainer>
-        {/* <TopNavbar
-          startIcon="ios-return-up-back"
-          startIconType="ionicons"
-          // endIcon="plus"
-          text="send"
-          startClick={handleGoBack}
-          // endClick={handleAdd}
-        /> */}
-        <SolaceLoader text="getting tokens">
-          <ActivityIndicator size="small" />
-        </SolaceLoader>
-      </SolaceContainer>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <SolaceContainer>
+  //       {/* <TopNavbar
+  //         startIcon="ios-return-up-back"
+  //         startIconType="ionicons"
+  //         // endIcon="plus"
+  //         text="send"
+  //         startClick={handleGoBack}
+  //         // endClick={handleAdd}
+  //       /> */}
+  //       <SolaceLoader text="getting tokens">
+  //         <ActivityIndicator size="small" />
+  //       </SolaceLoader>
+  //     </SolaceContainer>
+  //   );
+  // }
 
   return (
     <View style={{flex: 0.6, justifyContent: 'space-between', marginTop: 20}}>
@@ -141,16 +141,25 @@ const WalletHoldings = () => {
         </ScrollView>
       ) : (
         <View style={{flex: 1, width: '100%'}}>
-          <Image
-            source={require('../../../assets/images/solace/send-money.png')}
-            style={globalStyles.image}
-          />
-          <SolaceText type="secondary" size="sm" weight="bold">
-            no tokens found
-          </SolaceText>
-          <SolaceText type="secondary" size="xs" mt={10}>
-            sol transfers are coming very soon
-          </SolaceText>
+          {isLoading ? (
+            <View
+              style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+              <ActivityIndicator size="small" />
+            </View>
+          ) : (
+            <>
+              <Image
+                source={require('../../../assets/images/solace/send-money.png')}
+                style={[globalStyles.image, {height: 150}]}
+              />
+              <SolaceText type="secondary" size="sm" weight="bold">
+                no tokens found
+              </SolaceText>
+              <SolaceText type="secondary" size="xs" mt={10}>
+                sol transfers are coming very soon
+              </SolaceText>
+            </>
+          )}
         </View>
       )}
     </View>
