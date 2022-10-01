@@ -146,7 +146,7 @@ const RecieveItem = () => {
             <SolaceText>there was an error. please login again</SolaceText>
           </View>
           <SolaceButton onPress={goToLogin}>
-            <SolaceText type="secondary" variant="black" weight="bold">
+            <SolaceText type="secondary" color="black" weight="bold">
               Login
             </SolaceText>
           </SolaceButton>

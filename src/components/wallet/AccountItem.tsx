@@ -7,13 +7,14 @@ import SolaceText from '../common/solaceui/SolaceText';
 import globalStyles from '../../utils/global_styles';
 import {Account} from '../screens/wallet/Recieve';
 import {WalletStackParamList} from '../../navigation/Wallet';
+import SolacePaper from '../common/solaceui/SolacePaper';
 
 export type Props = {
   account: Account;
   type: 'send' | 'recieve';
 };
 
-type WalletScreenProps = NativeStackScreenProps<WalletStackParamList, 'Send'>;
+type WalletScreenProps = NativeStackScreenProps<WalletStackParamList, 'Assets'>;
 
 const AccountItem: React.FC<Props> = ({
   account: {tokenAddress, amount},
@@ -34,12 +35,9 @@ const AccountItem: React.FC<Props> = ({
   };
 
   return (
-    <View
-      style={{
-        marginVertical: 10,
-      }}>
+    <SolacePaper size="xs">
       <TouchableOpacity
-        style={[globalStyles.rowSpaceBetween]}
+        style={[globalStyles.rowSpaceBetween, globalStyles.fullWidth]}
         onPress={redirectToAsset}>
         <View style={globalStyles.rowCenter}>
           <View style={globalStyles.avatar}>
@@ -62,7 +60,7 @@ const AccountItem: React.FC<Props> = ({
           </View>
         </View>
       </TouchableOpacity>
-    </View>
+    </SolacePaper>
   );
 };
 

@@ -12,7 +12,7 @@ const Transaction = ({item}: {item: any}) => {
         type="secondary"
         size="sm"
         weight="bold"
-        variant="white"
+        color="white"
         mb={8}>
         {moment(item?.date)?.format('DD MMM yyyy')?.toLowerCase()}
       </SolaceText>
@@ -28,7 +28,7 @@ const Transaction = ({item}: {item: any}) => {
             type="secondary"
             size="sm"
             weight="bold"
-            variant="light">
+            color="light">
             from
           </SolaceText>
           <SolaceText align="left" type="secondary" size="sm" weight="bold">

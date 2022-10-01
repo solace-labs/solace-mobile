@@ -1,26 +1,34 @@
 import React, {FC, ReactNode} from 'react';
-import {ActivityIndicator, TouchableOpacity} from 'react-native';
-import type {StyleProp, TouchableOpacityProps, ViewStyle} from 'react-native';
+import {
+  ActivityIndicator,
+  TouchableOpacity,
+  View,
+  ViewProps,
+} from 'react-native';
+import type {StyleProp, ViewStyle} from 'react-native';
 import {Colors} from '../../../utils/colors';
+import {Styles} from '../../../utils/styles';
 
 type Variant = keyof typeof Colors.background;
 
-interface ButtonProps extends TouchableOpacityProps {
+interface PaperProps extends ViewProps {
   style?: StyleProp<ViewStyle>;
   background?: Variant;
   fullWidth?: boolean;
   children?: ReactNode;
   loading?: boolean;
+  size?: keyof typeof Styles.fontSize;
   mt?: number;
   mb?: number;
 }
 
-const SolaceButton: FC<ButtonProps> = ({
+const SolacePaper: FC<PaperProps> = ({
   style,
   children,
   fullWidth = true,
-  background = 'light',
+  background = 'darker',
   loading = false,
+  size = 'md',
   mt = 0,
   mb = 0,
   ...touchableProps
@@ -33,13 +41,16 @@ const SolaceButton: FC<ButtonProps> = ({
     return fullWidth ? {width: '100%'} : {};
   };
 
-  const disabled = touchableProps.disabled as boolean;
-  const disableColor = (disabled && '#8a8a8a') as string;
+  // const disabled = touchableProps.disabled as boolean;
+  // const disableColor = (disabled && '#8a8a8a') as string;
 
   const defaultStyle: StyleProp<ViewStyle> = {
-    padding: 16,
+    padding: Styles.fontSize[size] * 1.5,
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: Colors.background.dark,
+    borderRadius: 12,
   };
 
   const marginStyles = {
@@ -48,19 +59,19 @@ const SolaceButton: FC<ButtonProps> = ({
   };
 
   return (
-    <TouchableOpacity
+    <View
       style={[
         variantStyle(),
         fullWidthStyle(),
         marginStyles,
         defaultStyle,
-        touchableProps.disabled ? {backgroundColor: disableColor} : {},
+        // touchableProps.disabled ? {backgroundColor: disableColor} : {},
         style,
       ]}
       {...touchableProps}>
       {loading ? <ActivityIndicator size={24} color="black" /> : children}
-    </TouchableOpacity>
+    </View>
   );
 };
 
-export default SolaceButton;
+export default SolacePaper;

@@ -138,7 +138,7 @@ const GoogleDriveScreen = () => {
         }}
         loading={loading.value}
         disabled={loading.value}>
-        <SolaceText type="secondary" weight="bold" variant="dark">
+        <SolaceText type="secondary" weight="bold" color="dark">
           {loading.message}
         </SolaceText>
       </SolaceButton>

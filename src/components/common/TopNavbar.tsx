@@ -11,7 +11,7 @@ type Props = {
   text?: string;
   endIcon?: string;
   endIconType?: IconType;
-  startClick: () => void;
+  startClick?: () => void;
   endClick?: () => void;
   fetching?: boolean;
 };
@@ -30,24 +30,28 @@ const TopNavbar: FC<Props> = ({
     <View
       style={[
         globalStyles.rowSpaceBetween,
-        {backgroundColor: Colors.background.dark, zIndex: 50},
+        {backgroundColor: Colors.background.darkest, zIndex: 50},
       ]}>
-      <View style={globalStyles.rowCenter}>
-        <SolaceIcon
-          name={startIcon || 'questioncircleo'}
-          type="dark"
-          variant={startIconType || 'antdesign'}
-          onPress={startClick}
-        />
+      <View style={[globalStyles.rowCenter, {paddingLeft: startIcon ? 0 : 20}]}>
+        {startIcon && (
+          <SolaceIcon
+            name={startIcon || 'questioncircleo'}
+            background="darkest"
+            color="white"
+            variant={startIconType || 'antdesign'}
+            onPress={startClick}
+          />
+        )}
         <SolaceText size="lg" weight="semibold" style={{marginHorizontal: 8}}>
           {text}
         </SolaceText>
-        {fetching && <ActivityIndicator size="small" />}
+        {/* {fetching && <ActivityIndicator size="small" />} */}
       </View>
       {endIcon && (
         <SolaceIcon
           name={endIcon ?? 'questioncircleo'}
-          type="dark"
+          background="darkest"
+          color="white"
           onPress={endClick}
           variant={endIconType || 'antdesign'}
         />

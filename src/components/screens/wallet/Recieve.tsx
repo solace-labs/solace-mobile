@@ -116,7 +116,7 @@ const RecieveScreen = () => {
                 <SolaceText size="sm" weight="extralight">
                   pull to refresh
                 </SolaceText>
-                <SolaceIcon type="dark" name="down" />
+                <SolaceIcon background="dark" name="down" />
               </View>
               {accounts.map((account, index) => {
                 return (
@@ -140,7 +140,7 @@ const RecieveScreen = () => {
                 onPress={handleAdd}
                 type="secondary"
                 size="sm"
-                variant="white"
+                color="white"
                 style={{textDecorationLine: 'underline'}}
                 weight="bold">
                 add a token

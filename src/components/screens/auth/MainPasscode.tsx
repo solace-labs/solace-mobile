@@ -106,12 +106,12 @@ const MainPasscodeScreen = () => {
         <Image
           source={require('../../../../assets/images/solace/solace-icon.png')}
         />
-        <SolaceText mt={16} variant="white" size="xl" weight="semibold">
+        <SolaceText mt={16} color="white" size="xl" weight="semibold">
           solace
         </SolaceText>
       </View>
       <View style={{flex: 1}}>
-        <SolaceText variant="white" size="xl" weight="medium">
+        <SolaceText color="white" size="xl" weight="medium">
           enter passcode
         </SolaceText>
         <PasscodeContainer code={code} setCode={setCode} />

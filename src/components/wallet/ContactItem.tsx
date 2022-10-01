@@ -3,7 +3,7 @@ import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import SolaceText from '../common/solaceui/SolaceText';
 import globalStyles from '../../utils/global_styles';
-import {PublicKeyType} from '../screens/wallet/Guardian';
+import {PublicKeyType} from '../screens/guardian/Guardian';
 import {WalletStackParamList} from '../../navigation/Wallet';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
@@ -35,7 +35,7 @@ const ContactItem: React.FC<Props> = ({contact, asset}) => {
       <TouchableOpacity
         style={globalStyles.rowCenter}
         onPress={() =>
-          navigation.navigate('Asset', {
+          navigation.navigate('Send', {
             asset: asset.toString(),
             contact: contact.toString(),
           })

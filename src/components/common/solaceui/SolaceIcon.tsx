@@ -16,7 +16,6 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FontAwecome5 from 'react-native-vector-icons/FontAwesome5';
 import FontAwecome5Pro from 'react-native-vector-icons/FontAwesome5Pro';
 import Fontisto from 'react-native-vector-icons/Fontisto';
-import Foundation from 'react-native-vector-icons/Foundation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -45,8 +44,9 @@ export type IconType =
 
 export type SolaceIconProps = {
   children?: ReactNode;
-  type?: 'light' | 'dark' | 'normal';
+  background?: keyof typeof Colors.background;
   size?: keyof typeof Styles.fontSize;
+  color?: keyof typeof Colors.text;
   variant?: IconType;
   name?: string;
   subText?: string;
@@ -54,31 +54,28 @@ export type SolaceIconProps = {
 
 const SolaceIcon: FC<SolaceIconProps> = ({
   children,
-  type = 'light',
+  background = 'light',
   variant = 'antdesign',
   size = 'md',
+  color = 'dark',
   name,
   subText,
   ...props
 }) => {
+  const fontSize = Styles.fontSize[size];
+
   const iconBackgroundStyle: StyleProp<ViewStyle> = {
-    backgroundColor:
-      type === 'light'
-        ? Colors.background.lightest
-        : type === 'dark'
-        ? Colors.background.dark
-        : Colors.background.normal,
-    borderRadius: 25,
+    backgroundColor: Colors.background[background],
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 5,
-    width: 50,
+    borderRadius: fontSize * 1.5,
+    width: fontSize * 3,
   };
 
   const iconStyle: StyleProp<TextStyle> = {
-    color: type === 'light' ? Colors.text.dark : Colors.text.white,
-    fontSize: Styles.fontSize[size] * 1.3,
-    padding: 10,
+    color: Colors.text[color],
+    fontSize: fontSize,
+    padding: fontSize,
     overflow: 'hidden',
   };
 
@@ -138,7 +135,7 @@ const SolaceIcon: FC<SolaceIconProps> = ({
         {children}
       </TouchableOpacity>
       {subText && (
-        <SolaceText type="secondary" mt={10} style={{fontSize: 14}}>
+        <SolaceText type="secondary" mt={10} size="sm" weight="bold">
           {subText}
         </SolaceText>
       )}

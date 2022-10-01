@@ -75,7 +75,7 @@ const Incubation = () => {
         startClick={handleGoBack}
       />
       <View style={{flex: 1, marginTop: 16}}>
-        <SolaceText align="left" weight="bold" type="secondary" variant="light">
+        <SolaceText align="left" weight="bold" type="secondary" color="light">
           during incubation mode
         </SolaceText>
         <View style={{flexDirection: 'column', marginTop: 12}}>
@@ -85,7 +85,7 @@ const Incubation = () => {
               align="left"
               weight="bold"
               type="secondary"
-              variant="light">
+              color="light">
               add guardians without delay
             </SolaceText>
           </View>
@@ -95,7 +95,7 @@ const Incubation = () => {
               align="left"
               weight="bold"
               type="secondary"
-              variant="light">
+              color="light">
               add trusted contacts without any history with them
             </SolaceText>
           </View>
@@ -104,7 +104,7 @@ const Incubation = () => {
           align="left"
           weight="bold"
           type="secondary"
-          variant="light"
+          color="light"
           mt={12}
           size="sm">
           it begins when your vault is created and ends after 12 hours of it and
@@ -117,12 +117,12 @@ const Incubation = () => {
               weight="bold"
               type="secondary"
               mt={16}
-              variant="light">
+              color="light">
               your vault is in{' '}
               <SolaceText
                 align="left"
                 weight="bold"
-                variant="solana-green"
+                color="solana-green"
                 type="secondary">
                 incubation mode
               </SolaceText>{' '}
@@ -133,7 +133,7 @@ const Incubation = () => {
               weight="bold"
               type="secondary"
               mt={16}
-              variant="awaiting">
+              color="awaiting">
               are you sure you want to end incubation?
             </SolaceText>
           </>
@@ -142,7 +142,7 @@ const Incubation = () => {
       </View>
       {show === 'yes' && (
         <SolaceButton onPress={handleIncubationEnd} loading={loading.value}>
-          <SolaceText type="secondary" weight="bold" variant="dark">
+          <SolaceText type="secondary" weight="bold" color="dark">
             end incubation
           </SolaceText>
         </SolaceButton>

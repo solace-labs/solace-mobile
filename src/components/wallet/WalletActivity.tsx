@@ -51,7 +51,7 @@ const WalletActivity: FC<Props> = ({data}) => {
           {/* see more */}
           <SolaceText
             type="secondary"
-            variant="normal"
+            color="normal"
             style={{fontSize: 14}}
             weight="bold">
             unavailable
@@ -76,7 +76,7 @@ const WalletActivity: FC<Props> = ({data}) => {
           onPress={openLink}
           type="secondary"
           size="sm"
-          variant="white"
+          color="white"
           style={{textDecorationLine: 'underline'}}
           weight="bold">
           solscan

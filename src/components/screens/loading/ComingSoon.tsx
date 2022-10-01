@@ -4,7 +4,7 @@ import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import SolaceText from '../../common/solaceui/SolaceText';
 import globalStyles from '../../../utils/global_styles';
 
-const Loading = () => {
+const ComingSoon = () => {
   return (
     <SolaceContainer>
       <View style={globalStyles.fullCenter}>
@@ -12,13 +12,13 @@ const Loading = () => {
           source={require('../../../../assets/images/solace/solace-icon.png')}
         />
         <SolaceText mt={16} color="white" size="xl" weight="semibold">
-          solace
+          coming soon
         </SolaceText>
       </View>
-      <View style={{flex: 1}}>
+      {/* <View style={{flex: 1}}>
         <ActivityIndicator size="small" />
-      </View>
+      </View> */}
     </SolaceContainer>
   );
 };
-export default Loading;
+export default ComingSoon;

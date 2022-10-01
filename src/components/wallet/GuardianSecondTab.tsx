@@ -6,7 +6,7 @@ import {
   Image,
 } from 'react-native';
 import React from 'react';
-import {PublicKeyType} from '../screens/wallet/Guardian';
+import {PublicKeyType} from '../screens/guardian/Guardian';
 import SolaceText from '../common/solaceui/SolaceText';
 import globalStyles from '../../utils/global_styles';
 
@@ -59,18 +59,14 @@ const GuardianSecondTab: React.FC<Props> = ({guarding}) => {
                 size="sm"
                 weight="bold"
                 align="left"
-                variant={type}>
+                color={type}>
                 {type === 'approved' ? 'approved' : 'awaiting response'}
               </SolaceText>
             </View>
           </View>
           <View style={guardianStyles.rightSide}>
             <TouchableOpacity>
-              <SolaceText
-                type="secondary"
-                weight="bold"
-                size="sm"
-                variant="link">
+              <SolaceText type="secondary" weight="bold" size="sm" color="link">
                 confirm
               </SolaceText>
             </TouchableOpacity>

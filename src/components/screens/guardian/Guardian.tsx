@@ -1,26 +1,24 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 
-import {AppState, GlobalContext} from '../../../state/contexts/GlobalContext';
+import {GlobalContext} from '../../../state/contexts/GlobalContext';
 import GuardianTab from '../../wallet/GuardianTab';
 import GuardianSecondTab from '../../wallet/GuardianSecondTab';
-import {PublicKey, SolaceSDK} from 'solace-sdk';
-import {showMessage} from 'react-native-flash-message';
+import {PublicKey} from 'solace-sdk';
 import SolaceContainer from '../../common/solaceui/SolaceContainer';
 import SolaceButton from '../../common/solaceui/SolaceButton';
 import SolaceText from '../../common/solaceui/SolaceText';
-import TopNavbar from '../../common/TopNavbar';
-import {StorageGetItem} from '../../../utils/storage';
 import {useQuery, useQueryClient} from '@tanstack/react-query';
 import {useRefreshOnFocus} from '../../../hooks/useRefreshOnFocus';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {WalletStackParamList} from '../../../navigation/Wallet';
+import {GuardianStackParamList} from '../../../navigation/Wallet';
 import {useNavigation} from '@react-navigation/native';
 import {getGuardians} from '../../../apis/sdk';
+import TopNavbar from '../../common/TopNavbar';
 
-type WalletScreenProps = NativeStackScreenProps<
-  WalletStackParamList,
+type GuardianScreenProps = NativeStackScreenProps<
+  GuardianStackParamList,
   'Guardian'
 >;
 
@@ -29,7 +27,7 @@ export type PublicKeyType = InstanceType<typeof PublicKey>;
 const Guardian = () => {
   const [activeTab, setActiveTab] = useState(1);
   const {state} = useContext(GlobalContext);
-  const navigation = useNavigation<WalletScreenProps['navigation']>();
+  const navigation = useNavigation<GuardianScreenProps['navigation']>();
   const queryClient = useQueryClient();
 
   const {data, isLoading, isFetching} = useQuery(
@@ -68,13 +66,13 @@ const Guardian = () => {
   };
 
   return (
-    <SolaceContainer>
+    <SolaceContainer fullWidth={true}>
       <TopNavbar
-        startIcon="ios-return-up-back"
-        startIconType="ionicons"
+        // startIcon="ios-return-up-back"
+        // startIconType="ionicons"
         endIcon="infocirlceo"
         text="guardians"
-        startClick={handleGoBack}
+        // startClick={handleGoBack}
         endClick={() => {}}
       />
       <View style={styles.tabs}>
@@ -85,7 +83,7 @@ const Guardian = () => {
           ]}
           onPress={() => setActiveTab(1)}>
           <SolaceText
-            variant="white"
+            color="white"
             weight="bold"
             type="secondary"
             style={{
@@ -102,7 +100,7 @@ const Guardian = () => {
           ]}
           onPress={() => setActiveTab(2)}>
           <SolaceText
-            variant="white"
+            color="white"
             weight="bold"
             type="secondary"
             style={{
@@ -113,12 +111,16 @@ const Guardian = () => {
           </SolaceText>
         </TouchableOpacity>
       </View>
-      <View style={{flex: 1}}>{renderTab()}</View>
-      <SolaceButton onPress={() => navigation.navigate('AddGuardian')}>
-        <SolaceText type="secondary" variant="black" weight="bold">
-          add guardian
-        </SolaceText>
-      </SolaceButton>
+      <SolaceContainer style={{marginBottom: 12}}>
+        <View style={{flex: 1}}>{renderTab()}</View>
+        <SolaceButton
+          onPress={() => navigation.navigate('AddGuardian')}
+          background="purple">
+          <SolaceText type="secondary" color="white" weight="bold">
+            add guardian
+          </SolaceText>
+        </SolaceButton>
+      </SolaceContainer>
     </SolaceContainer>
   );
 };

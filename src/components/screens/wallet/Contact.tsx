@@ -60,7 +60,7 @@ const ContactScreen = () => {
   };
 
   const sendToUntrusted = () => {
-    navigation.navigate('Asset', {asset: asset.toString(), contact: ''});
+    navigation.navigate('Send', {asset: asset.toString(), contact: ''});
   };
 
   if (isLoading) {
@@ -109,13 +109,13 @@ const ContactScreen = () => {
               <SolaceText size="sm" weight="extralight">
                 pull to refresh
               </SolaceText>
-              <SolaceIcon type="dark" name="down" />
+              <SolaceIcon background="dark" name="down" />
             </View>
             <TouchableOpacity onPress={sendToUntrusted}>
               <SolaceText
                 size="sm"
                 type="secondary"
-                variant="normal"
+                color="normal"
                 weight="bold"
                 mb={8}
                 style={{
@@ -143,7 +143,7 @@ const ContactScreen = () => {
                 onPress={handleAdd}
                 type="secondary"
                 size="sm"
-                variant="white"
+                color="white"
                 style={{textDecorationLine: 'underline'}}
                 weight="bold">
                 add a contact
@@ -154,7 +154,7 @@ const ContactScreen = () => {
               <SolaceText
                 size="sm"
                 type="secondary"
-                variant="normal"
+                color="normal"
                 weight="bold"
                 mb={8}
                 style={{

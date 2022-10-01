@@ -5,7 +5,7 @@ import {Styles} from '../../../utils/styles';
 
 type PrimaryWeight = keyof typeof Styles.fontFamily.primary;
 type SecondaryWeight = keyof typeof Styles.fontFamily.secondary;
-type Variant = keyof typeof Colors.text;
+type Color = keyof typeof Colors.text;
 
 type PrimaryTextProps = {
   type?: 'primary';
@@ -19,7 +19,7 @@ type SecondaryTextProps = {
 
 export type SolaceTextProps = {
   style?: StyleProp<TextStyle>;
-  variant?: Variant;
+  color?: Color;
   fullWidth?: boolean;
   children?: ReactNode;
   italic?: boolean;
@@ -39,7 +39,7 @@ const SolaceText: FC<SolaceTextCompleteProps> = ({
   italic = false,
   forwardRef,
   type = 'primary',
-  variant = 'white',
+  color: variant = 'white',
   align = 'center',
   size = 'md',
   mt = 0,

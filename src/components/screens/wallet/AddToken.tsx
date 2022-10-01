@@ -96,10 +96,10 @@ const AddToken = () => {
             justifyContent: 'space-between',
             marginTop: 20,
           }}>
-          <SolaceText type="secondary" weight="bold" variant="normal">
+          <SolaceText type="secondary" weight="bold" color="normal">
             network
           </SolaceText>
-          <SolaceText type="secondary" weight="bold" variant="solana-green">
+          <SolaceText type="secondary" weight="bold" color="green">
             solana testnet
           </SolaceText>
         </View>
@@ -109,7 +109,7 @@ const AddToken = () => {
         onPress={addToken}
         loading={loading.value}
         disabled={!address}>
-        <SolaceText type="secondary" weight="bold" variant="dark">
+        <SolaceText type="secondary" weight="bold" color="dark">
           add token
         </SolaceText>
       </SolaceButton>

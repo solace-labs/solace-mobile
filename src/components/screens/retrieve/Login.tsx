@@ -140,7 +140,7 @@ const Login = () => {
         }}
         loading={isLoading}
         disabled={isDisable()}>
-        <SolaceText type="secondary" weight="bold" variant="dark">
+        <SolaceText type="secondary" weight="bold" color="dark">
           retrieve?
         </SolaceText>
       </SolaceButton>

@@ -13,11 +13,11 @@ import TopNavbar from '../../common/TopNavbar';
 import SolaceCustomInput from '../../common/solaceui/SolaceCustomInput';
 import {StorageGetItem} from '../../../utils/storage';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {WalletStackParamList} from '../../../navigation/Wallet';
+import {GuardianStackParamList} from '../../../navigation/Wallet';
 import {useNavigation} from '@react-navigation/native';
 
-type WalletScreenProps = NativeStackScreenProps<
-  WalletStackParamList,
+type AddGuardianScreenProps = NativeStackScreenProps<
+  GuardianStackParamList,
   'AddGuardian'
 >;
 
@@ -27,7 +27,7 @@ const AddGuardian = () => {
     '',
   );
   const {state} = useContext(GlobalContext);
-  const navigation = useNavigation<WalletScreenProps['navigation']>();
+  const navigation = useNavigation<AddGuardianScreenProps['navigation']>();
   const [loading, setLoading] = useState({
     value: false,
     message: 'add guardian',
@@ -126,14 +126,17 @@ const AddGuardian = () => {
         <Text style={styles.secondText}>network</Text>
         <Text style={styles.solanaText}>solana</Text>
       </View> */}
-      <SolaceButton
-        onPress={addGuardian}
-        loading={loading.value}
-        disabled={!address || loading.value}>
-        <SolaceText type="secondary" weight="bold" variant="dark">
-          {loading.message}
-        </SolaceText>
-      </SolaceButton>
+      <View style={{paddingBottom: 12}}>
+        <SolaceButton
+          onPress={addGuardian}
+          background="purple"
+          loading={loading.value}
+          disabled={!address || loading.value}>
+          <SolaceText type="secondary" weight="bold" color="white">
+            {loading.message}
+          </SolaceText>
+        </SolaceButton>
+      </View>
     </SolaceContainer>
   );
 };

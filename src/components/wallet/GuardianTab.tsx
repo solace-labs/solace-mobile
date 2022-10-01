@@ -7,7 +7,7 @@ import {
   ScrollView,
 } from 'react-native';
 import React from 'react';
-import {PublicKeyType} from '../screens/wallet/Guardian';
+import {PublicKeyType} from '../screens/guardian/Guardian';
 import SolaceText from '../common/solaceui/SolaceText';
 import globalStyles from '../../utils/global_styles';
 import {guardianStyles as styles} from './GuardianSecondTab';
@@ -66,18 +66,14 @@ const GuardianTab: React.FC<Props> = ({guardians, loading}) => {
                 size="sm"
                 weight="bold"
                 align="left"
-                variant={type}>
+                color={type}>
                 {type === 'approved' ? 'approved' : 'pending'}
               </SolaceText>
             </View>
           </View>
           <View style={styles.rightSide}>
             <TouchableOpacity onPress={() => handleCopy(guardian.toString())}>
-              <SolaceText
-                type="secondary"
-                weight="bold"
-                size="sm"
-                variant="link">
+              <SolaceText type="secondary" weight="bold" size="sm" color="link">
                 copy
               </SolaceText>
             </TouchableOpacity>
@@ -104,7 +100,7 @@ const GuardianTab: React.FC<Props> = ({guardians, loading}) => {
           source={require('../../../assets/images/solace/secrurity.png')}
           style={globalStyles.image}
         />
-        <SolaceText type="secondary" size="sm" weight="bold" variant="normal">
+        <SolaceText type="secondary" size="sm" weight="bold" color="normal">
           you need 1 guardian approval for solace vault recovery or to approve
           an untrusted transaction
         </SolaceText>

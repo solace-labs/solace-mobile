@@ -135,10 +135,10 @@ const AddContactScreen = () => {
             justifyContent: 'space-between',
             marginTop: 20,
           }}>
-          <SolaceText type="secondary" weight="bold" variant="normal">
+          <SolaceText type="secondary" weight="bold" color="normal">
             network
           </SolaceText>
-          <SolaceText type="secondary" weight="bold" variant="solana-green">
+          <SolaceText type="secondary" weight="bold" color="solana-green">
             solana testnet
           </SolaceText>
         </View>
@@ -149,7 +149,7 @@ const AddContactScreen = () => {
         loading={loading.value}
         mb={10}
         disabled={!address}>
-        <SolaceText type="secondary" weight="bold" variant="dark">
+        <SolaceText type="secondary" weight="bold" color="dark">
           save contact
         </SolaceText>
       </SolaceButton>

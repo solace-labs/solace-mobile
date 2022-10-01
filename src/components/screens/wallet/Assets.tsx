@@ -25,11 +25,11 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {WalletStackParamList} from '../../../navigation/Wallet';
 import {useNavigation} from '@react-navigation/native';
 
-type SendScreenProps = NativeStackScreenProps<WalletStackParamList, 'Send'>;
+type AssetsScreenProps = NativeStackScreenProps<WalletStackParamList, 'Assets'>;
 
-const SendScreen = () => {
+const Assets = () => {
   const {state} = useContext(GlobalContext);
-  const navigation = useNavigation<SendScreenProps['navigation']>();
+  const navigation = useNavigation<AssetsScreenProps['navigation']>();
   const {
     data: accounts,
     isLoading,
@@ -68,7 +68,7 @@ const SendScreen = () => {
           startIcon="ios-return-up-back"
           startIconType="ionicons"
           // endIcon="plus"
-          text="send"
+          text="assets"
           startClick={handleGoBack}
           // endClick={handleAdd}
         />
@@ -86,7 +86,7 @@ const SendScreen = () => {
         startIconType="ionicons"
         fetching={isFetching}
         // endIcon=""
-        text="send"
+        text="assets"
         startClick={handleGoBack}
         // endClick={handleAdd}
       />
@@ -106,7 +106,7 @@ const SendScreen = () => {
               <SolaceText size="sm" weight="extralight">
                 pull to refresh
               </SolaceText>
-              <SolaceIcon type="dark" name="down" />
+              <SolaceIcon background="darkest" color="white" name="down" />
             </View>
             {accounts.map((account, index) => {
               return <AccountItem account={account} key={index} type="send" />;
@@ -131,4 +131,4 @@ const SendScreen = () => {
   );
 };
 
-export default SendScreen;
+export default Assets;

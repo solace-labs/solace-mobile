@@ -30,7 +30,7 @@ const PasscodeScreen: React.FC<Props> = ({navigation}) => {
   return (
     <SolaceContainer>
       <View style={{flex: 1}}>
-        <SolaceText variant="white" size="lg" weight="semibold" align="center">
+        <SolaceText color="white" size="lg" weight="semibold" align="center">
           choose a passcode to protect your wallet on this device
         </SolaceText>
         <PasscodeContainer code={code} setCode={setCode} />
@@ -40,7 +40,7 @@ const PasscodeScreen: React.FC<Props> = ({navigation}) => {
         onPress={() => {
           checkPin();
         }}>
-        <SolaceText type="secondary" weight="bold" variant="dark">
+        <SolaceText type="secondary" weight="bold" color="dark">
           next
         </SolaceText>
       </SolaceButton>

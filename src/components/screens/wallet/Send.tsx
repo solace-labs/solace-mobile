@@ -27,14 +27,14 @@ import {useQuery, useQueryClient} from '@tanstack/react-query';
 import {useRefreshOnFocus} from '../../../hooks/useRefreshOnFocus';
 import {getMaxBalance} from '../../../apis/sdk';
 
-type WalletScreenProps = NativeStackScreenProps<WalletStackParamList, 'Asset'>;
+type SendScreenProps = NativeStackScreenProps<WalletStackParamList, 'Send'>;
 
-const AssetScreen = () => {
+const SendScreen = () => {
   const {state, dispatch} = useContext(GlobalContext);
-  const navigation = useNavigation<WalletScreenProps['navigation']>();
+  const navigation = useNavigation<SendScreenProps['navigation']>();
   const {
     params: {asset, contact},
-  } = useRoute<WalletScreenProps['route']>();
+  } = useRoute<SendScreenProps['route']>();
 
   const shortAsset = asset.slice(0, 4) + '...' + asset.slice(-4);
 
@@ -186,7 +186,7 @@ const AssetScreen = () => {
           onChangeText={text => handleAmountChange(text)}
         />
         <View style={[globalStyles.rowSpaceBetween, {marginTop: 10}]}>
-          <SolaceText type="secondary" variant="normal" weight="bold">
+          <SolaceText type="secondary" color="normal" weight="bold">
             {maxBalance} available
           </SolaceText>
           <TouchableOpacity onPress={handleMax}>
@@ -200,7 +200,7 @@ const AssetScreen = () => {
         mb={10}
         loading={sendLoading.value}
         disabled={isDisabled()}>
-        <SolaceText type="secondary" weight="bold" variant="dark">
+        <SolaceText type="secondary" weight="bold" color="dark">
           send
         </SolaceText>
       </SolaceButton>
@@ -208,4 +208,4 @@ const AssetScreen = () => {
   );
 };
 
-export default AssetScreen;
+export default SendScreen;
