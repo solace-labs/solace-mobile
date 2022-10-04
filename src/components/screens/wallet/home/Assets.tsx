@@ -11,18 +11,18 @@ import Clipboard from '@react-native-community/clipboard';
 import {showMessage} from 'react-native-flash-message';
 import {useQuery, useQueryClient} from '@tanstack/react-query';
 
-import {GlobalContext} from '../../../state/contexts/GlobalContext';
-import globalStyles from '../../../utils/global_styles';
-import SolaceContainer from '../../common/solaceui/SolaceContainer';
-import TopNavbar from '../../common/TopNavbar';
-import SolaceText from '../../common/solaceui/SolaceText';
-import AccountItem from '../../wallet/AccountItem';
-import SolaceLoader from '../../common/solaceui/SolaceLoader';
-import SolaceIcon from '../../common/solaceui/SolaceIcon';
-import {useRefreshOnFocus} from '../../../hooks/useRefreshOnFocus';
-import {getAccounts} from '../../../apis/sdk';
+import {GlobalContext} from '../../../../state/contexts/GlobalContext';
+import globalStyles from '../../../../utils/global_styles';
+import SolaceContainer from '../../../common/solaceui/SolaceContainer';
+import TopNavbar from '../../../common/TopNavbar';
+import SolaceText from '../../../common/solaceui/SolaceText';
+import AccountItem from '../../../wallet/AccountItem';
+import SolaceLoader from '../../../common/solaceui/SolaceLoader';
+import SolaceIcon from '../../../common/solaceui/SolaceIcon';
+import {useRefreshOnFocus} from '../../../../hooks/useRefreshOnFocus';
+import {getAccounts} from '../../../../apis/sdk';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {WalletStackParamList} from '../../../navigation/Wallet';
+import {WalletStackParamList} from '../../../../navigation/Wallet';
 import {useNavigation} from '@react-navigation/native';
 
 type AssetsScreenProps = NativeStackScreenProps<WalletStackParamList, 'Assets'>;
@@ -115,7 +115,7 @@ const Assets = () => {
         ) : (
           <View style={{flex: 1, width: '100%'}}>
             <Image
-              source={require('../../../../assets/images/solace/send-money.png')}
+              source={require('../../../../../assets/images/solace/send-money.png')}
               style={globalStyles.image}
             />
             <SolaceText type="secondary" size="sm" weight="bold">

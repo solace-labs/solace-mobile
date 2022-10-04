@@ -14,30 +14,30 @@ import Toast from 'react-native-toast-message';
 import {
   AccountStatus,
   GlobalContext,
-} from '../../../state/contexts/GlobalContext';
-import SolaceContainer from '../../common/solaceui/SolaceContainer';
-import SolaceButton from '../../common/solaceui/SolaceButton';
-import SolaceText from '../../common/solaceui/SolaceText';
-import TopNavbar from '../../common/TopNavbar';
-import globalStyles from '../../../utils/global_styles';
+} from '../../../../state/contexts/GlobalContext';
+import SolaceContainer from '../../../common/solaceui/SolaceContainer';
+import SolaceButton from '../../../common/solaceui/SolaceButton';
+import SolaceText from '../../../common/solaceui/SolaceText';
+import TopNavbar from '../../../common/TopNavbar';
+import globalStyles from '../../../../utils/global_styles';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import SolaceInput from '../../common/solaceui/SolaceInput';
-import SolaceCustomInput from '../../common/solaceui/SolaceCustomInput';
+import SolaceInput from '../../../common/solaceui/SolaceInput';
+import SolaceCustomInput from '../../../common/solaceui/SolaceCustomInput';
 import {PublicKey} from 'solace-sdk';
-import {confirmTransaction, getFeePayer} from '../../../utils/apis';
-import {relayTransaction} from '../../../utils/relayer';
-import {LAMPORTS_PER_SOL} from '../../../utils/constants';
+import {confirmTransaction, getFeePayer} from '../../../../utils/apis';
+import {relayTransaction} from '../../../../utils/relayer';
+import {LAMPORTS_PER_SOL} from '../../../../utils/constants';
 import FlashMessage, {showMessage} from 'react-native-flash-message';
-import {setAccountStatus} from '../../../state/actions/global';
-import SolaceLoader from '../../common/solaceui/SolaceLoader';
+import {setAccountStatus} from '../../../../state/actions/global';
+import SolaceLoader from '../../../common/solaceui/SolaceLoader';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {WalletStackParamList} from '../../../navigation/Wallet';
+import {WalletStackParamList} from '../../../../navigation/Wallet';
 import {useQuery, useQueryClient} from '@tanstack/react-query';
-import {useRefreshOnFocus} from '../../../hooks/useRefreshOnFocus';
-import {getMaxBalance} from '../../../apis/sdk';
-import {minifyAddress} from '../../../utils/helpers';
-import {Colors} from '../../../utils/colors';
-import {SolaceToast} from '../../common/solaceui/SolaceToast';
+import {useRefreshOnFocus} from '../../../../hooks/useRefreshOnFocus';
+import {getMaxBalance} from '../../../../apis/sdk';
+import {minifyAddress} from '../../../../utils/helpers';
+import {Colors} from '../../../../utils/colors';
+import {SolaceToast} from '../../../common/solaceui/SolaceToast';
 
 type SendScreenProps = NativeStackScreenProps<WalletStackParamList, 'Send'>;
 

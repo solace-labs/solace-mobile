@@ -5,7 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 
 import SolaceText from '../common/solaceui/SolaceText';
 import globalStyles from '../../utils/global_styles';
-import {Account} from '../screens/wallet/Recieve';
+import {Account} from '../screens/wallet/home/Recieve';
 import {WalletStackParamList} from '../../navigation/Wallet';
 import SolacePaper from '../common/solaceui/SolacePaper';
 import {minifyAddress} from '../../utils/helpers';

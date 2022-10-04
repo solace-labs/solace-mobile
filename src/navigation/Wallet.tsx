@@ -1,16 +1,16 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import WalletHomeScreen from '../components/screens/wallet/WalletHome';
-import Assets from '../components/screens/wallet/Assets';
-import AddContactScreen from '../components/screens/wallet/AddContact';
-import ContactScreen from '../components/screens/wallet/Contact';
-import SendScreen from '../components/screens/wallet/Send';
-import AddGuardian from '../components/screens/guardian/AddGuardian';
-import Guardian from '../components/screens/guardian/Guardian';
-import RecieveScreen from '../components/screens/wallet/Recieve';
-import RecieveItem from '../components/screens/wallet/RecieveItem';
-import AddToken from '../components/screens/wallet/AddToken';
-import Incubation from '../components/screens/wallet/Incubation';
+import WalletHomeScreen from '../components/screens/wallet/home/WalletHome';
+import Assets from '../components/screens/wallet/home/Assets';
+import AddContactScreen from '../components/screens/wallet/home/AddContact';
+import ContactScreen from '../components/screens/wallet/home/Contact';
+import SendScreen from '../components/screens/wallet/home/Send';
+import AddGuardian from '../components/screens/wallet/guardian/AddGuardian';
+import Guardian from '../components/screens/wallet/guardian/Guardian';
+import RecieveScreen from '../components/screens/wallet/home/Recieve';
+import RecieveItem from '../components/screens/wallet/home/RecieveItem';
+import AddToken from '../components/screens/wallet/home/AddToken';
+import Incubation from '../components/screens/wallet/home/Incubation';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MCI from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -20,7 +20,7 @@ import {ArrowTrendingUpIcon} from 'react-native-heroicons/outline';
 import {Colors} from '../utils/colors';
 import ComingSoon from '../components/screens/loading/ComingSoon';
 import FlashMessage from 'react-native-flash-message';
-import SwapScreen from '../components/screens/wallet/SwapScreen';
+import SwapScreen from '../components/screens/wallet/swap/SwapScreen';
 
 export type WalletStackParamList = {
   Wallet: undefined;

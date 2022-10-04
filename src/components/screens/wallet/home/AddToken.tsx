@@ -5,17 +5,17 @@ import {PublicKey} from 'solace-sdk';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-import {GlobalContext} from '../../../state/contexts/GlobalContext';
-import SolaceContainer from '../../common/solaceui/SolaceContainer';
-import SolaceButton from '../../common/solaceui/SolaceButton';
-import SolaceText from '../../common/solaceui/SolaceText';
-import TopNavbar from '../../common/TopNavbar';
-import SolaceCustomInput from '../../common/solaceui/SolaceCustomInput';
-import {SPL_TOKEN} from '../../../utils/constants';
-import {confirmTransaction, getFeePayer} from '../../../utils/apis';
-import {relayTransaction} from '../../../utils/relayer';
-import SolaceLoader from '../../common/solaceui/SolaceLoader';
-import {WalletStackParamList} from '../../../navigation/Wallet';
+import {GlobalContext} from '../../../../state/contexts/GlobalContext';
+import SolaceContainer from '../../../common/solaceui/SolaceContainer';
+import SolaceButton from '../../../common/solaceui/SolaceButton';
+import SolaceText from '../../../common/solaceui/SolaceText';
+import TopNavbar from '../../../common/TopNavbar';
+import SolaceCustomInput from '../../../common/solaceui/SolaceCustomInput';
+import {SPL_TOKEN} from '../../../../utils/constants';
+import {confirmTransaction, getFeePayer} from '../../../../utils/apis';
+import {relayTransaction} from '../../../../utils/relayer';
+import SolaceLoader from '../../../common/solaceui/SolaceLoader';
+import {WalletStackParamList} from '../../../../navigation/Wallet';
 
 type WalletScreenProps = NativeStackScreenProps<
   WalletStackParamList,

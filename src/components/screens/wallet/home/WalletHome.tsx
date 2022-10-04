@@ -18,22 +18,22 @@ import {
   AccountStatus,
   AppState,
   GlobalContext,
-} from '../../../state/contexts/GlobalContext';
-import {clearData, setAccountStatus} from '../../../state/actions/global';
-import {StorageClearAll, StorageGetItem} from '../../../utils/storage';
-import SolaceContainer from '../../common/solaceui/SolaceContainer';
-import SolaceIcon from '../../common/solaceui/SolaceIcon';
-import SolaceText from '../../common/solaceui/SolaceText';
-import WalletActivity from '../../wallet/WalletActivity';
-import globalStyles from '../../../utils/global_styles';
-import SolaceStatus from '../../common/solaceui/SolaceStatus';
-import {useRefreshOnFocus} from '../../../hooks/useRefreshOnFocus';
-import {getIncubationData} from '../../../apis/sdk';
-import {WalletStackParamList} from '../../../navigation/Wallet';
-import {Colors} from '../../../utils/colors';
-import SolacePaper from '../../common/solaceui/SolacePaper';
-import WalletHoldings from '../../wallet/WalletHoldings';
-import {minifyAddress} from '../../../utils/helpers';
+} from '../../../../state/contexts/GlobalContext';
+import {clearData, setAccountStatus} from '../../../../state/actions/global';
+import {StorageClearAll, StorageGetItem} from '../../../../utils/storage';
+import SolaceContainer from '../../../common/solaceui/SolaceContainer';
+import SolaceIcon from '../../../common/solaceui/SolaceIcon';
+import SolaceText from '../../../common/solaceui/SolaceText';
+import WalletActivity from '../../../wallet/WalletActivity';
+import globalStyles from '../../../../utils/global_styles';
+import SolaceStatus from '../../../common/solaceui/SolaceStatus';
+import {useRefreshOnFocus} from '../../../../hooks/useRefreshOnFocus';
+import {getIncubationData} from '../../../../apis/sdk';
+import {WalletStackParamList} from '../../../../navigation/Wallet';
+import {Colors} from '../../../../utils/colors';
+import SolacePaper from '../../../common/solaceui/SolacePaper';
+import WalletHoldings from '../../../wallet/WalletHoldings';
+import {minifyAddress} from '../../../../utils/helpers';
 
 type WalletScreenProps = NativeStackScreenProps<WalletStackParamList, 'Wallet'>;
 
@@ -134,7 +134,7 @@ const WalletHomeScreen = () => {
           name="lock"
         /> */}
         <Image
-          source={require('../../../../assets/images/solace/solana-icon.png')}
+          source={require('../../../../../assets/images/solace/solana-icon.png')}
           style={globalStyles.avatar}
         />
         {isLoading ? (
@@ -170,7 +170,7 @@ const WalletHomeScreen = () => {
       </View>
       <View style={[globalStyles.fullCenter, {flex: 0.4}]}>
         <Image
-          source={require('../../../../assets/images/solace/solace-icon.png')}
+          source={require('../../../../../assets/images/solace/solace-icon.png')}
           style={{
             height: 35,
             resizeMode: 'contain',

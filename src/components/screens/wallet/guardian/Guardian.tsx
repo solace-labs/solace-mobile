@@ -2,20 +2,20 @@
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import React, {useContext, useState} from 'react';
 
-import {GlobalContext} from '../../../state/contexts/GlobalContext';
-import GuardianTab from '../../wallet/GuardianTab';
-import GuardianSecondTab from '../../wallet/GuardianSecondTab';
+import {GlobalContext} from '../../../../state/contexts/GlobalContext';
+import GuardianTab from '../../../wallet/GuardianTab';
+import GuardianSecondTab from '../../../wallet/GuardianSecondTab';
 import {PublicKey} from 'solace-sdk';
-import SolaceContainer from '../../common/solaceui/SolaceContainer';
-import SolaceButton from '../../common/solaceui/SolaceButton';
-import SolaceText from '../../common/solaceui/SolaceText';
+import SolaceContainer from '../../../common/solaceui/SolaceContainer';
+import SolaceButton from '../../../common/solaceui/SolaceButton';
+import SolaceText from '../../../common/solaceui/SolaceText';
 import {useQuery, useQueryClient} from '@tanstack/react-query';
-import {useRefreshOnFocus} from '../../../hooks/useRefreshOnFocus';
+import {useRefreshOnFocus} from '../../../../hooks/useRefreshOnFocus';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {GuardianStackParamList} from '../../../navigation/Wallet';
+import {GuardianStackParamList} from '../../../../navigation/Wallet';
 import {useNavigation} from '@react-navigation/native';
-import {getGuardians} from '../../../apis/sdk';
-import TopNavbar from '../../common/TopNavbar';
+import {getGuardians} from '../../../../apis/sdk';
+import TopNavbar from '../../../common/TopNavbar';
 
 type GuardianScreenProps = NativeStackScreenProps<
   GuardianStackParamList,

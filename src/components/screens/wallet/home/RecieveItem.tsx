@@ -5,26 +5,26 @@ import React, {useContext, useEffect, useState} from 'react';
 import {
   AccountStatus,
   GlobalContext,
-} from '../../../state/contexts/GlobalContext';
-import SolaceContainer from '../../common/solaceui/SolaceContainer';
-import TopNavbar from '../../common/TopNavbar';
-import SolaceCustomInput from '../../common/solaceui/SolaceCustomInput';
-import SolaceText from '../../common/solaceui/SolaceText';
-import globalStyles from '../../../utils/global_styles';
+} from '../../../../state/contexts/GlobalContext';
+import SolaceContainer from '../../../common/solaceui/SolaceContainer';
+import TopNavbar from '../../../common/TopNavbar';
+import SolaceCustomInput from '../../../common/solaceui/SolaceCustomInput';
+import SolaceText from '../../../common/solaceui/SolaceText';
+import globalStyles from '../../../../utils/global_styles';
 import Clipboard from '@react-native-community/clipboard';
 import {showMessage} from 'react-native-flash-message';
 import {PublicKey} from 'solace-sdk';
 import QRCode from 'react-native-qrcode-svg';
-import SolaceButton from '../../common/solaceui/SolaceButton';
-import SolaceLoader from '../../common/solaceui/SolaceLoader';
-import {setAccountStatus} from '../../../state/actions/global';
+import SolaceButton from '../../../common/solaceui/SolaceButton';
+import SolaceLoader from '../../../common/solaceui/SolaceLoader';
+import {setAccountStatus} from '../../../../state/actions/global';
 import {useQuery, useQueryClient} from '@tanstack/react-query';
-import {getTokenAccount} from '../../../apis/sdk';
-import {useRefreshOnFocus} from '../../../hooks/useRefreshOnFocus';
+import {getTokenAccount} from '../../../../apis/sdk';
+import {useRefreshOnFocus} from '../../../../hooks/useRefreshOnFocus';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {WalletStackParamList} from '../../../navigation/Wallet';
+import {WalletStackParamList} from '../../../../navigation/Wallet';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {minifyAddress} from '../../../utils/helpers';
+import {minifyAddress} from '../../../../utils/helpers';
 
 type WalletScreenProps = NativeStackScreenProps<
   WalletStackParamList,

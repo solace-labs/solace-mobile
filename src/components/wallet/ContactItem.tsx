@@ -3,7 +3,7 @@ import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import SolaceText from '../common/solaceui/SolaceText';
 import globalStyles from '../../utils/global_styles';
-import {PublicKeyType} from '../screens/guardian/Guardian';
+import {PublicKeyType} from '../screens/wallet/guardian/Guardian';
 import {WalletStackParamList} from '../../navigation/Wallet';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {minifyAddress} from '../../utils/helpers';

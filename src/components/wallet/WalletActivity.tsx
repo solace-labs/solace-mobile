@@ -4,7 +4,7 @@ import {showMessage} from 'react-native-flash-message';
 import {GlobalContext} from '../../state/contexts/GlobalContext';
 import globalStyles from '../../utils/global_styles';
 import SolaceText from '../common/solaceui/SolaceText';
-import {DATA} from '../screens/wallet/WalletHome';
+import {DATA} from '../screens/wallet/home/WalletHome';
 import Transaction from './Transaction';
 
 type Props = {
@@ -59,7 +59,7 @@ const WalletActivity: FC<Props> = ({data}) => {
         </TouchableOpacity>
       </View>
       <Image
-        source={require('../../../assets/images/solace/contact-screen.png')}
+        source={require('../../../../../assets/images/solace/contact-screen.png')}
         style={{
           width: '100%',
           height: 220,

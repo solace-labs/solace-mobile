@@ -1,19 +1,22 @@
 import {View} from 'react-native';
 import React, {useContext, useState} from 'react';
-import {AppState, GlobalContext} from '../../../state/contexts/GlobalContext';
+import {
+  AppState,
+  GlobalContext,
+} from '../../../../state/contexts/GlobalContext';
 import {PublicKey} from 'solace-sdk';
-import {relayTransaction, requestGuardian} from '../../../utils/relayer';
+import {relayTransaction, requestGuardian} from '../../../../utils/relayer';
 import {showMessage} from 'react-native-flash-message';
-import {confirmTransaction, getFeePayer} from '../../../utils/apis';
-import SolaceContainer from '../../common/solaceui/SolaceContainer';
-import SolaceButton from '../../common/solaceui/SolaceButton';
-import SolaceText from '../../common/solaceui/SolaceText';
-import SolaceLoader from '../../common/solaceui/SolaceLoader';
-import TopNavbar from '../../common/TopNavbar';
-import SolaceCustomInput from '../../common/solaceui/SolaceCustomInput';
-import {StorageGetItem} from '../../../utils/storage';
+import {confirmTransaction, getFeePayer} from '../../../../utils/apis';
+import SolaceContainer from '../../../common/solaceui/SolaceContainer';
+import SolaceButton from '../../../common/solaceui/SolaceButton';
+import SolaceText from '../../../common/solaceui/SolaceText';
+import SolaceLoader from '../../../common/solaceui/SolaceLoader';
+import TopNavbar from '../../../common/TopNavbar';
+import SolaceCustomInput from '../../../common/solaceui/SolaceCustomInput';
+import {StorageGetItem} from '../../../../utils/storage';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {GuardianStackParamList} from '../../../navigation/Wallet';
+import {GuardianStackParamList} from '../../../../navigation/Wallet';
 import {useNavigation} from '@react-navigation/native';
 
 type AddGuardianScreenProps = NativeStackScreenProps<

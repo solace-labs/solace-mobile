@@ -6,7 +6,7 @@ import {
   Image,
 } from 'react-native';
 import React from 'react';
-import {PublicKeyType} from '../screens/guardian/Guardian';
+import {PublicKeyType} from '../screens/wallet/guardian/Guardian';
 import SolaceText from '../common/solaceui/SolaceText';
 import globalStyles from '../../utils/global_styles';
 import {firstCharacter, minifyAddress} from '../../utils/helpers';

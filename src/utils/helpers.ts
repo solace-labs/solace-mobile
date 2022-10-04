@@ -1,4 +1,4 @@
-import {PublicKeyType} from '../components/screens/guardian/Guardian';
+import {PublicKeyType} from '../components/screens/wallet/guardian/Guardian';
 
 export const minifyAddress = (
   address: string | PublicKeyType,

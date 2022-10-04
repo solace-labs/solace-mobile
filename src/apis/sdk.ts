@@ -2,7 +2,7 @@ import {showMessage} from 'react-native-flash-message';
 import {PublicKey, SolaceSDK} from 'solace-sdk';
 import {LAMPORTS_PER_SOL, TOKEN_PROGRAM_ID} from '../utils/constants';
 import moment from 'moment';
-import {WalletDataType} from '../components/screens/wallet/Incubation';
+import {WalletDataType} from '../components/screens/wallet/home/Incubation';
 import {StorageGetItem} from '../utils/storage';
 import {AppState} from '../state/contexts/GlobalContext';
 

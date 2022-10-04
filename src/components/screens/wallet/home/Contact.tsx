@@ -9,20 +9,20 @@ import {
 } from 'react-native';
 import React, {useContext} from 'react';
 
-import {GlobalContext} from '../../../state/contexts/GlobalContext';
-import SolaceContainer from '../../common/solaceui/SolaceContainer';
-import TopNavbar from '../../common/TopNavbar';
-import SolaceText from '../../common/solaceui/SolaceText';
-import globalStyles from '../../../utils/global_styles';
-import ContactItem from '../../wallet/ContactItem';
-import SolaceIcon from '../../common/solaceui/SolaceIcon';
-import SolaceLoader from '../../common/solaceui/SolaceLoader';
-import {Colors} from '../../../utils/colors';
+import {GlobalContext} from '../../../../state/contexts/GlobalContext';
+import SolaceContainer from '../../../common/solaceui/SolaceContainer';
+import TopNavbar from '../../../common/TopNavbar';
+import SolaceText from '../../../common/solaceui/SolaceText';
+import globalStyles from '../../../../utils/global_styles';
+import ContactItem from '../../../wallet/ContactItem';
+import SolaceIcon from '../../../common/solaceui/SolaceIcon';
+import SolaceLoader from '../../../common/solaceui/SolaceLoader';
+import {Colors} from '../../../../utils/colors';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {useQuery, useQueryClient} from '@tanstack/react-query';
-import {useRefreshOnFocus} from '../../../hooks/useRefreshOnFocus';
-import {getContacts} from '../../../apis/sdk';
-import {WalletStackParamList} from '../../../navigation/Wallet';
+import {useRefreshOnFocus} from '../../../../hooks/useRefreshOnFocus';
+import {getContacts} from '../../../../apis/sdk';
+import {WalletStackParamList} from '../../../../navigation/Wallet';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 type WalletScreenProps = NativeStackScreenProps<
@@ -135,7 +135,7 @@ const ContactScreen = () => {
         ) : (
           <View style={{flex: 1, width: '100%'}}>
             <Image
-              source={require('../../../../assets/images/solace/send-money.png')}
+              source={require('../../../../../assets/images/solace/send-money.png')}
               style={globalStyles.image}
             />
             <SolaceText type="secondary" size="sm">

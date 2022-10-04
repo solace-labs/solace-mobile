@@ -2,7 +2,7 @@ import {CognitoRefreshToken} from 'amazon-cognito-identity-js';
 import {Linking} from 'react-native';
 import {showMessage} from 'react-native-flash-message';
 import {PublicKey, SolaceSDK} from 'solace-sdk';
-import {PublicKeyType} from '../components/screens/guardian/Guardian';
+import {PublicKeyType} from '../components/screens/wallet/guardian/Guardian';
 import {AppState, Tokens, User} from '../state/contexts/GlobalContext';
 import {AwsCognito} from './aws_cognito';
 import {NETWORK} from './constants';

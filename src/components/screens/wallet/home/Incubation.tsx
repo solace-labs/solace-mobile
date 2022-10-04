@@ -3,17 +3,17 @@ import React, {FC, ReactNode, useContext, useState} from 'react';
 import {showMessage} from 'react-native-flash-message';
 import {SolaceSDK} from 'solace-sdk';
 
-import SolaceContainer from '../../common/solaceui/SolaceContainer';
-import SolaceButton from '../../common/solaceui/SolaceButton';
-import SolaceText from '../../common/solaceui/SolaceText';
-import SolaceLoader from '../../common/solaceui/SolaceLoader';
-import TopNavbar from '../../common/TopNavbar';
-import {GlobalContext} from '../../../state/contexts/GlobalContext';
-import {relayTransaction} from '../../../utils/relayer';
-import {confirmTransaction, getFeePayer} from '../../../utils/apis';
-import SolaceStatus from '../../common/solaceui/SolaceStatus';
-import globalStyles from '../../../utils/global_styles';
-import {WalletStackParamList} from '../../../navigation/Wallet';
+import SolaceContainer from '../../../common/solaceui/SolaceContainer';
+import SolaceButton from '../../../common/solaceui/SolaceButton';
+import SolaceText from '../../../common/solaceui/SolaceText';
+import SolaceLoader from '../../../common/solaceui/SolaceLoader';
+import TopNavbar from '../../../common/TopNavbar';
+import {GlobalContext} from '../../../../state/contexts/GlobalContext';
+import {relayTransaction} from '../../../../utils/relayer';
+import {confirmTransaction, getFeePayer} from '../../../../utils/apis';
+import SolaceStatus from '../../../common/solaceui/SolaceStatus';
+import globalStyles from '../../../../utils/global_styles';
+import {WalletStackParamList} from '../../../../navigation/Wallet';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 
