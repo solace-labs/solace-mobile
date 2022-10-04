@@ -22,9 +22,9 @@ import {useQuery, useQueryClient} from '@tanstack/react-query';
 import {getTokenAccount} from '../../../../apis/sdk';
 import {useRefreshOnFocus} from '../../../../hooks/useRefreshOnFocus';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {WalletStackParamList} from '../../../../navigation/Wallet';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {minifyAddress} from '../../../../utils/helpers';
+import {WalletStackParamList} from '../../../../navigation/Home/Home';
 
 type WalletScreenProps = NativeStackScreenProps<
   WalletStackParamList,
@@ -145,6 +145,7 @@ const RecieveItem = () => {
               iconName="content-copy"
               handleIconPress={() => handleCopy(address)}
               value={address}
+              shiftIconUp="xxs"
               iconType="mci"
             />
             <SolaceText color="normal" mt={16} weight="light">

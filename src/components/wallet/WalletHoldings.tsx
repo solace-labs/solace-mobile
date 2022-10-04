@@ -14,7 +14,7 @@ import {
 import {showMessage} from 'react-native-flash-message';
 import {getAccounts} from '../../apis/sdk';
 import {useRefreshOnFocus} from '../../hooks/useRefreshOnFocus';
-import {WalletStackParamList} from '../../navigation/Wallet';
+import {WalletStackParamList} from '../../navigation/Home/Home';
 import {GlobalContext} from '../../state/contexts/GlobalContext';
 import globalStyles from '../../utils/global_styles';
 import SolaceContainer from '../common/solaceui/SolaceContainer';

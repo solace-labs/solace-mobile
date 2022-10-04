@@ -1,5 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {View, Image, TouchableOpacity, TextInput} from 'react-native';
+import {
+  View,
+  Image,
+  TouchableOpacity,
+  TextInput,
+  ScrollView,
+  RefreshControl,
+} from 'react-native';
 import React, {useContext, useState} from 'react';
 import {showMessage} from 'react-native-flash-message';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -24,6 +31,40 @@ import {minifyAddress} from '../../../../utils/helpers';
 import {Colors} from '../../../../utils/colors';
 import {Styles} from '../../../../utils/styles';
 import {SwapStackParamList} from '../../../../navigation/Home/Swap';
+import SolaceCustomInput from '../../../common/solaceui/SolaceCustomInput';
+import AccountItem from '../../../wallet/AccountItem';
+import AssetItem from '../../../wallet/AssetItem';
+
+const assets = [
+  {
+    name: 'solana',
+    symbol: 'sol',
+    amount: 20,
+    amountInDollars: 20.3,
+    changeInPrice: -10,
+  },
+  {
+    name: 'usdc',
+    symbol: 'usdc',
+    amount: 120,
+    amountInDollars: 120,
+    changeInPrice: -1,
+  },
+  {
+    name: 'serum',
+    symbol: 'srm',
+    amount: 0,
+    amountInDollars: 0,
+    changeInPrice: -0.01,
+  },
+  {
+    name: 'raydium',
+    symbol: 'ray',
+    amount: 56.67,
+    amountInDollars: 34.03,
+    changeInPrice: 4.02,
+  },
+];
 
 type TokenListScreenProps = NativeStackScreenProps<
   SwapStackParamList,
@@ -33,6 +74,7 @@ type TokenListScreenProps = NativeStackScreenProps<
 const TokenListScreen = () => {
   const {state, dispatch} = useContext(GlobalContext);
   const navigation = useNavigation<TokenListScreenProps['navigation']>();
+  const [searchValue, setSearchValue] = useState('');
 
   const handleGoBack = () => {
     navigation.goBack();
@@ -46,6 +88,7 @@ const TokenListScreen = () => {
   };
 
   const address = state.sdk?.wallet!?.toString();
+  // const address = false;
   const headerTitle = address ? `${minifyAddress(address, 5)}` : '-';
 
   const goToLogin = () => {
@@ -65,110 +108,33 @@ const TokenListScreen = () => {
   return (
     <SolaceContainer>
       <TopNavbar
-        // startIcon="ios-return-up-back"
-        // startIconType="ionicons"
+        startIcon="ios-return-up-back"
+        startIconType="ionicons"
         endIcon="infocirlceo"
         // text="swap tokens"
-        // startClick={handleGoBack}
-      >
+        startClick={handleGoBack}>
         <SolaceText size="lg" weight="semibold">
-          swap tokens
+          {/* swap tokens */}
+          token list
         </SolaceText>
       </TopNavbar>
       {address ? (
         <View style={globalStyles.fullCenter}>
-          <View
-            style={[
-              globalStyles.fullWidth,
-              globalStyles.rowCenter,
-              {
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'flex-start',
-                paddingTop: 24,
-              },
-            ]}>
-            <View
-              style={[
-                globalStyles.fullWidth,
-                {
-                  height: 150,
-                  position: 'relative',
-                },
-              ]}>
-              <SolacePaper
-                style={{
-                  height: 75,
-                  borderBottomEndRadius: 0,
-                  borderBottomStartRadius: 0,
-                  zIndex: 10,
-                }}>
-                <SwapCard />
-              </SolacePaper>
-              <SolacePaper
-                style={{
-                  height: 75,
-                  borderTopEndRadius: 0,
-                  borderTopStartRadius: 0,
-                  borderTopWidth: 1,
-                  borderTopColor: Colors.background.dark,
-                  width: '100%',
-                  zIndex: 10,
-                }}>
-                <SwapCard />
-              </SolacePaper>
-              <View
-                style={{
-                  zIndex: 30,
-                  position: 'absolute',
-                  left: '50%',
-                  top: '50%',
-                  transform: [{translateX: -21}, {translateY: -21}],
-                }}>
-                <SolaceIcon
-                  size="sm"
-                  name="swap-vertical-bold"
-                  variant="mci"
-                  color="purple"
-                  background="lightpink"
-                />
-              </View>
-              <View style={[globalStyles.rowSpaceBetween, {marginTop: 12}]}>
-                <View style={globalStyles.rowCenter}>
-                  <Entypo
-                    name="wallet"
-                    size={20}
-                    color={Colors.text.normal}
-                    style={{marginRight: 10}}
-                  />
-                  <SolaceText type="secondary" color="normal" weight="bold">
-                    balance
-                  </SolaceText>
-                  <SolaceText
-                    type="secondary"
-                    color="white"
-                    weight="bold"
-                    style={{marginLeft: 10}}>
-                    123
-                  </SolaceText>
-                </View>
-                <TouchableOpacity>
-                  <SolaceText type="secondary" color="lightpink" weight="bold">
-                    {/* {maxBalance} */}
-                    use max
-                  </SolaceText>
-                </TouchableOpacity>
-              </View>
-            </View>
+          <View style={globalStyles.fullWidth}>
+            <SolaceCustomInput
+              value={searchValue}
+              onChangeText={setSearchValue}
+              iconName="search1"
+              placeholder="search"
+              style={{padding: 10}}
+              shiftIconUp="xs"
+            />
           </View>
-          <SolaceButton
-            background="purple"
-            mb={12}
-            onPress={() => navigation.navigate('SwapPreviewScreen')}>
-            <SolaceText weight="bold" type="secondary">
-              preview swap
-            </SolaceText>
-          </SolaceButton>
+          <ScrollView bounces={true} style={{width: '100%'}}>
+            {assets.map((asset, index) => {
+              return <AssetItem asset={asset} key={index} />;
+            })}
+          </ScrollView>
         </View>
       ) : (
         <View style={globalStyles.fullCenter}>

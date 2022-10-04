@@ -31,13 +31,13 @@ import FlashMessage, {showMessage} from 'react-native-flash-message';
 import {setAccountStatus} from '../../../../state/actions/global';
 import SolaceLoader from '../../../common/solaceui/SolaceLoader';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {WalletStackParamList} from '../../../../navigation/Wallet';
 import {useQuery, useQueryClient} from '@tanstack/react-query';
 import {useRefreshOnFocus} from '../../../../hooks/useRefreshOnFocus';
 import {getMaxBalance} from '../../../../apis/sdk';
 import {minifyAddress} from '../../../../utils/helpers';
 import {Colors} from '../../../../utils/colors';
 import {SolaceToast} from '../../../common/solaceui/SolaceToast';
+import {WalletStackParamList} from '../../../../navigation/Home/Home';
 
 type SendScreenProps = NativeStackScreenProps<WalletStackParamList, 'Send'>;
 

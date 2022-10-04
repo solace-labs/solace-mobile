@@ -29,11 +29,11 @@ import globalStyles from '../../../../utils/global_styles';
 import SolaceStatus from '../../../common/solaceui/SolaceStatus';
 import {useRefreshOnFocus} from '../../../../hooks/useRefreshOnFocus';
 import {getIncubationData} from '../../../../apis/sdk';
-import {WalletStackParamList} from '../../../../navigation/Wallet';
 import {Colors} from '../../../../utils/colors';
 import SolacePaper from '../../../common/solaceui/SolacePaper';
 import WalletHoldings from '../../../wallet/WalletHoldings';
 import {minifyAddress} from '../../../../utils/helpers';
+import {WalletStackParamList} from '../../../../navigation/Home/Home';
 
 type WalletScreenProps = NativeStackScreenProps<WalletStackParamList, 'Wallet'>;
 

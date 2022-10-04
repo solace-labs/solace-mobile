@@ -22,8 +22,8 @@ import {useQuery, useQueryClient} from '@tanstack/react-query';
 import {useRefreshOnFocus} from '../../../../hooks/useRefreshOnFocus';
 import {getAccounts} from '../../../../apis/sdk';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {WalletStackParamList} from '../../../../navigation/Wallet';
 import {useNavigation} from '@react-navigation/native';
+import {WalletStackParamList} from '../../../../navigation/Home/Home';
 
 type WalletScreenProps = NativeStackScreenProps<
   WalletStackParamList,

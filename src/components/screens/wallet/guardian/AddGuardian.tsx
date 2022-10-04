@@ -16,8 +16,8 @@ import TopNavbar from '../../../common/TopNavbar';
 import SolaceCustomInput from '../../../common/solaceui/SolaceCustomInput';
 import {StorageGetItem} from '../../../../utils/storage';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {GuardianStackParamList} from '../../../../navigation/Wallet';
 import {useNavigation} from '@react-navigation/native';
+import {GuardianStackParamList} from '../../../../navigation/Home/Guardian';
 
 type AddGuardianScreenProps = NativeStackScreenProps<
   GuardianStackParamList,
@@ -111,6 +111,7 @@ const AddGuardian = () => {
               type: 'info',
             });
           }}
+          shiftIconUp="xxs"
           value={address}
           placeholder="wallet address of guardian"
           onChangeText={setAddress}

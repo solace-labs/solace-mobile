@@ -12,10 +12,10 @@ import SolaceText from '../../../common/solaceui/SolaceText';
 import {useQuery, useQueryClient} from '@tanstack/react-query';
 import {useRefreshOnFocus} from '../../../../hooks/useRefreshOnFocus';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {GuardianStackParamList} from '../../../../navigation/Wallet';
 import {useNavigation} from '@react-navigation/native';
 import {getGuardians} from '../../../../apis/sdk';
 import TopNavbar from '../../../common/TopNavbar';
+import {GuardianStackParamList} from '../../../../navigation/Home/Guardian';
 
 type GuardianScreenProps = NativeStackScreenProps<
   GuardianStackParamList,

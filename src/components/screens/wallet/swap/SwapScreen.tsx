@@ -130,7 +130,7 @@ const SwapScreen = () => {
                   background="lightpink"
                 />
               </View>
-              <View style={[globalStyles.rowSpaceBetween, {marginTop: 12}]}>
+              {/* <View style={[globalStyles.rowSpaceBetween, {marginTop: 12}]}>
                 <View style={globalStyles.rowCenter}>
                   <Entypo
                     name="wallet"
@@ -151,11 +151,10 @@ const SwapScreen = () => {
                 </View>
                 <TouchableOpacity>
                   <SolaceText type="secondary" color="lightpink" weight="bold">
-                    {/* {maxBalance} */}
                     use max
                   </SolaceText>
                 </TouchableOpacity>
-              </View>
+              </View> */}
             </View>
           </View>
           <SolaceButton
@@ -187,6 +186,7 @@ export default SwapScreen;
 
 const SwapCard = () => {
   const [amount, setAmount] = useState('');
+  const navigation = useNavigation<SwapScreenProps['navigation']>();
 
   const handleAmountChange = (amt: string) => {
     if (amt.match(/^\d*\.?\d*$/)) {
@@ -201,7 +201,7 @@ const SwapCard = () => {
           you pay
         </SolaceText>
         <TouchableOpacity
-          onPress={() => console.log('handle press')}
+          onPress={() => navigation.navigate('TokenListScreen')}
           style={globalStyles.rowCenter}>
           <Image
             source={require('../../../../../assets/images/solace/solana-icon.png')}

@@ -4,12 +4,15 @@ import SolaceInput, {SolaceInputProps} from './SolaceInput';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Colors} from '../../../utils/colors';
+import {Styles} from '../../../utils/styles';
 
 type Props = {
   iconName: string;
   iconType?: 'antdesign' | 'mci';
   iconColor?: keyof typeof Colors.text;
   handleIconPress?: () => void;
+  shiftIconUp?: keyof typeof Styles.fontSize;
+  style?: TextInputProps;
 } & SolaceInputProps;
 
 const SolaceCustomInput: FC<Props> = ({
@@ -17,6 +20,8 @@ const SolaceCustomInput: FC<Props> = ({
   iconType = 'antdesign',
   iconColor = 'normal',
   handleIconPress,
+  shiftIconUp = 'md',
+  style: styleProp,
   ...props
 }) => {
   const getIcon = () => {
@@ -45,10 +50,17 @@ const SolaceCustomInput: FC<Props> = ({
   return (
     <View>
       <View style={styles.inputWrap}>
-        <TouchableOpacity style={styles.iconPosition} onPress={handleIconPress}>
+        <TouchableOpacity
+          style={[
+            styles.iconPosition,
+            {
+              transform: [{translateY: -Styles.fontSize[shiftIconUp]}],
+            },
+          ]}
+          onPress={handleIconPress}>
           {getIcon()}
         </TouchableOpacity>
-        <SolaceInput {...props} style={styles.inputStyle} />
+        <SolaceInput {...props} style={[styles.inputStyle, styleProp]} />
       </View>
     </View>
   );
@@ -63,8 +75,8 @@ const styles = StyleSheet.create({
   },
   iconPosition: {
     position: 'absolute',
-    top: 20,
     right: 16,
+    top: '50%',
     zIndex: 10,
   },
   inputStyle: {

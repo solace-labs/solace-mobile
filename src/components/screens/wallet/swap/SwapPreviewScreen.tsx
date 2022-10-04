@@ -18,12 +18,12 @@ import SolaceText from '../../../common/solaceui/SolaceText';
 import globalStyles from '../../../../utils/global_styles';
 import SolaceButton from '../../../common/solaceui/SolaceButton';
 import {setAccountStatus} from '../../../../state/actions/global';
-import {SwapStackParamList} from '../../../../navigation/Wallet';
 import {minifyAddress} from '../../../../utils/helpers';
 import {Colors} from '../../../../utils/colors';
 import SolacePaper from '../../../common/solaceui/SolacePaper';
 import SolaceIcon from '../../../common/solaceui/SolaceIcon';
 import {Styles} from '../../../../utils/styles';
+import {SwapStackParamList} from '../../../../navigation/Home/Swap';
 
 type SwapPreviewScreenProps = NativeStackScreenProps<
   SwapStackParamList,
@@ -82,12 +82,11 @@ const SwapPreviewScreen = () => {
   return (
     <SolaceContainer>
       <TopNavbar
-        // startIcon="ios-return-up-back"
-        // startIconType="ionicons"
+        startIcon="ios-return-up-back"
+        startIconType="ionicons"
         endIcon="infocirlceo"
         // text="swap tokens"
-        // startClick={handleGoBack}
-      >
+        startClick={handleGoBack}>
         <SolaceText size="lg" weight="semibold">
           preview tokens
         </SolaceText>
@@ -97,10 +96,9 @@ const SwapPreviewScreen = () => {
           <View
             style={[
               globalStyles.fullWidth,
-              globalStyles.rowCenter,
               {
                 flex: 1,
-                justifyContent: 'center',
+                justifyContent: 'flex-start',
                 alignItems: 'flex-start',
                 paddingTop: 24,
               },
@@ -118,6 +116,7 @@ const SwapPreviewScreen = () => {
                   height: 75,
                   borderBottomEndRadius: 0,
                   borderBottomStartRadius: 0,
+                  borderBottomWidth: 0,
                   zIndex: 10,
                 }}>
                 <SwapCard />
@@ -150,32 +149,100 @@ const SwapPreviewScreen = () => {
                   background="darkest"
                 />
               </View>
-              <View style={[globalStyles.rowSpaceBetween, {marginTop: 12}]}>
+            </View>
+            <SolacePaper mt={24}>
+              <View
+                style={[globalStyles.rowSpaceBetween, globalStyles.fullWidth]}>
+                <SolaceText
+                  color="normal"
+                  weight="bold"
+                  type="secondary"
+                  size="sm">
+                  powered by
+                </SolaceText>
                 <View style={globalStyles.rowCenter}>
-                  <Entypo
-                    name="wallet"
-                    size={20}
-                    color={Colors.text.normal}
-                    style={{marginRight: 10}}
+                  <Image
+                    source={require('../../../../../assets/images/solace/jupiter.png')}
+                    style={{
+                      width: 25,
+                      height: 25,
+                      resizeMode: 'contain',
+                      marginRight: 12,
+                    }}
                   />
-                  <SolaceText type="secondary" color="normal" weight="bold">
-                    balance
-                  </SolaceText>
                   <SolaceText
-                    type="secondary"
-                    color="white"
+                    color="normal"
                     weight="bold"
-                    style={{marginLeft: 10}}>
-                    123
+                    type="secondary"
+                    size="sm">
+                    jupiter
                   </SolaceText>
                 </View>
-                <TouchableOpacity>
-                  <SolaceText type="secondary" color="lightpink" weight="bold">
-                    {/* {maxBalance} */}
-                    use max
-                  </SolaceText>
-                </TouchableOpacity>
               </View>
+            </SolacePaper>
+            <View
+              style={[
+                globalStyles.fullWidth,
+                {
+                  marginTop: 24,
+                },
+              ]}>
+              <SolacePaper
+                style={{
+                  borderBottomEndRadius: 0,
+                  borderBottomStartRadius: 0,
+                  borderBottomWidth: 0,
+                }}>
+                <View
+                  style={[
+                    globalStyles.rowSpaceBetween,
+                    globalStyles.fullWidth,
+                  ]}>
+                  <SolaceText
+                    color="normal"
+                    weight="bold"
+                    type="secondary"
+                    size="sm">
+                    network fee <AntDesign name="infocirlceo" />
+                  </SolaceText>
+                  <SolaceText
+                    color="lightgreen"
+                    weight="bold"
+                    type="secondary"
+                    size="sm">
+                    $0.000071
+                  </SolaceText>
+                </View>
+              </SolacePaper>
+              <SolacePaper
+                style={{
+                  borderTopEndRadius: 0,
+                  borderTopStartRadius: 0,
+                  borderTopWidth: 1,
+                  borderTopColor: Colors.background.dark,
+                  width: '100%',
+                }}>
+                <View
+                  style={[
+                    globalStyles.rowSpaceBetween,
+                    globalStyles.fullWidth,
+                  ]}>
+                  <SolaceText
+                    color="normal"
+                    weight="bold"
+                    type="secondary"
+                    size="sm">
+                    platform fee <AntDesign name="infocirlceo" />
+                  </SolaceText>
+                  <SolaceText
+                    color="normal"
+                    weight="bold"
+                    type="secondary"
+                    size="sm">
+                    0.80%
+                  </SolaceText>
+                </View>
+              </SolacePaper>
             </View>
           </View>
           <SolaceButton background="purple" mb={12}>

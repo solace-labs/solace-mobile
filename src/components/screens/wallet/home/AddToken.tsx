@@ -15,7 +15,7 @@ import {SPL_TOKEN} from '../../../../utils/constants';
 import {confirmTransaction, getFeePayer} from '../../../../utils/apis';
 import {relayTransaction} from '../../../../utils/relayer';
 import SolaceLoader from '../../../common/solaceui/SolaceLoader';
-import {WalletStackParamList} from '../../../../navigation/Wallet';
+import {WalletStackParamList} from '../../../../navigation/Home/Home';
 
 type WalletScreenProps = NativeStackScreenProps<
   WalletStackParamList,
@@ -86,6 +86,7 @@ const AddToken = () => {
             });
           }}
           placeholder="address"
+          shiftIconUp="xxs"
           iconType="mci"
           value={address}
           onChangeText={setAddress}
