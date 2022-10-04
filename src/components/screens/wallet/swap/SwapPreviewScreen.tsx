@@ -1,11 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {View, Image, TouchableOpacity, TextInput} from 'react-native';
 import React, {useContext, useState} from 'react';
-import {showMessage} from 'react-native-flash-message';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Clipboard from '@react-native-community/clipboard';
-import {useNavigation} from '@react-navigation/native';
+import {showMessage} from 'react-native-flash-message';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import {
@@ -13,23 +13,43 @@ import {
   GlobalContext,
 } from '../../../../state/contexts/GlobalContext';
 import SolaceContainer from '../../../common/solaceui/SolaceContainer';
-import SolaceText from '../../../common/solaceui/SolaceText';
-import SolacePaper from '../../../common/solaceui/SolacePaper';
-import SolaceIcon from '../../../common/solaceui/SolaceIcon';
-import SolaceButton from '../../../common/solaceui/SolaceButton';
 import TopNavbar from '../../../common/TopNavbar';
+import SolaceText from '../../../common/solaceui/SolaceText';
 import globalStyles from '../../../../utils/global_styles';
+import SolaceButton from '../../../common/solaceui/SolaceButton';
 import {setAccountStatus} from '../../../../state/actions/global';
+import {SwapStackParamList} from '../../../../navigation/Wallet';
 import {minifyAddress} from '../../../../utils/helpers';
 import {Colors} from '../../../../utils/colors';
+import SolacePaper from '../../../common/solaceui/SolacePaper';
+import SolaceIcon from '../../../common/solaceui/SolaceIcon';
 import {Styles} from '../../../../utils/styles';
-import {SwapStackParamList} from '../../../../navigation/Home/Swap';
 
-type SwapScreenProps = NativeStackScreenProps<SwapStackParamList, 'SwapScreen'>;
+type SwapPreviewScreenProps = NativeStackScreenProps<
+  SwapStackParamList,
+  'SwapPreviewScreen'
+>;
 
-const SwapScreen = () => {
+const SwapPreviewScreen = () => {
   const {state, dispatch} = useContext(GlobalContext);
-  const navigation = useNavigation<SwapScreenProps['navigation']>();
+  const navigation = useNavigation<SwapPreviewScreenProps['navigation']>();
+  const route = useRoute<SwapPreviewScreenProps['route']>();
+  // const spltoken = route.params.token;
+
+  // const {
+  //   data: addressToken,
+  //   isLoading,
+  //   isFetching,
+  // } = useQuery(['tokenaccount'], () => getTokenAccount(state?.sdk!, spltoken), {
+  //   enabled: !!state?.sdk && !!spltoken,
+  // });
+
+  // const queryClient = useQueryClient();
+  // const refresh = async () => {
+  //   isLoading && (await queryClient.invalidateQueries(['tokenaccount']));
+  // };
+
+  // useRefreshOnFocus(refresh);
 
   const handleGoBack = () => {
     navigation.goBack();
@@ -69,7 +89,7 @@ const SwapScreen = () => {
         // startClick={handleGoBack}
       >
         <SolaceText size="lg" weight="semibold">
-          swap tokens
+          preview tokens
         </SolaceText>
       </TopNavbar>
       {address ? (
@@ -124,10 +144,10 @@ const SwapScreen = () => {
                 }}>
                 <SolaceIcon
                   size="sm"
-                  name="swap-vertical-bold"
-                  variant="mci"
-                  color="purple"
-                  background="lightpink"
+                  name="arrow-long-down"
+                  variant="entypo"
+                  color="lightpink"
+                  background="darkest"
                 />
               </View>
               <View style={[globalStyles.rowSpaceBetween, {marginTop: 12}]}>
@@ -158,12 +178,9 @@ const SwapScreen = () => {
               </View>
             </View>
           </View>
-          <SolaceButton
-            background="purple"
-            mb={12}
-            onPress={() => navigation.navigate('SwapPreviewScreen')}>
+          <SolaceButton background="purple" mb={12}>
             <SolaceText weight="bold" type="secondary">
-              preview swap
+              confirm swap
             </SolaceText>
           </SolaceButton>
         </View>
@@ -183,7 +200,7 @@ const SwapScreen = () => {
   );
 };
 
-export default SwapScreen;
+export default SwapPreviewScreen;
 
 const SwapCard = () => {
   const [amount, setAmount] = useState('');

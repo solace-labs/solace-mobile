@@ -25,11 +25,14 @@ import {Colors} from '../../../../utils/colors';
 import {Styles} from '../../../../utils/styles';
 import {SwapStackParamList} from '../../../../navigation/Home/Swap';
 
-type SwapScreenProps = NativeStackScreenProps<SwapStackParamList, 'SwapScreen'>;
+type TokenListScreenProps = NativeStackScreenProps<
+  SwapStackParamList,
+  'TokenListScreen'
+>;
 
-const SwapScreen = () => {
+const TokenListScreen = () => {
   const {state, dispatch} = useContext(GlobalContext);
-  const navigation = useNavigation<SwapScreenProps['navigation']>();
+  const navigation = useNavigation<TokenListScreenProps['navigation']>();
 
   const handleGoBack = () => {
     navigation.goBack();
@@ -183,7 +186,7 @@ const SwapScreen = () => {
   );
 };
 
-export default SwapScreen;
+export default TokenListScreen;
 
 const SwapCard = () => {
   const [amount, setAmount] = useState('');
