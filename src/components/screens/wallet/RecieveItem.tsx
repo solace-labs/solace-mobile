@@ -90,14 +90,23 @@ const RecieveItem = () => {
       <TopNavbar
         startIcon="ios-return-up-back"
         startIconType="ionicons"
-        text={`recieve ${headerTitle}`}
-        startClick={handleGoBack}
-      />
+        endIcon="infocirlceo"
+        // text={`recieve ${headerTitle}`}
+        startClick={handleGoBack}>
+        <View style={globalStyles.rowCenter}>
+          <SolaceText size="lg" weight="semibold">
+            recieve tokens
+          </SolaceText>
+          {/* <SolaceText weight="semibold" color="normal">
+            ({headerTitle})
+          </SolaceText> */}
+        </View>
+      </TopNavbar>
       {address ? (
         <View style={globalStyles.fullCenter}>
           <View style={[globalStyles.rowCenter, {flex: 0.5}]}>
             <View
-              style={{borderColor: 'white', borderWidth: 20, borderRadius: 20}}>
+              style={{borderColor: 'white', borderWidth: 16, borderRadius: 16}}>
               <QRCode
                 value={addressToken ? addressToken : 'no-address'}
                 size={180}
@@ -105,7 +114,7 @@ const RecieveItem = () => {
             </View>
           </View>
           <View style={[globalStyles.fullWidth, {flex: 0.5, paddingTop: 12}]}>
-            <SolaceText
+            {/* <SolaceText
               mt={10}
               mb={10}
               type="primary"
@@ -120,7 +129,7 @@ const RecieveItem = () => {
               handleIconPress={() => handleCopy(address)}
               value={addressToken}
               iconType="mci"
-            />
+            /> */}
             <SolaceText
               mt={20}
               mb={10}
@@ -130,6 +139,7 @@ const RecieveItem = () => {
               vault address
             </SolaceText>
             <SolaceCustomInput
+              style={{borderRadius: 8}}
               editable={false}
               placeholder="username or address"
               iconName="content-copy"
@@ -137,7 +147,13 @@ const RecieveItem = () => {
               value={address}
               iconType="mci"
             />
+            <SolaceText color="normal" mt={16} weight="light">
+              only use this address for SOL and SPL tokens
+            </SolaceText>
           </View>
+          <SolaceButton background="purple" mb={12}>
+            <SolaceText weight="semibold">share address</SolaceText>
+          </SolaceButton>
         </View>
       ) : (
         <View style={globalStyles.fullCenter}>

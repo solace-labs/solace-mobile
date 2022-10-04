@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, TextInputProps, TouchableOpacity, View} from 'react-native';
 import SolaceInput, {SolaceInputProps} from './SolaceInput';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -69,5 +69,6 @@ const styles = StyleSheet.create({
   },
   inputStyle: {
     paddingRight: 40,
+    backgroundColor: Colors.background.darkest,
   },
 });

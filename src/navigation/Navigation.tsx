@@ -9,6 +9,7 @@ import LoadingStack from './Loading';
 import RetrieveStack from './Retrieve';
 import RecoverStack from './Recover';
 import UpdateStack from './Update';
+import FlashMessage from 'react-native-flash-message';
 
 const Navigation = () => {
   const {state} = useContext(GlobalContext);

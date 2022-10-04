@@ -34,6 +34,10 @@ const globalStyles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 12,
   },
+  testBorder: {
+    borderWidth: 1,
+    borderColor: 'red',
+  },
 });
 
 export default globalStyles;

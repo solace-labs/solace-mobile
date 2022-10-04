@@ -16,6 +16,7 @@ import {relayTransaction} from '../../../utils/relayer';
 import {confirmTransaction, getFeePayer} from '../../../utils/apis';
 import SolaceLoader from '../../common/solaceui/SolaceLoader';
 import {WalletStackParamList} from '../../../navigation/Wallet';
+import Toast from 'react-native-toast-message';
 
 type WalletScreenProps = NativeStackScreenProps<
   WalletStackParamList,
@@ -118,10 +119,15 @@ const AddContactScreen = () => {
         /> */}
         <SolaceCustomInput
           handleIconPress={() => {
-            showMessage({
-              message: 'scan coming soon...',
-              type: 'info',
+            Toast.show({
+              type: 'success',
+              text1: 'Hello',
+              text2: 'This is some something 👋',
             });
+            // showMessage({
+            //   message: 'scan coming soon...',
+            //   type: 'info',
+            // });
           }}
           iconName="line-scan"
           placeholder="address"
@@ -138,7 +144,7 @@ const AddContactScreen = () => {
           <SolaceText type="secondary" weight="bold" color="normal">
             network
           </SolaceText>
-          <SolaceText type="secondary" weight="bold" color="solana-green">
+          <SolaceText type="secondary" weight="bold" color="green">
             solana testnet
           </SolaceText>
         </View>

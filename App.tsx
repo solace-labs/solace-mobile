@@ -4,6 +4,7 @@ import Navigation from './src/navigation/Navigation';
 import GlobalProvider from './src/state/contexts/GlobalContext';
 import codePush from 'react-native-code-push';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import Toast from 'react-native-toast-message';
 
 // type Data = keyof typeof codePush.SyncStatus;
 // function onAppStateChange(status: any) {
@@ -109,6 +110,7 @@ let App = () => {
       <GlobalProvider updating={updating}>
         <Navigation />
         <FlashMessage position="top" />
+        <Toast />
       </GlobalProvider>
     </QueryClientProvider>
   );

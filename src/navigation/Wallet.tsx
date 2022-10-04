@@ -19,6 +19,8 @@ import {RouteProp} from '@react-navigation/native';
 import {ArrowTrendingUpIcon} from 'react-native-heroicons/outline';
 import {Colors} from '../utils/colors';
 import ComingSoon from '../components/screens/loading/ComingSoon';
+import FlashMessage from 'react-native-flash-message';
+import SwapScreen from '../components/screens/wallet/SwapScreen';
 
 export type WalletStackParamList = {
   Wallet: undefined;
@@ -41,12 +43,17 @@ export type TabParamList = {
   Home: undefined;
   Swap: undefined;
   GuardianTab: undefined;
-  Charts: undefined;
+  Activity: undefined;
+};
+
+export type SwapStackParamList = {
+  SwapScreen: undefined;
 };
 
 const TabStack = createBottomTabNavigator<TabParamList>();
 const HomeStack = createNativeStackNavigator<WalletStackParamList>();
 const GuardianStack = createNativeStackNavigator<GuardianStackParamList>();
+const SwapStack = createNativeStackNavigator<SwapStackParamList>();
 
 const WalletStack = () => {
   const renderTabIcon = (
@@ -61,7 +68,7 @@ const WalletStack = () => {
         return focused ? (
           <FontAwesome5
             name="wallet"
-            size={size}
+            size={size - 2}
             color={Colors.text.lightgreen}
           />
         ) : (
@@ -83,10 +90,11 @@ const WalletStack = () => {
             color={focused ? Colors.text.lightblue : color}
           />
         );
-      case 'Charts':
+      case 'Activity':
         return (
-          <ArrowTrendingUpIcon
-            size={size}
+          <MCI
+            name="lightning-bolt"
+            size={size + 2}
             color={focused ? Colors.text.lightpink : color}
           />
         );
@@ -123,6 +131,7 @@ const WalletStack = () => {
           name="Incubation"
           component={Incubation}
         />
+        {/* <FlashMessage /> */}
       </HomeStack.Navigator>
     );
   };
@@ -137,6 +146,19 @@ const WalletStack = () => {
         <GuardianStack.Screen name="AddGuardian" component={AddGuardian} />
         <GuardianStack.Screen name="Guardian" component={Guardian} />
       </GuardianStack.Navigator>
+    );
+  };
+
+  const SwapScreenStack = () => {
+    return (
+      <SwapStack.Navigator
+        initialRouteName="SwapScreen"
+        screenOptions={{
+          headerShown: false,
+        }}>
+        <SwapStack.Screen name="SwapScreen" component={SwapScreen} />
+        {/* <SwapStack.Screen name="Guardian" component={Guardian} /> */}
+      </SwapStack.Navigator>
     );
   };
 
@@ -163,9 +185,11 @@ const WalletStack = () => {
         },
       })}>
       <TabStack.Screen name="Home" component={HomeScreenStack} />
-      <TabStack.Screen name="Swap" component={ComingSoon} />
+      <TabStack.Screen name="Swap" component={SwapScreen} />
       <TabStack.Screen name="GuardianTab" component={GuardianScreenStack} />
-      <TabStack.Screen name="Charts" component={ComingSoon} />
+      <TabStack.Screen name="Activity" component={ComingSoon} />
+
+      {/* <FlashMessage /> */}
     </TabStack.Navigator>
   );
 };

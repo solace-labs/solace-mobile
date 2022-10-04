@@ -9,6 +9,7 @@ import {
 import React, {useContext, useEffect, useState} from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Entypo from 'react-native-vector-icons/Entypo';
+import Toast from 'react-native-toast-message';
 
 import {
   AccountStatus,
@@ -26,7 +27,7 @@ import {PublicKey} from 'solace-sdk';
 import {confirmTransaction, getFeePayer} from '../../../utils/apis';
 import {relayTransaction} from '../../../utils/relayer';
 import {LAMPORTS_PER_SOL} from '../../../utils/constants';
-import {showMessage} from 'react-native-flash-message';
+import FlashMessage, {showMessage} from 'react-native-flash-message';
 import {setAccountStatus} from '../../../state/actions/global';
 import SolaceLoader from '../../common/solaceui/SolaceLoader';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -36,6 +37,7 @@ import {useRefreshOnFocus} from '../../../hooks/useRefreshOnFocus';
 import {getMaxBalance} from '../../../apis/sdk';
 import {minifyAddress} from '../../../utils/helpers';
 import {Colors} from '../../../utils/colors';
+import {SolaceToast} from '../../common/solaceui/SolaceToast';
 
 type SendScreenProps = NativeStackScreenProps<WalletStackParamList, 'Send'>;
 
@@ -163,6 +165,11 @@ const SendScreen = () => {
 
   const handleMax = () => {
     handleAmountChange(maxBalance!.toString(), 'max');
+    Toast.show({
+      type: 'success',
+      text1: 'max value',
+      text2: 'max value set',
+    });
   };
 
   return (
@@ -185,7 +192,11 @@ const SendScreen = () => {
       <View
         style={[
           globalStyles.fullCenter,
-          {flex: 0.33, justifyContent: 'space-evenly'},
+          {
+            flex: 0.33,
+            paddingHorizontal: 16,
+            justifyContent: 'space-evenly',
+          },
         ]}>
         <View style={globalStyles.rowSpaceBetween}>
           <SolaceText size="lg" weight="semibold">
@@ -270,6 +281,8 @@ const SendScreen = () => {
         }}>
         <SolaceKeypad handleKeyChange={handleAmountChange} />
       </View>
+      {/* <Toast topOffset={50} /> */}
+      <SolaceToast topOffset={50} />
     </SolaceContainer>
   );
 };
