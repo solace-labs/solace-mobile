@@ -3,7 +3,7 @@ import {View, Image, TouchableOpacity, TextInput} from 'react-native';
 import React, {useContext, useState} from 'react';
 import {showMessage} from 'react-native-flash-message';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import Entypo from 'react-native-vector-icons/Entypo';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Clipboard from '@react-native-community/clipboard';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -120,15 +120,29 @@ const SwapScreen = () => {
                   position: 'absolute',
                   left: '50%',
                   top: '50%',
-                  transform: [{translateX: -21}, {translateY: -21}],
+                  transform: [{translateX: -20}, {translateY: -20}],
                 }}>
-                <SolaceIcon
-                  size="sm"
-                  name="swap-vertical-bold"
-                  variant="mci"
-                  color="purple"
-                  background="lightpink"
-                />
+                <View style={{alignItems: 'center'}}>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: Colors.background.lightpink,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      borderRadius: 20,
+                      width: 40,
+                      height: 40,
+                    }}>
+                    <MaterialIcons
+                      name="swap-vert"
+                      style={{
+                        color: Colors.text.purple,
+                        fontSize: 24,
+                        padding: 2,
+                        overflow: 'hidden',
+                      }}
+                    />
+                  </TouchableOpacity>
+                </View>
               </View>
               {/* <View style={[globalStyles.rowSpaceBetween, {marginTop: 12}]}>
                 <View style={globalStyles.rowCenter}>

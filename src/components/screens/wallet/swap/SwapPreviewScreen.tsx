@@ -164,8 +164,8 @@ const SwapPreviewScreen = () => {
                   <Image
                     source={require('../../../../../assets/images/solace/jupiter.png')}
                     style={{
-                      width: 25,
-                      height: 25,
+                      width: 20,
+                      height: 20,
                       resizeMode: 'contain',
                       marginRight: 12,
                     }}

@@ -1,5 +1,10 @@
 import React, {FC, ReactNode} from 'react';
-import {ActivityIndicator, TouchableWithoutFeedback, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Platform,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import type {StyleProp, TouchableOpacityProps, ViewStyle} from 'react-native';
 import {Colors} from '../../../utils/colors';
 import Animated, {
@@ -49,11 +54,16 @@ const SolaceButton: FC<ButtonProps> = ({
   }
 
   const animatedStyles = useAnimatedStyle(() => {
+    if (Platform.OS === 'ios') {
+      return {
+        transform: [
+          {translateY: withTiming(offset.value, {duration: 50})},
+          {translateX: withTiming(offset.value, {duration: 50})},
+        ],
+      };
+    }
     return {
-      transform: [
-        {translateY: withTiming(offset.value, {duration: 50})},
-        {translateX: withTiming(offset.value, {duration: 50})},
-      ],
+      transform: [{translateY: withTiming(offset.value, {duration: 50})}],
     };
   });
 
@@ -133,8 +143,15 @@ const SolaceButton: FC<ButtonProps> = ({
             backgroundColor: '#E5C5FF',
             height: '100%',
             right: -1,
-            transform: [{skewY: '45deg'}, {translateX: 2}],
           },
+          Platform.OS === 'ios'
+            ? {
+                transform: [{skewY: '45deg'}, {translateX: 2}],
+              }
+            : {
+                height: 0,
+              },
+          // : {transform: [{translateY: 3}]},
           shadowStyles,
         ]}
       />
@@ -143,7 +160,7 @@ const SolaceButton: FC<ButtonProps> = ({
           {
             position: 'absolute',
             bottom: -3,
-            width: '100%',
+            width: Platform.OS === 'ios' ? '100%' : '99%',
             backgroundColor: '#C072FF',
             // height: 4,
             transform: [{skewX: '45deg'}, {translateX: 2}],
