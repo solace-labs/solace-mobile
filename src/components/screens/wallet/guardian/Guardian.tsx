@@ -111,7 +111,7 @@ const Guardian = () => {
           </SolaceText>
         </TouchableOpacity>
       </View>
-      <SolaceContainer style={{marginBottom: 12}}>
+      <SolaceContainer>
         <View style={{flex: 1}}>{renderTab()}</View>
         <SolaceButton
           onPress={() => navigation.navigate('AddGuardian')}

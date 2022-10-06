@@ -39,7 +39,6 @@ const HomeScreen = () => {
         </SolaceText>
       </SolaceButton>
       <SolaceButton
-        mt={16}
         background="light"
         onPress={async () => {
           const appState = await StorageGetItem('appstate');

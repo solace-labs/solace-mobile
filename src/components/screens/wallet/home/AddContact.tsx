@@ -154,9 +154,10 @@ const AddContactScreen = () => {
       <SolaceButton
         onPress={handleAdd}
         loading={loading.value}
-        mb={10}
+        // mb={10}
+        background="purple"
         disabled={!address}>
-        <SolaceText type="secondary" weight="bold" color="dark">
+        <SolaceText type="secondary" weight="bold" color="white">
           save contact
         </SolaceText>
       </SolaceButton>

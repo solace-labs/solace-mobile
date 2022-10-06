@@ -6,6 +6,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
+  withTiming,
 } from 'react-native-reanimated';
 import HapticFeedback from 'react-native-haptic-feedback';
 
@@ -39,21 +40,32 @@ const SolaceButton: FC<ButtonProps> = ({
   const offset = useSharedValue(0);
   const width = useSharedValue(3);
 
+  if (touchableProps.disabled) {
+    width.value = withTiming(0, {duration: 50});
+    offset.value = withTiming(2, {duration: 50});
+  } else {
+    width.value = withTiming(3, {duration: 50});
+    offset.value = withTiming(0, {duration: 50});
+  }
+
   const animatedStyles = useAnimatedStyle(() => {
     return {
-      transform: [{translateY: offset.value}, {translateX: offset.value}],
+      transform: [
+        {translateY: withTiming(offset.value, {duration: 50})},
+        {translateX: withTiming(offset.value, {duration: 50})},
+      ],
     };
   });
 
   const shadowStyles = useAnimatedStyle(() => {
     return {
-      width: width.value,
+      width: withTiming(width.value, {duration: 50}),
     };
   });
 
   const bottomShadowStyles = useAnimatedStyle(() => {
     return {
-      height: width.value,
+      height: withTiming(width.value, {duration: 50}),
     };
   });
 
@@ -91,12 +103,13 @@ const SolaceButton: FC<ButtonProps> = ({
       <TouchableWithoutFeedback
         onPressIn={() => {
           HapticFeedback.trigger('impactLight', hapticFeedbackOptions);
-          offset.value = withSpring(3);
-          width.value = withSpring(0);
+          offset.value = withTiming(3, {duration: 50});
+          width.value = withTiming(0, {duration: 50});
         }}
         onPressOut={() => {
-          offset.value = withSpring(0);
-          width.value = withSpring(3);
+          HapticFeedback.trigger('impactLight', hapticFeedbackOptions);
+          offset.value = withTiming(0, {duration: 50});
+          width.value = withTiming(3, {duration: 50});
         }}
         {...touchableProps}>
         <Animated.View

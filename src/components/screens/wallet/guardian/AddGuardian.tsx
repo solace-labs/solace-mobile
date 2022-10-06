@@ -130,7 +130,7 @@ const AddGuardian = () => {
         <Text style={styles.secondText}>network</Text>
         <Text style={styles.solanaText}>solana</Text>
       </View> */}
-      <View style={{paddingBottom: 12}}>
+      <View>
         <SolaceButton
           onPress={addGuardian}
           background="purple"

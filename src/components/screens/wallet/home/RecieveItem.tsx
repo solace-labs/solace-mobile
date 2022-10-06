@@ -152,7 +152,7 @@ const RecieveItem = () => {
               only use this address for SOL and SPL tokens
             </SolaceText>
           </View>
-          <SolaceButton background="purple" mb={12}>
+          <SolaceButton background="purple">
             <SolaceText weight="semibold">share address</SolaceText>
           </SolaceButton>
         </View>
