@@ -159,7 +159,7 @@ const SwapScreen = () => {
           </View>
           <SolaceButton
             background="purple"
-            mb={12}
+            // mb={12}
             onPress={() => navigation.navigate('SwapPreviewScreen')}>
             <SolaceText weight="bold" type="secondary">
               preview swap

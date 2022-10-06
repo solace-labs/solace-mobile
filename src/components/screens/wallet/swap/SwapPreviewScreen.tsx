@@ -245,7 +245,7 @@ const SwapPreviewScreen = () => {
               </SolacePaper>
             </View>
           </View>
-          <SolaceButton background="purple" mb={12}>
+          <SolaceButton background="purple">
             <SolaceText weight="bold" type="secondary">
               confirm swap
             </SolaceText>
