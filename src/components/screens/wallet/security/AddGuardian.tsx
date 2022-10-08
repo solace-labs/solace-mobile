@@ -17,10 +17,10 @@ import SolaceCustomInput from '../../../common/solaceui/SolaceCustomInput';
 import {StorageGetItem} from '../../../../utils/storage';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
-import {GuardianStackParamList} from '../../../../navigation/Home/Guardian';
+import {SecurityStackParamList} from '../../../../navigation/Home/Security';
 
 type AddGuardianScreenProps = NativeStackScreenProps<
-  GuardianStackParamList,
+  SecurityStackParamList,
   'AddGuardian'
 >;
 

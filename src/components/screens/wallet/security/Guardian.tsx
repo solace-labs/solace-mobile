@@ -15,10 +15,10 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
 import {getGuardians} from '../../../../apis/sdk';
 import TopNavbar from '../../../common/TopNavbar';
-import {GuardianStackParamList} from '../../../../navigation/Home/Guardian';
+import {SecurityStackParamList} from '../../../../navigation/Home/Security';
 
 type GuardianScreenProps = NativeStackScreenProps<
-  GuardianStackParamList,
+  SecurityStackParamList,
   'Guardian'
 >;
 
@@ -68,11 +68,11 @@ const Guardian = () => {
   return (
     <SolaceContainer fullWidth={true}>
       <TopNavbar
-        // startIcon="ios-return-up-back"
-        // startIconType="ionicons"
+        startIcon="ios-return-up-back"
+        startIconType="ionicons"
         endIcon="infocirlceo"
-        text="guardians"
-        // startClick={handleGoBack}
+        text="manage guardians"
+        startClick={handleGoBack}
         endClick={() => {}}
       />
       <View style={styles.tabs}>

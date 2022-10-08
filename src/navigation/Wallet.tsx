@@ -1,6 +1,7 @@
 import React from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MCI from 'react-native-vector-icons/MaterialCommunityIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {RouteProp} from '@react-navigation/native';
@@ -9,12 +10,12 @@ import {Colors} from '../utils/colors';
 import ComingSoon from '../components/screens/loading/ComingSoon';
 import HomeScreenStack from './Home/Home';
 import SwapScreenStack from './Home/Swap';
-import GuardianScreenStack from './Home/Guardian';
+import SecurityScreenStack from './Home/Security';
 
 export type TabParamList = {
   Home: undefined;
   Swap: undefined;
-  GuardianTab: undefined;
+  Security: undefined;
   Activity: undefined;
 };
 
@@ -47,10 +48,10 @@ const WalletStack = () => {
             color={focused ? Colors.text.lightorange : color}
           />
         );
-      case 'GuardianTab':
+      case 'Security':
         return (
-          <MCI
-            name="shield"
+          <Ionicons
+            name="md-shield-outline"
             size={size}
             color={focused ? Colors.text.lightblue : color}
           />
@@ -58,8 +59,8 @@ const WalletStack = () => {
       case 'Activity':
         return (
           <MCI
-            name="lightning-bolt"
-            size={size + 2}
+            name="lightning-bolt-outline"
+            size={size + 6}
             color={focused ? Colors.text.lightpink : color}
           />
         );
@@ -92,7 +93,7 @@ const WalletStack = () => {
       })}>
       <TabStack.Screen name="Home" component={HomeScreenStack} />
       <TabStack.Screen name="Swap" component={SwapScreenStack} />
-      <TabStack.Screen name="GuardianTab" component={GuardianScreenStack} />
+      <TabStack.Screen name="Security" component={SecurityScreenStack} />
       <TabStack.Screen name="Activity" component={ComingSoon} />
     </TabStack.Navigator>
   );
