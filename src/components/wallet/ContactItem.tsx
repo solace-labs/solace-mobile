@@ -3,9 +3,10 @@ import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import SolaceText from '../common/solaceui/SolaceText';
 import globalStyles from '../../utils/global_styles';
-import {PublicKeyType} from '../screens/wallet/Guardian';
-import {WalletStackParamList} from '../../navigation/Wallet';
+import {PublicKeyType} from '../screens/wallet/security/Guardian';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {minifyAddress} from '../../utils/helpers';
+import {WalletStackParamList} from '../../navigation/Home/Home';
 
 export type Contact = {
   id: string;
@@ -27,15 +28,14 @@ type WalletScreenProps = NativeStackScreenProps<
 const ContactItem: React.FC<Props> = ({contact, asset}) => {
   const navigation = useNavigation<WalletScreenProps['navigation']>();
   const imageText = contact.toString()[0];
-  const address =
-    contact.toString().slice(0, 5) + '...' + contact.toString().slice(-5);
+  const address = minifyAddress(contact, 5);
 
   return (
     <View style={{marginVertical: 10}}>
       <TouchableOpacity
         style={globalStyles.rowCenter}
         onPress={() =>
-          navigation.navigate('Asset', {
+          navigation.navigate('Send', {
             asset: asset.toString(),
             contact: contact.toString(),
           })

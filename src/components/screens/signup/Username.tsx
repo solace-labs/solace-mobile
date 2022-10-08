@@ -109,7 +109,7 @@ const UsernameScreen = ({navigation}: {navigation: any}) => {
       <View style={containerStyle}>
         <AntDesign name={name} style={iconStyle} />
         <SolaceText
-          variant="light"
+          color="light"
           weight="semibold"
           size="sm"
           style={{paddingLeft: 8}}>
@@ -144,7 +144,7 @@ const UsernameScreen = ({navigation}: {navigation: any}) => {
             ? handleUsernameSubmit()
             : checkUsernameAvailability();
         }}>
-        <SolaceText type="secondary" weight="bold" variant="dark">
+        <SolaceText type="secondary" weight="bold" color="dark">
           {usernameAvailable ? 'next' : 'check'}
         </SolaceText>
       </SolaceButton>

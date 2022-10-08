@@ -9,10 +9,10 @@ type Props = {
 const Header: FC<Props> = ({heading, subHeading}) => {
   return (
     <>
-      <SolaceText weight="semibold" variant="white" size="xl" align="left">
+      <SolaceText weight="semibold" color="white" size="xl" align="left">
         {heading}
       </SolaceText>
-      <SolaceText type="secondary" weight="bold" align="left" variant="normal">
+      <SolaceText type="secondary" weight="bold" align="left" color="normal">
         {subHeading}
       </SolaceText>
     </>

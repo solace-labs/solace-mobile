@@ -27,12 +27,16 @@ const globalStyles = StyleSheet.create({
   avatar: {
     height: 40,
     width: 40,
-    backgroundColor: Colors.background.light,
+    backgroundColor: Colors.background.lightorange,
     borderRadius: 20,
     overflow: 'hidden',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
+  },
+  testBorder: {
+    borderWidth: 1,
+    borderColor: 'red',
   },
 });
 

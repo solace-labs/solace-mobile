@@ -5,17 +5,18 @@ import {PublicKey, SolaceSDK} from 'solace-sdk';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
 
-import {GlobalContext} from '../../../state/contexts/GlobalContext';
+import {GlobalContext} from '../../../../state/contexts/GlobalContext';
 import {showMessage} from 'react-native-flash-message';
-import SolaceContainer from '../../common/solaceui/SolaceContainer';
-import SolaceButton from '../../common/solaceui/SolaceButton';
-import SolaceText from '../../common/solaceui/SolaceText';
-import TopNavbar from '../../common/TopNavbar';
-import SolaceCustomInput from '../../common/solaceui/SolaceCustomInput';
-import {relayTransaction} from '../../../utils/relayer';
-import {confirmTransaction, getFeePayer} from '../../../utils/apis';
-import SolaceLoader from '../../common/solaceui/SolaceLoader';
-import {WalletStackParamList} from '../../../navigation/Wallet';
+import SolaceContainer from '../../../common/solaceui/SolaceContainer';
+import SolaceButton from '../../../common/solaceui/SolaceButton';
+import SolaceText from '../../../common/solaceui/SolaceText';
+import TopNavbar from '../../../common/TopNavbar';
+import SolaceCustomInput from '../../../common/solaceui/SolaceCustomInput';
+import {relayTransaction} from '../../../../utils/relayer';
+import {confirmTransaction, getFeePayer} from '../../../../utils/apis';
+import SolaceLoader from '../../../common/solaceui/SolaceLoader';
+import Toast from 'react-native-toast-message';
+import {WalletStackParamList} from '../../../../navigation/Home/Home';
 
 type WalletScreenProps = NativeStackScreenProps<
   WalletStackParamList,
@@ -118,11 +119,17 @@ const AddContactScreen = () => {
         /> */}
         <SolaceCustomInput
           handleIconPress={() => {
-            showMessage({
-              message: 'scan coming soon...',
-              type: 'info',
+            Toast.show({
+              type: 'success',
+              text1: 'scan coming soon...',
+              // text2: 'gre',
             });
+            // showMessage({
+            //   message: 'scan coming soon...',
+            //   type: 'info',
+            // });
           }}
+          shiftIconUp="xs"
           iconName="line-scan"
           placeholder="address"
           iconType="mci"
@@ -135,10 +142,10 @@ const AddContactScreen = () => {
             justifyContent: 'space-between',
             marginTop: 20,
           }}>
-          <SolaceText type="secondary" weight="bold" variant="normal">
+          <SolaceText type="secondary" weight="bold" color="normal">
             network
           </SolaceText>
-          <SolaceText type="secondary" weight="bold" variant="solana-green">
+          <SolaceText type="secondary" weight="bold" color="green">
             solana testnet
           </SolaceText>
         </View>
@@ -147,9 +154,10 @@ const AddContactScreen = () => {
       <SolaceButton
         onPress={handleAdd}
         loading={loading.value}
-        mb={10}
+        // mb={10}
+        background="purple"
         disabled={!address}>
-        <SolaceText type="secondary" weight="bold" variant="dark">
+        <SolaceText type="secondary" weight="bold" color="white">
           save contact
         </SolaceText>
       </SolaceButton>

@@ -140,7 +140,7 @@ const Login = () => {
         <TouchableOpacity onPress={reset}>
           <SolaceText
             type="secondary"
-            variant="normal"
+            color="normal"
             weight="bold"
             mt={10}
             align="right">
@@ -154,8 +154,9 @@ const Login = () => {
           handleSignIn();
         }}
         loading={isLoading}
+        background="purple"
         disabled={isDisable()}>
-        <SolaceText type="secondary" weight="bold" variant="dark">
+        <SolaceText type="secondary" weight="bold" color="white">
           sign in
         </SolaceText>
       </SolaceButton>

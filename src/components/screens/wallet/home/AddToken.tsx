@@ -5,17 +5,17 @@ import {PublicKey} from 'solace-sdk';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-import {GlobalContext} from '../../../state/contexts/GlobalContext';
-import SolaceContainer from '../../common/solaceui/SolaceContainer';
-import SolaceButton from '../../common/solaceui/SolaceButton';
-import SolaceText from '../../common/solaceui/SolaceText';
-import TopNavbar from '../../common/TopNavbar';
-import SolaceCustomInput from '../../common/solaceui/SolaceCustomInput';
-import {SPL_TOKEN} from '../../../utils/constants';
-import {confirmTransaction, getFeePayer} from '../../../utils/apis';
-import {relayTransaction} from '../../../utils/relayer';
-import SolaceLoader from '../../common/solaceui/SolaceLoader';
-import {WalletStackParamList} from '../../../navigation/Wallet';
+import {GlobalContext} from '../../../../state/contexts/GlobalContext';
+import SolaceContainer from '../../../common/solaceui/SolaceContainer';
+import SolaceButton from '../../../common/solaceui/SolaceButton';
+import SolaceText from '../../../common/solaceui/SolaceText';
+import TopNavbar from '../../../common/TopNavbar';
+import SolaceCustomInput from '../../../common/solaceui/SolaceCustomInput';
+import {SPL_TOKEN} from '../../../../utils/constants';
+import {confirmTransaction, getFeePayer} from '../../../../utils/apis';
+import {relayTransaction} from '../../../../utils/relayer';
+import SolaceLoader from '../../../common/solaceui/SolaceLoader';
+import {WalletStackParamList} from '../../../../navigation/Home/Home';
 
 type WalletScreenProps = NativeStackScreenProps<
   WalletStackParamList,
@@ -86,6 +86,7 @@ const AddToken = () => {
             });
           }}
           placeholder="address"
+          shiftIconUp="xxs"
           iconType="mci"
           value={address}
           onChangeText={setAddress}
@@ -96,10 +97,10 @@ const AddToken = () => {
             justifyContent: 'space-between',
             marginTop: 20,
           }}>
-          <SolaceText type="secondary" weight="bold" variant="normal">
+          <SolaceText type="secondary" weight="bold" color="normal">
             network
           </SolaceText>
-          <SolaceText type="secondary" weight="bold" variant="solana-green">
+          <SolaceText type="secondary" weight="bold" color="green">
             solana testnet
           </SolaceText>
         </View>
@@ -109,7 +110,7 @@ const AddToken = () => {
         onPress={addToken}
         loading={loading.value}
         disabled={!address}>
-        <SolaceText type="secondary" weight="bold" variant="dark">
+        <SolaceText type="secondary" weight="bold" color="dark">
           add token
         </SolaceText>
       </SolaceButton>

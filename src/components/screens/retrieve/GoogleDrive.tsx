@@ -137,8 +137,9 @@ const GoogleDriveScreen = () => {
             : retrieveFromGoogleDrive();
         }}
         loading={loading.value}
+        background="purple"
         disabled={loading.value}>
-        <SolaceText type="secondary" weight="bold" variant="dark">
+        <SolaceText type="secondary" weight="bold" color="white">
           {loading.message}
         </SolaceText>
       </SolaceButton>

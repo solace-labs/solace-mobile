@@ -1,23 +1,26 @@
 import {View} from 'react-native';
 import React, {useContext, useState} from 'react';
-import {AppState, GlobalContext} from '../../../state/contexts/GlobalContext';
+import {
+  AppState,
+  GlobalContext,
+} from '../../../../state/contexts/GlobalContext';
 import {PublicKey} from 'solace-sdk';
-import {relayTransaction, requestGuardian} from '../../../utils/relayer';
+import {relayTransaction, requestGuardian} from '../../../../utils/relayer';
 import {showMessage} from 'react-native-flash-message';
-import {confirmTransaction, getFeePayer} from '../../../utils/apis';
-import SolaceContainer from '../../common/solaceui/SolaceContainer';
-import SolaceButton from '../../common/solaceui/SolaceButton';
-import SolaceText from '../../common/solaceui/SolaceText';
-import SolaceLoader from '../../common/solaceui/SolaceLoader';
-import TopNavbar from '../../common/TopNavbar';
-import SolaceCustomInput from '../../common/solaceui/SolaceCustomInput';
-import {StorageGetItem} from '../../../utils/storage';
+import {confirmTransaction, getFeePayer} from '../../../../utils/apis';
+import SolaceContainer from '../../../common/solaceui/SolaceContainer';
+import SolaceButton from '../../../common/solaceui/SolaceButton';
+import SolaceText from '../../../common/solaceui/SolaceText';
+import SolaceLoader from '../../../common/solaceui/SolaceLoader';
+import TopNavbar from '../../../common/TopNavbar';
+import SolaceCustomInput from '../../../common/solaceui/SolaceCustomInput';
+import {StorageGetItem} from '../../../../utils/storage';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {WalletStackParamList} from '../../../navigation/Wallet';
 import {useNavigation} from '@react-navigation/native';
+import {SecurityStackParamList} from '../../../../navigation/Home/Security';
 
-type WalletScreenProps = NativeStackScreenProps<
-  WalletStackParamList,
+type AddGuardianScreenProps = NativeStackScreenProps<
+  SecurityStackParamList,
   'AddGuardian'
 >;
 
@@ -27,7 +30,7 @@ const AddGuardian = () => {
     '',
   );
   const {state} = useContext(GlobalContext);
-  const navigation = useNavigation<WalletScreenProps['navigation']>();
+  const navigation = useNavigation<AddGuardianScreenProps['navigation']>();
   const [loading, setLoading] = useState({
     value: false,
     message: 'add guardian',
@@ -108,6 +111,7 @@ const AddGuardian = () => {
               type: 'info',
             });
           }}
+          shiftIconUp="xxs"
           value={address}
           placeholder="wallet address of guardian"
           onChangeText={setAddress}
@@ -126,14 +130,17 @@ const AddGuardian = () => {
         <Text style={styles.secondText}>network</Text>
         <Text style={styles.solanaText}>solana</Text>
       </View> */}
-      <SolaceButton
-        onPress={addGuardian}
-        loading={loading.value}
-        disabled={!address || loading.value}>
-        <SolaceText type="secondary" weight="bold" variant="dark">
-          {loading.message}
-        </SolaceText>
-      </SolaceButton>
+      <View>
+        <SolaceButton
+          onPress={addGuardian}
+          background="purple"
+          loading={loading.value}
+          disabled={!address || loading.value}>
+          <SolaceText type="secondary" weight="bold" color="white">
+            {loading.message}
+          </SolaceText>
+        </SolaceButton>
+      </View>
     </SolaceContainer>
   );
 };

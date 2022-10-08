@@ -9,21 +9,21 @@ import {
 } from 'react-native';
 import React, {useContext} from 'react';
 
-import {GlobalContext} from '../../../state/contexts/GlobalContext';
-import SolaceContainer from '../../common/solaceui/SolaceContainer';
-import TopNavbar from '../../common/TopNavbar';
-import SolaceText from '../../common/solaceui/SolaceText';
-import globalStyles from '../../../utils/global_styles';
-import ContactItem from '../../wallet/ContactItem';
-import SolaceIcon from '../../common/solaceui/SolaceIcon';
-import SolaceLoader from '../../common/solaceui/SolaceLoader';
-import {Colors} from '../../../utils/colors';
+import {GlobalContext} from '../../../../state/contexts/GlobalContext';
+import SolaceContainer from '../../../common/solaceui/SolaceContainer';
+import TopNavbar from '../../../common/TopNavbar';
+import SolaceText from '../../../common/solaceui/SolaceText';
+import globalStyles from '../../../../utils/global_styles';
+import ContactItem from '../../../wallet/ContactItem';
+import SolaceIcon from '../../../common/solaceui/SolaceIcon';
+import SolaceLoader from '../../../common/solaceui/SolaceLoader';
+import {Colors} from '../../../../utils/colors';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {useQuery, useQueryClient} from '@tanstack/react-query';
-import {useRefreshOnFocus} from '../../../hooks/useRefreshOnFocus';
-import {getContacts} from '../../../apis/sdk';
-import {WalletStackParamList} from '../../../navigation/Wallet';
+import {useRefreshOnFocus} from '../../../../hooks/useRefreshOnFocus';
+import {getContacts} from '../../../../apis/sdk';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {WalletStackParamList} from '../../../../navigation/Home/Home';
 
 type WalletScreenProps = NativeStackScreenProps<
   WalletStackParamList,
@@ -60,7 +60,7 @@ const ContactScreen = () => {
   };
 
   const sendToUntrusted = () => {
-    navigation.navigate('Asset', {asset: asset.toString(), contact: ''});
+    navigation.navigate('Send', {asset: asset.toString(), contact: ''});
   };
 
   if (isLoading) {
@@ -109,13 +109,13 @@ const ContactScreen = () => {
               <SolaceText size="sm" weight="extralight">
                 pull to refresh
               </SolaceText>
-              <SolaceIcon type="dark" name="down" />
+              <SolaceIcon background="dark" name="down" />
             </View>
             <TouchableOpacity onPress={sendToUntrusted}>
               <SolaceText
                 size="sm"
                 type="secondary"
-                variant="normal"
+                color="normal"
                 weight="bold"
                 mb={8}
                 style={{
@@ -135,7 +135,7 @@ const ContactScreen = () => {
         ) : (
           <View style={{flex: 1, width: '100%'}}>
             <Image
-              source={require('../../../../assets/images/solace/send-money.png')}
+              source={require('../../../../../assets/images/solace/send-money.png')}
               style={globalStyles.image}
             />
             <SolaceText type="secondary" size="sm">
@@ -143,7 +143,7 @@ const ContactScreen = () => {
                 onPress={handleAdd}
                 type="secondary"
                 size="sm"
-                variant="white"
+                color="white"
                 style={{textDecorationLine: 'underline'}}
                 weight="bold">
                 add a contact
@@ -154,7 +154,7 @@ const ContactScreen = () => {
               <SolaceText
                 size="sm"
                 type="secondary"
-                variant="normal"
+                color="normal"
                 weight="bold"
                 mb={8}
                 style={{

@@ -683,7 +683,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.onpar.in.solace;
+				PRODUCT_BUNDLE_IDENTIFIER = org.onpar.in.solacewallet;
 				PRODUCT_NAME = solace;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -710,7 +710,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.onpar.in.solace;
+				PRODUCT_BUNDLE_IDENTIFIER = org.onpar.in.solacewallet;
 				PRODUCT_NAME = solace;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";

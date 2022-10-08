@@ -34,7 +34,7 @@ const ConfirmPasscodeScreen: React.FC<Props> = ({navigation}) => {
   return (
     <SolaceContainer>
       <View style={{flex: 1}}>
-        <SolaceText variant="white" size="lg" weight="semibold" align="center">
+        <SolaceText color="white" size="lg" weight="semibold" align="center">
           re-enter the same passcode
         </SolaceText>
         <PasscodeContainer code={code} setCode={setCode} />
@@ -44,7 +44,7 @@ const ConfirmPasscodeScreen: React.FC<Props> = ({navigation}) => {
         onPress={() => {
           confirmPin();
         }}>
-        <SolaceText type="secondary" weight="bold" variant="dark">
+        <SolaceText type="secondary" weight="bold" color="dark">
           next
         </SolaceText>
       </SolaceButton>

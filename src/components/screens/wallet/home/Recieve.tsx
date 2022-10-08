@@ -8,22 +8,22 @@ import {
 } from 'react-native';
 import React, {useContext} from 'react';
 
-import {GlobalContext} from '../../../state/contexts/GlobalContext';
-import SolaceContainer from '../../common/solaceui/SolaceContainer';
-import TopNavbar from '../../common/TopNavbar';
-import SolaceText from '../../common/solaceui/SolaceText';
-import globalStyles from '../../../utils/global_styles';
+import {GlobalContext} from '../../../../state/contexts/GlobalContext';
+import SolaceContainer from '../../../common/solaceui/SolaceContainer';
+import TopNavbar from '../../../common/TopNavbar';
+import SolaceText from '../../../common/solaceui/SolaceText';
+import globalStyles from '../../../../utils/global_styles';
 import Clipboard from '@react-native-community/clipboard';
 import {showMessage} from 'react-native-flash-message';
-import AccountItem from '../../wallet/AccountItem';
-import SolaceLoader from '../../common/solaceui/SolaceLoader';
-import SolaceIcon from '../../common/solaceui/SolaceIcon';
+import AccountItem from '../../../wallet/AccountItem';
+import SolaceLoader from '../../../common/solaceui/SolaceLoader';
+import SolaceIcon from '../../../common/solaceui/SolaceIcon';
 import {useQuery, useQueryClient} from '@tanstack/react-query';
-import {useRefreshOnFocus} from '../../../hooks/useRefreshOnFocus';
-import {getAccounts} from '../../../apis/sdk';
+import {useRefreshOnFocus} from '../../../../hooks/useRefreshOnFocus';
+import {getAccounts} from '../../../../apis/sdk';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {WalletStackParamList} from '../../../navigation/Wallet';
 import {useNavigation} from '@react-navigation/native';
+import {WalletStackParamList} from '../../../../navigation/Home/Home';
 
 type WalletScreenProps = NativeStackScreenProps<
   WalletStackParamList,
@@ -116,7 +116,7 @@ const RecieveScreen = () => {
                 <SolaceText size="sm" weight="extralight">
                   pull to refresh
                 </SolaceText>
-                <SolaceIcon type="dark" name="down" />
+                <SolaceIcon background="dark" name="down" />
               </View>
               {accounts.map((account, index) => {
                 return (
@@ -128,7 +128,7 @@ const RecieveScreen = () => {
         ) : (
           <View style={[globalStyles.fullCenter, globalStyles.fullWidth]}>
             <Image
-              source={require('../../../../assets/images/solace/send-money.png')}
+              source={require('../../../../../assets/images/solace/send-money.png')}
               style={{
                 width: '100%',
                 height: 240,
@@ -140,7 +140,7 @@ const RecieveScreen = () => {
                 onPress={handleAdd}
                 type="secondary"
                 size="sm"
-                variant="white"
+                color="white"
                 style={{textDecorationLine: 'underline'}}
                 weight="bold">
                 add a token

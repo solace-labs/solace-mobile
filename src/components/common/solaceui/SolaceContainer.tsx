@@ -14,12 +14,14 @@ import {Colors} from '../../../utils/colors';
 export interface Props extends ViewProps {
   style?: StyleProp<ViewStyle>;
   children?: ReactNode;
+  fullWidth?: boolean;
   mt?: number;
   mb?: number;
 }
 
 const SolaceContainer: FC<Props> = ({
   style,
+  fullWidth = false,
   mt = 0,
   mb = 0,
   children,
@@ -31,7 +33,7 @@ const SolaceContainer: FC<Props> = ({
   };
 
   const defaultStyle: StyleProp<ViewStyle> = {
-    backgroundColor: Colors.background.dark,
+    backgroundColor: Colors.background.darkest,
     flex: 1,
     alignItems: 'center',
   };
@@ -39,7 +41,7 @@ const SolaceContainer: FC<Props> = ({
   const container: StyleProp<ViewStyle> = {
     flex: 1,
     width: '100%',
-    paddingHorizontal: 16,
+    paddingHorizontal: fullWidth ? 0 : 16,
   };
 
   return (

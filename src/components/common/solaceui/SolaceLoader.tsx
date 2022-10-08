@@ -15,7 +15,7 @@ const SolaceLoader: FC<Props> = ({text, children, style, ...textProps}) => {
         {flex: 1, justifyContent: 'center', alignItems: 'center'},
         style || {},
       ]}>
-      <SolaceText variant="normal" type="secondary" {...textProps}>
+      <SolaceText color="light" type="secondary" {...textProps}>
         {text}
       </SolaceText>
       {children}

@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {FC, ReactNode} from 'react';
 import {ActivityIndicator, View} from 'react-native';
 import {Colors} from '../../utils/colors';
 import globalStyles from '../../utils/global_styles';
@@ -11,9 +11,10 @@ type Props = {
   text?: string;
   endIcon?: string;
   endIconType?: IconType;
-  startClick: () => void;
+  startClick?: () => void;
   endClick?: () => void;
   fetching?: boolean;
+  children?: ReactNode;
 };
 
 const TopNavbar: FC<Props> = ({
@@ -24,30 +25,40 @@ const TopNavbar: FC<Props> = ({
   endIcon,
   endIconType,
   endClick,
+  children,
   fetching = false,
 }) => {
   return (
     <View
       style={[
         globalStyles.rowSpaceBetween,
-        {backgroundColor: Colors.background.dark, zIndex: 50},
+        {backgroundColor: Colors.background.darkest, zIndex: 50},
       ]}>
-      <View style={globalStyles.rowCenter}>
-        <SolaceIcon
-          name={startIcon || 'questioncircleo'}
-          type="dark"
-          variant={startIconType || 'antdesign'}
-          onPress={startClick}
-        />
-        <SolaceText size="lg" weight="semibold" style={{marginHorizontal: 8}}>
-          {text}
-        </SolaceText>
-        {fetching && <ActivityIndicator size="small" />}
+      <View style={[globalStyles.rowCenter, {paddingLeft: startIcon ? 0 : 20}]}>
+        {startIcon && (
+          <SolaceIcon
+            name={startIcon || 'questioncircleo'}
+            background="darkest"
+            color="white"
+            variant={startIconType || 'antdesign'}
+            onPress={startClick}
+          />
+        )}
+        {text ? (
+          <SolaceText size="lg" weight="semibold" style={{marginHorizontal: 8}}>
+            {text}
+          </SolaceText>
+        ) : (
+          children
+        )}
+
+        {/* {fetching && <ActivityIndicator size="small" />} */}
       </View>
       {endIcon && (
         <SolaceIcon
           name={endIcon ?? 'questioncircleo'}
-          type="dark"
+          background="darkest"
+          color="white"
           onPress={endClick}
           variant={endIconType || 'antdesign'}
         />

@@ -27,18 +27,19 @@ const HomeScreen = () => {
         <Image
           source={require('../../../../assets/images/solace/solace-icon.png')}
         />
-        <SolaceText mt={16} variant="white" size="xl" weight="semibold">
+        <SolaceText mt={16} color="white" size="xl" weight="semibold">
           solace
         </SolaceText>
       </View>
-      <SolaceButton onPress={() => navigation.navigate('Email')}>
-        <SolaceText type="secondary" variant="dark" weight="bold">
+      <SolaceButton
+        background="purple"
+        onPress={() => navigation.navigate('Email')}>
+        <SolaceText type="secondary" color="white" weight="bold">
           create new vault
         </SolaceText>
       </SolaceButton>
       <SolaceButton
-        mt={16}
-        variant="dark"
+        background="light"
         onPress={async () => {
           const appState = await StorageGetItem('appstate');
           if (appState === AppState.TESTING) {
@@ -47,7 +48,7 @@ const HomeScreen = () => {
             dispatch(setAccountStatus(AccountStatus.RETRIEVE));
           }
         }}>
-        <SolaceText type="secondary" weight="bold">
+        <SolaceText type="secondary" weight="bold" color="dark">
           retrieve your vault
         </SolaceText>
       </SolaceButton>

@@ -15,7 +15,7 @@ const FingerprintScreen: React.FC<Props> = ({navigation}) => {
         <Image
           source={require('../../../../assets/images/solace/solace-icon.png')}
         />
-        <SolaceText mt={16} variant="white" size="xl" weight="semibold">
+        <SolaceText mt={16} color="white" size="xl" weight="semibold">
           solace
         </SolaceText>
       </View>
@@ -33,7 +33,7 @@ const FingerprintScreen: React.FC<Props> = ({navigation}) => {
             size="md"
             type="secondary"
             weight="bold"
-            variant="normal">
+            color="normal">
             use passcode
           </SolaceText>
         </TouchableOpacity>

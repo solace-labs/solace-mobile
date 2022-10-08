@@ -12,23 +12,28 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useQuery, useQueryClient} from '@tanstack/react-query';
 import {useNavigation} from '@react-navigation/native';
 import {showMessage} from 'react-native-flash-message';
+import MCI from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {
   AccountStatus,
   AppState,
   GlobalContext,
-} from '../../../state/contexts/GlobalContext';
-import {clearData, setAccountStatus} from '../../../state/actions/global';
-import {StorageClearAll, StorageGetItem} from '../../../utils/storage';
-import SolaceContainer from '../../common/solaceui/SolaceContainer';
-import SolaceIcon from '../../common/solaceui/SolaceIcon';
-import SolaceText from '../../common/solaceui/SolaceText';
-import WalletActivity from '../../wallet/WalletActivity';
-import globalStyles from '../../../utils/global_styles';
-import SolaceStatus from '../../common/solaceui/SolaceStatus';
-import {useRefreshOnFocus} from '../../../hooks/useRefreshOnFocus';
-import {getIncubationData} from '../../../apis/sdk';
-import {WalletStackParamList} from '../../../navigation/Wallet';
+} from '../../../../state/contexts/GlobalContext';
+import {clearData, setAccountStatus} from '../../../../state/actions/global';
+import {StorageClearAll, StorageGetItem} from '../../../../utils/storage';
+import SolaceContainer from '../../../common/solaceui/SolaceContainer';
+import SolaceIcon from '../../../common/solaceui/SolaceIcon';
+import SolaceText from '../../../common/solaceui/SolaceText';
+import WalletActivity from '../../../wallet/WalletActivity';
+import globalStyles from '../../../../utils/global_styles';
+import SolaceStatus from '../../../common/solaceui/SolaceStatus';
+import {useRefreshOnFocus} from '../../../../hooks/useRefreshOnFocus';
+import {getIncubationData} from '../../../../apis/sdk';
+import {Colors} from '../../../../utils/colors';
+import SolacePaper from '../../../common/solaceui/SolacePaper';
+import WalletHoldings from '../../../wallet/WalletHoldings';
+import {minifyAddress} from '../../../../utils/helpers';
+import {WalletStackParamList} from '../../../../navigation/Home/Home';
 
 type WalletScreenProps = NativeStackScreenProps<WalletStackParamList, 'Wallet'>;
 
@@ -70,7 +75,7 @@ const WalletHomeScreen = () => {
   useRefreshOnFocus(refetch);
 
   const handleSend = () => {
-    navigation.navigate('Send');
+    navigation.navigate('Assets');
   };
 
   const handleRecieve = () => {
@@ -109,7 +114,7 @@ const WalletHomeScreen = () => {
   };
 
   const adrs = sdk!.wallet.toString();
-  const shortaddress = adrs.slice(0, 5) + '...' + adrs.slice(-5);
+  const shortaddress = minifyAddress(adrs, 5);
 
   const copy = () => {
     Clipboard.setString(adrs);
@@ -122,11 +127,15 @@ const WalletHomeScreen = () => {
   return (
     <SolaceContainer>
       <View style={globalStyles.rowSpaceBetween}>
-        <SolaceIcon
+        {/* <SolaceIcon
           onPress={() => navigation.navigate('Guardian')}
           type="normal"
           variant="antdesign"
           name="lock"
+        /> */}
+        <Image
+          source={require('../../../../../assets/images/solace/solana-icon.png')}
+          style={globalStyles.avatar}
         />
         {isLoading ? (
           <ActivityIndicator size="small" />
@@ -150,20 +159,18 @@ const WalletHomeScreen = () => {
             )}
           </TouchableOpacity>
         )}
-        {/* {isFetching && (
-          <ActivityIndicator size="small" color={Colors.text.approved} />
-        )} */}
-
         <SolaceIcon
+          size="sm"
           onPress={() => logout()}
-          type="normal"
-          variant="antdesign"
-          name="logout"
+          background="normal"
+          color="awaiting"
+          variant="fa"
+          name="lock"
         />
       </View>
-      <View style={[globalStyles.fullCenter, {flex: 0.3}]}>
+      <View style={[globalStyles.fullCenter, {flex: 0.4}]}>
         <Image
-          source={require('../../../../assets/images/solace/solace-icon.png')}
+          source={require('../../../../../assets/images/solace/solace-icon.png')}
           style={{
             height: 35,
             resizeMode: 'contain',
@@ -171,50 +178,78 @@ const WalletHomeScreen = () => {
             marginBottom: 12,
           }}
         />
-        <SolaceText weight="semibold" size="sm">
+        <SolaceText weight="bold" size="lg">
           {user?.solaceName ? user.solaceName : 'solaceuser'}
         </SolaceText>
+        <TouchableOpacity onPress={copy} style={{marginTop: 12}}>
+          <View style={{alignItems: 'center'}}>
+            <View
+              style={[
+                globalStyles.rowCenter,
+                {
+                  backgroundColor: Colors.background.normal,
+                  paddingVertical: 6,
+                  paddingHorizontal: 12,
+                  borderRadius: 18,
+                },
+              ]}>
+              <SolaceText type="primary" weight="semibold" size="sm">
+                {shortaddress}
+              </SolaceText>
+              <MCI
+                name="content-copy"
+                color={Colors.text.white}
+                size={18}
+                style={{marginLeft: 12}}
+              />
+            </View>
+          </View>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity onPress={copy}>
-        <SolaceText type="secondary" weight="bold">
-          {shortaddress}
-        </SolaceText>
-      </TouchableOpacity>
-      <View style={[globalStyles.fullCenter, {flex: 0.7}]}>
+
+      <View style={[globalStyles.fullCenter, {flex: 0.2}]}>
         <SolaceText size="xl" weight="bold">
           $0.00
         </SolaceText>
-        <View
-          style={[globalStyles.rowSpaceBetween, {marginTop: 20, width: '70%'}]}>
-          <SolaceIcon
-            onPress={handleSend}
-            type="light"
-            name="arrowup"
-            variant="antdesign"
-            subText="send"
-          />
-          <SolaceIcon
-            onPress={() => {
-              showMessage({
-                message: 'coming soon...',
-                type: 'info',
-              });
-            }}
-            type="light"
-            name="line-scan"
-            variant="mci"
-            subText="scan"
-          />
-          <SolaceIcon
-            onPress={handleRecieve}
-            type="light"
-            name="arrowdown"
-            variant="antdesign"
-            subText="recieve"
-          />
-        </View>
       </View>
-      <WalletActivity data={[]} />
+      <View style={[globalStyles.fullCenter, {flex: 0.4}]}>
+        <SolacePaper>
+          <View
+            style={[
+              globalStyles.rowCenter,
+              {width: '50%', justifyContent: 'space-between'},
+            ]}>
+            <SolaceIcon
+              onPress={handleSend}
+              background="lightpink"
+              name="ios-send-outline"
+              variant="ionicons"
+              subText="send"
+            />
+            {/* <SolaceIcon
+              onPress={() => {
+                showMessage({
+                  message: 'coming soon...',
+                  type: 'info',
+                });
+              }}
+              background="light"
+              name="line-scan"
+              variant="mci"
+              subText="scan"
+            /> */}
+            <SolaceIcon
+              onPress={handleRecieve}
+              background="lightgreen"
+              name="arrowdown"
+              variant="antdesign"
+              subText="recieve"
+            />
+          </View>
+        </SolacePaper>
+      </View>
+      <WalletHoldings />
+      {/* <WalletActivity data={[]} /> */}
     </SolaceContainer>
   );
 };

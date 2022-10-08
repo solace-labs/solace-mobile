@@ -211,7 +211,7 @@ const EmailScreen = () => {
           <SolaceText
             type="secondary"
             size="xs"
-            variant="normal"
+            color="normal"
             align="left"
             mt={8}>
             must be at least 8 characters long, contain at least one lowercase
@@ -240,8 +240,9 @@ const EmailScreen = () => {
           isOtpSent ? handleVerifyOtp() : handleMailSubmit();
         }}
         loading={isLoading}
+        background="purple"
         disabled={isDisable()}>
-        <SolaceText type="secondary" weight="bold" variant="dark">
+        <SolaceText type="secondary" weight="bold" color="white">
           {isOtpSent ? 'verify otp' : 'send otp'}
         </SolaceText>
       </SolaceButton>
