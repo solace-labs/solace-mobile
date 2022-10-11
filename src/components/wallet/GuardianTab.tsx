@@ -15,6 +15,8 @@ import Clipboard from '@react-native-community/clipboard';
 import {showMessage} from 'react-native-flash-message';
 import {firstCharacter, minifyAddress} from '../../utils/helpers';
 
+import Fontisto from 'react-native-vector-icons/Fontisto';
+
 export type Props = {
   guardians: {
     approved: PublicKeyType[];
@@ -62,16 +64,18 @@ const GuardianTab: React.FC<Props> = ({guardians, loading}) => {
                 size="sm"
                 weight="bold"
                 align="left"
-                color={type}>
-                {type === 'approved' ? 'approved' : 'pending'}
+                color={'normal'}>
+                {/* {type === 'approved' ? 'approved' : 'pending'} */}
+                {'24 hours before approval'}
               </SolaceText>
             </View>
           </View>
           <View style={styles.rightSide}>
             <TouchableOpacity onPress={() => handleCopy(guardian.toString())}>
-              <SolaceText type="secondary" weight="bold" size="sm" color="link">
+              {/* <SolaceText type="secondary" weight="bold" size="sm" color="link">
                 copy
-              </SolaceText>
+              </SolaceText> */}
+              <Fontisto name="arrow-right-l" color="gray" size={20} />
             </TouchableOpacity>
           </View>
         </View>

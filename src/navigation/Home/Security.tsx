@@ -4,11 +4,13 @@ import AddGuardian from '../../components/screens/wallet/security/AddGuardian';
 import Guardian from '../../components/screens/wallet/security/Guardian';
 import SecurityScreen from '../../components/screens/wallet/security/SecurityScreen';
 import AboutScreen from '../../components/screens/wallet/security/AboutScreen';
+import ChooseGuardian from '../../components/screens/wallet/security/ChooseGuardian';
 
 export type SecurityStackParamList = {
-  AddGuardian: undefined;
-  Guardian: undefined;
   SecurityHome: undefined;
+  Guardian: undefined;
+  ChooseGuardian: undefined;
+  AddGuardian: undefined;
   About: undefined;
 };
 
@@ -21,9 +23,10 @@ const SecurityScreenStack = () => {
       screenOptions={{
         headerShown: false,
       }}>
-      <SecurityStack.Screen name="AddGuardian" component={AddGuardian} />
-      <SecurityStack.Screen name="Guardian" component={Guardian} />
       <SecurityStack.Screen name="SecurityHome" component={SecurityScreen} />
+      <SecurityStack.Screen name="Guardian" component={Guardian} />
+      <SecurityStack.Screen name="ChooseGuardian" component={ChooseGuardian} />
+      <SecurityStack.Screen name="AddGuardian" component={AddGuardian} />
       <SecurityStack.Screen name="About" component={AboutScreen} />
     </SecurityStack.Navigator>
   );

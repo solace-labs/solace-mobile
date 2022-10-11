@@ -114,7 +114,7 @@ const Guardian = () => {
       <SolaceContainer>
         <View style={{flex: 1}}>{renderTab()}</View>
         <SolaceButton
-          onPress={() => navigation.navigate('AddGuardian')}
+          onPress={() => navigation.navigate('ChooseGuardian')}
           background="purple">
           <SolaceText type="secondary" color="white" weight="bold">
             add guardian

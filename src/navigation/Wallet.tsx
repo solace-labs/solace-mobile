@@ -11,6 +11,7 @@ import ComingSoon from '../components/screens/loading/ComingSoon';
 import HomeScreenStack from './Home/Home';
 import SwapScreenStack from './Home/Swap';
 import SecurityScreenStack from './Home/Security';
+import ActivityScreenStack from './Home/Activity';
 
 export type TabParamList = {
   Home: undefined;
@@ -94,7 +95,7 @@ const WalletStack = () => {
       <TabStack.Screen name="Home" component={HomeScreenStack} />
       <TabStack.Screen name="Swap" component={SwapScreenStack} />
       <TabStack.Screen name="Security" component={SecurityScreenStack} />
-      <TabStack.Screen name="Activity" component={ComingSoon} />
+      <TabStack.Screen name="Activity" component={ActivityScreenStack} />
     </TabStack.Navigator>
   );
 };
