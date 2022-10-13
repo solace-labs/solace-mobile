@@ -63,6 +63,9 @@ const ChooseGuardian = () => {
         text="choose guardian"
         startClick={handleGoBack}
         endIcon="infocirlceo"
+        endClick={() => {
+          navigation.navigate('GuardianInfo');
+        }}
       />
       <View style={{flex: 1, marginTop: 8}}>
         {cards.map((card, index) => {

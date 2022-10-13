@@ -16,6 +16,9 @@ import {showMessage} from 'react-native-flash-message';
 import {firstCharacter, minifyAddress} from '../../utils/helpers';
 
 import Fontisto from 'react-native-vector-icons/Fontisto';
+import {SecurityStackParamList} from '../../navigation/Home/Security';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {useNavigation} from '@react-navigation/native';
 
 export type Props = {
   guardians: {
@@ -25,7 +28,13 @@ export type Props = {
   loading: boolean;
 };
 
+type GuardianScreenProps = NativeStackScreenProps<
+  SecurityStackParamList,
+  'Guardian'
+>;
+
 const GuardianTab: React.FC<Props> = ({guardians, loading}) => {
+  const navigation = useNavigation<GuardianScreenProps['navigation']>();
   if (loading) {
     return (
       <View style={globalStyles.fullCenter}>
@@ -35,10 +44,11 @@ const GuardianTab: React.FC<Props> = ({guardians, loading}) => {
   }
 
   const handleCopy = async (text: string) => {
-    Clipboard.setString(text);
-    showMessage({
-      message: 'copied successfully',
-    });
+    // Clipboard.setString(text);
+    // showMessage({
+    //   message: 'copied successfully',
+    // });
+    navigation.navigate('EditGuardian');
   };
 
   const renderGuardian = (

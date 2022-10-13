@@ -70,10 +70,10 @@ const Guardian = () => {
       <TopNavbar
         startIcon="ios-return-up-back"
         startIconType="ionicons"
-        endIcon="infocirlceo"
+        // endIcon="infocirlceo"
         text="manage guardians"
         startClick={handleGoBack}
-        endClick={() => {}}
+        // endClick={() => {}}
       />
       <View style={styles.tabs}>
         <TouchableOpacity

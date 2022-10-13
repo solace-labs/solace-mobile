@@ -5,6 +5,9 @@ import Guardian from '../../components/screens/wallet/security/Guardian';
 import SecurityScreen from '../../components/screens/wallet/security/SecurityScreen';
 import AboutScreen from '../../components/screens/wallet/security/AboutScreen';
 import ChooseGuardian from '../../components/screens/wallet/security/ChooseGuardian';
+import SendScreen from '../../components/screens/wallet/home/Send';
+import GuardianInfo from '../../components/screens/wallet/security/GuardianInfo';
+import EditGuardian from '../../components/screens/wallet/security/EditGuardian';
 
 export type SecurityStackParamList = {
   SecurityHome: undefined;
@@ -12,6 +15,8 @@ export type SecurityStackParamList = {
   ChooseGuardian: undefined;
   AddGuardian: undefined;
   About: undefined;
+  EditGuardian: undefined;
+  GuardianInfo: undefined;
 };
 
 const SecurityStack = createNativeStackNavigator<SecurityStackParamList>();
@@ -28,6 +33,14 @@ const SecurityScreenStack = () => {
       <SecurityStack.Screen name="ChooseGuardian" component={ChooseGuardian} />
       <SecurityStack.Screen name="AddGuardian" component={AddGuardian} />
       <SecurityStack.Screen name="About" component={AboutScreen} />
+      <SecurityStack.Screen name="GuardianInfo" component={GuardianInfo} />
+      <SecurityStack.Screen
+        options={{
+          presentation: 'modal',
+        }}
+        name="EditGuardian"
+        component={EditGuardian}
+      />
     </SecurityStack.Navigator>
   );
 };

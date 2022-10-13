@@ -42,7 +42,7 @@ const SolaceContainer: FC<Props> = ({
     flex: 1,
     width: '100%',
     paddingHorizontal: fullWidth ? 0 : 16,
-    paddingVertical: Platform.OS === 'android' ? 12 : 4,
+    paddingTop: Platform.OS === 'android' ? 24 : 4,
   };
 
   return (
