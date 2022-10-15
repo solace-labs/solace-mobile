@@ -16,6 +16,7 @@ let theme = {
     lightorange: '#FFCFC4',
     lightblue: '#C4E6FF',
     lightpink: '#F0C4FF',
+    nav: '#1a1a1a',
   },
   text: {
     white: '#ffffff',

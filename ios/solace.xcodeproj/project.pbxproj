@@ -670,7 +670,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = T2UY6KVKWP;
+				DEVELOPMENT_TEAM = G2PTA5Y532;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = solace/Info.plist;
@@ -683,7 +683,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.onpar.in.solacewallet;
+				PRODUCT_BUNDLE_IDENTIFIER = secure.solace.money;
 				PRODUCT_NAME = solace;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -698,7 +698,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = T2UY6KVKWP;
+				DEVELOPMENT_TEAM = G2PTA5Y532;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = solace/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -710,7 +710,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.onpar.in.solacewallet;
+				PRODUCT_BUNDLE_IDENTIFIER = secure.solace.money;
 				PRODUCT_NAME = solace;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";

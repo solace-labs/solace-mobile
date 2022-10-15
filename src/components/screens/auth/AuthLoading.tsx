@@ -13,6 +13,7 @@ import {
   User,
 } from '../../../state/contexts/GlobalContext';
 import {getFeePayer} from '../../../utils/apis';
+import {AwsCognito} from '../../../utils/aws_cognito';
 import {
   NETWORK,
   PROGRAM_ADDRESS,
@@ -29,6 +30,8 @@ type AuthScreenProps = NativeStackScreenProps<AuthStackParamList, 'Loading'>;
 
 const AuthLoading = () => {
   const {state, dispatch} = useContext(GlobalContext);
+
+  console.log('AUTH LOADING');
 
   const navigation = useNavigation<AuthScreenProps['navigation']>();
 
@@ -110,6 +113,22 @@ const AuthLoading = () => {
         e === 'TOKEN_NOT_AVAILABLE' ||
         e.message === 'Request failed with status code 401'
       ) {
+        // navigation.reset({
+        //   index: 0,
+        //   routes: [{name: 'Login'}],
+        // });
+        const tokens = await StorageGetItem('tokens');
+        if (!tokens) {
+          navigation.reset({
+            index: 0,
+            routes: [{name: 'Login'}],
+          });
+        }
+        const username = state.user?.solaceName;
+        const awsCognito = new AwsCognito();
+        awsCognito.setCognitoUser(username!);
+        const res = await awsCognito.refreshSession(tokens.refreshtoken);
+        console.log('refresh response: ', res);
         navigation.reset({
           index: 0,
           routes: [{name: 'Login'}],

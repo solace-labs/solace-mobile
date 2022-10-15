@@ -109,8 +109,9 @@ const AddToken = () => {
       <SolaceButton
         onPress={addToken}
         loading={loading.value}
-        disabled={!address}>
-        <SolaceText type="secondary" weight="bold" color="dark">
+        background="purple"
+        disabled={!address || loading.value}>
+        <SolaceText type="secondary" weight="bold" color="white">
           add token
         </SolaceText>
       </SolaceButton>

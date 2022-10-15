@@ -85,7 +85,7 @@ const WalletStack = () => {
         },
         tabBarStyle: {
           paddingHorizontal: 24,
-          backgroundColor: Colors.background.darker,
+          backgroundColor: Colors.background.nav,
           paddingTop: 12,
           paddingBottom: 24,
           height: 80,
