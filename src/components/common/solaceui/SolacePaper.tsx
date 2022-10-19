@@ -26,7 +26,7 @@ const SolacePaper: FC<PaperProps> = ({
   style,
   children,
   fullWidth = true,
-  background = 'darker',
+  background = 'card',
   loading = false,
   size = 'md',
   mt = 0,

@@ -112,7 +112,9 @@ const SecurityScreen = () => {
       heading: 'trusted addresses',
       subHeading:
         'make transaction without guardians with addresses you cant trust',
-      handlePress: () => {},
+      handlePress: () => {
+        navigateTo('TrustedAddresses');
+      },
     },
     {
       iconType: 'mci',

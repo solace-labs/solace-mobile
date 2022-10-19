@@ -6,6 +6,7 @@ let theme = {
     lightest: '#ffffff',
     light: '#9999A5',
     normal: '#3d3d3d',
+    card: '#1a1a1a',
     dark: '#151515',
     darker: '#101010',
     darkest: '#0D0D0D',

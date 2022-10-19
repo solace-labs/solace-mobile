@@ -65,7 +65,9 @@ const AuthLoading = () => {
   const retrieveAccount = async (user: User) => {
     try {
       const privateKey = user.ownerPrivateKey;
+      const tokens = await StorageGetItem('tokens');
       const solaceName = user.solaceName;
+      console.log('from retrieve account', {tokens, solaceName});
       const keypair = KeyPair.fromSecretKey(
         Uint8Array.from(privateKey.split(',').map(e => +e)),
       );
@@ -108,7 +110,7 @@ const AuthLoading = () => {
       const user = await StorageGetItem('user');
       await retrieveAccount(user);
     } catch (e: any) {
-      await StorageDeleteItem('tokens');
+      // await StorageDeleteItem('tokens');
       if (
         e === 'TOKEN_NOT_AVAILABLE' ||
         e.message === 'Request failed with status code 401'
@@ -125,10 +127,16 @@ const AuthLoading = () => {
           });
         }
         const username = state.user?.solaceName;
-        const awsCognito = new AwsCognito();
-        awsCognito.setCognitoUser(username!);
-        const res = await awsCognito.refreshSession(tokens.refreshtoken);
-        console.log('refresh response: ', res);
+        console.log({tokens, username});
+        try {
+          const awsCognito = new AwsCognito();
+          awsCognito.setCognitoUser(username!);
+          const res = await awsCognito.refreshSession(tokens.refreshtoken);
+
+          console.log('refresh response: ', res);
+        } catch (err) {
+          console.log(err);
+        }
         navigation.reset({
           index: 0,
           routes: [{name: 'Login'}],

@@ -217,7 +217,7 @@ const WalletHomeScreen = () => {
           <View
             style={[
               globalStyles.rowCenter,
-              {width: '50%', justifyContent: 'space-between'},
+              {width: '80%', justifyContent: 'space-between'},
             ]}>
             <SolaceIcon
               onPress={handleSend}
@@ -226,18 +226,18 @@ const WalletHomeScreen = () => {
               variant="ionicons"
               subText="send"
             />
-            {/* <SolaceIcon
+            <SolaceIcon
               onPress={() => {
                 showMessage({
                   message: 'coming soon...',
                   type: 'info',
                 });
               }}
-              background="light"
-              name="line-scan"
-              variant="mci"
-              subText="scan"
-            /> */}
+              background="lightblue"
+              name="dollar"
+              variant="fa"
+              subText="buy"
+            />
             <SolaceIcon
               onPress={handleRecieve}
               background="lightgreen"

@@ -8,6 +8,9 @@ import ChooseGuardian from '../../components/screens/wallet/security/ChooseGuard
 import SendScreen from '../../components/screens/wallet/home/Send';
 import GuardianInfo from '../../components/screens/wallet/security/GuardianInfo';
 import EditGuardian from '../../components/screens/wallet/security/EditGuardian';
+import TrustedAddresses from '../../components/screens/wallet/security/TrustedAddresses';
+import ContactList from '../../components/screens/wallet/security/ContactList';
+import AddTrustedAddress from '../../components/screens/wallet/security/AddTrustedAddress';
 
 export type SecurityStackParamList = {
   SecurityHome: undefined;
@@ -17,6 +20,9 @@ export type SecurityStackParamList = {
   About: undefined;
   EditGuardian: undefined;
   GuardianInfo: undefined;
+  TrustedAddresses: undefined;
+  ContactList: undefined;
+  AddTrustedAddress: undefined;
 };
 
 const SecurityStack = createNativeStackNavigator<SecurityStackParamList>();
@@ -40,6 +46,18 @@ const SecurityScreenStack = () => {
         }}
         name="EditGuardian"
         component={EditGuardian}
+      />
+      <SecurityStack.Screen
+        name="TrustedAddresses"
+        component={TrustedAddresses}
+      />
+      <SecurityStack.Screen name="ContactList" component={ContactList} />
+      <SecurityStack.Screen
+        options={{
+          presentation: 'modal',
+        }}
+        name="AddTrustedAddress"
+        component={AddTrustedAddress}
       />
     </SecurityStack.Navigator>
   );
