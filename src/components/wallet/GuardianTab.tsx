@@ -19,11 +19,13 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import {SecurityStackParamList} from '../../navigation/Home/Security';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
+import {GuardianTimeData} from 'solace-sdk/dist/cjs/sdk/types';
+import moment from 'moment';
 
 export type Props = {
   guardians: {
     approved: PublicKeyType[];
-    pending: PublicKeyType[];
+    pending: GuardianTimeData[];
   };
   loading: boolean;
 };
@@ -51,11 +53,45 @@ const GuardianTab: React.FC<Props> = ({guardians, loading}) => {
     navigation.navigate('EditGuardian');
   };
 
-  const renderGuardian = (
-    guardian: PublicKeyType,
-    index: number,
-    type: 'approved' | 'pending',
-  ) => {
+  const renderPendingGuardian = (guardian: GuardianTimeData, index: number) => {
+    return (
+      <View key={index}>
+        <View style={styles.item}>
+          <View style={styles.leftSide}>
+            <View style={globalStyles.avatar}>
+              <SolaceText weight="bold" size="sm" color="awaiting">
+                {firstCharacter(guardian.guardian)}
+              </SolaceText>
+            </View>
+            <View>
+              <SolaceText align="left" type="secondary" weight="bold" size="sm">
+                {minifyAddress(guardian.guardian, 5)}
+              </SolaceText>
+              <SolaceText
+                type="secondary"
+                size="sm"
+                weight="bold"
+                align="left"
+                color={'normal'}>
+                approve on{' '}
+                {moment(new Date(guardian.time * 1000)).format('DD MMM HH:mm')}
+              </SolaceText>
+            </View>
+          </View>
+          <View style={styles.rightSide}>
+            <TouchableOpacity onPress={() => handleCopy(guardian.toString())}>
+              {/* <SolaceText type="secondary" weight="bold" size="sm" color="link">
+                copy
+              </SolaceText> */}
+              <Fontisto name="arrow-right-l" color="gray" size={20} />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    );
+  };
+
+  const renderApprovedGuardian = (guardian: PublicKeyType, index: number) => {
     return (
       <View key={index}>
         <View style={styles.item}>
@@ -74,9 +110,9 @@ const GuardianTab: React.FC<Props> = ({guardians, loading}) => {
                 size="sm"
                 weight="bold"
                 align="left"
-                color={'normal'}>
+                color={'approved'}>
                 {/* {type === 'approved' ? 'approved' : 'pending'} */}
-                {'24 hours before approval'}
+                approved
               </SolaceText>
             </View>
           </View>
@@ -144,10 +180,10 @@ const GuardianTab: React.FC<Props> = ({guardians, loading}) => {
           </View>
         </View> */}
         {pendingGuardians.map((guardian, index) => {
-          return renderGuardian(guardian, index, 'pending');
+          return renderPendingGuardian(guardian, index);
         })}
         {approvedGuardians.map((guardian, index) => {
-          return renderGuardian(guardian, index, 'approved');
+          return renderApprovedGuardian(guardian, index);
         })}
       </View>
     </ScrollView>

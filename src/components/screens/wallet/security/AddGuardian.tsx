@@ -27,7 +27,8 @@ type AddGuardianScreenProps = NativeStackScreenProps<
 const AddGuardian = () => {
   const [address, setAddress] = useState(
     // 'GNgMfSSJ4NjSuu1EdHj94P6TzQS24KH38y1si2CMrUsF',
-    '',
+    // '2EUpmLqZNLbiwq1NYmvPLVPCByGsntfqfSEMpPj4eqPS',
+    'G9PfPVfBuKF4xr4yLt4LjfDezwunPsezCvdjfVBJnHk2',
   );
   const {state} = useContext(GlobalContext);
   const navigation = useNavigation<AddGuardianScreenProps['navigation']>();
@@ -48,7 +49,13 @@ const AddGuardian = () => {
     try {
       const feePayer = await getFeePayer();
       const guardianPublicKey = new PublicKey(address);
+      console.log(state.sdk!.wallet, state.sdk!.owner.publicKey.toString());
+      // console.log(state.sdk!.owner.publicKey.)
+      const data = await sdk.fetchWalletData();
+      console.log(data.owner.toString());
       const tx = await sdk.addGuardian(guardianPublicKey, feePayer!);
+      // const pending = await sdk.fetchPendingGuardiansWithApprovalFrom();
+      // pending[0].time
       const transactionId = await relayTransaction(tx);
       setLoading({
         message: 'finalizing...',
@@ -72,7 +79,7 @@ const AddGuardian = () => {
     } catch (e) {
       console.log('MAIN ERROR:', JSON.stringify(e));
       setLoading({
-        message: '',
+        message: 'add guardian',
         value: false,
       });
       if (!(appstate === AppState.TESTING)) {

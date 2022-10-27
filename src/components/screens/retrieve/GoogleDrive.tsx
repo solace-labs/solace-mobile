@@ -1,6 +1,7 @@
-import {View, Image} from 'react-native';
+import {View, Image, TouchableOpacity} from 'react-native';
 import React, {useContext, useState} from 'react';
 import {
+  clearData,
   setAccountStatus,
   setGoogleApi,
   setRetrieveData,
@@ -23,6 +24,7 @@ import SolaceText from '../../common/solaceui/SolaceText';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RetrieveStackParamList} from '../../../navigation/Retrieve';
 import {useNavigation} from '@react-navigation/native';
+import {StorageClearAll} from '../../../utils/storage';
 
 type RetrieveScreenProps = NativeStackScreenProps<
   RetrieveStackParamList,
@@ -116,6 +118,12 @@ const GoogleDriveScreen = () => {
     marginBottom: 5,
   };
 
+  const goToHomeScreen = async () => {
+    await StorageClearAll();
+    dispatch(clearData());
+    dispatch(setAccountStatus(AccountStatus.NEW));
+  };
+
   return (
     <SolaceContainer>
       <View style={{flex: 1}}>
@@ -129,6 +137,11 @@ const GoogleDriveScreen = () => {
         />
         {loading.value && <SolaceLoader text={loading.message} />}
       </View>
+      <TouchableOpacity onPress={goToHomeScreen}>
+        <SolaceText type="secondary" weight="bold" mb={20}>
+          or create new vault?
+        </SolaceText>
+      </TouchableOpacity>
 
       <SolaceButton
         onPress={() => {

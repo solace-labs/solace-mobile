@@ -24,21 +24,9 @@ const WalletActivity: FC<Props> = ({data}) => {
   }
 
   const openLink = () => {
-    const link = `https://solscan.io/account/${
-      state.sdk!.wallet
-    }?cluster=testnet`;
-    Linking.canOpenURL(link).then(supported => {
-      if (supported) {
-        Linking.openURL(link);
-      } else {
-        console.log("Don't know how to open URI: " + link);
-        showMessage({
-          message:
-            "can't open link. please select default browser in the setting",
-          type: 'info',
-        });
-      }
-    });
+    Linking.openURL(
+      `https://solscan.io/account/${state.sdk!.wallet}?cluster=testnet`,
+    );
   };
 
   return (

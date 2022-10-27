@@ -100,33 +100,37 @@ const RecieveScreen = () => {
         endClick={handleAdd}
       />
       <View style={globalStyles.fullCenter}>
-        {accounts && accounts.length > 0 ? (
-          <>
-            <ScrollView
-              refreshControl={
-                <RefreshControl refreshing={isLoading} onRefresh={refresh} />
-              }
-              bounces={true}
-              style={{marginTop: -50, width: '100%'}}>
-              <View
-                style={[
-                  globalStyles.rowCenter,
-                  {justifyContent: 'center', marginBottom: 20},
-                ]}>
-                <SolaceText size="sm" weight="extralight">
-                  pull to refresh
-                </SolaceText>
-                <SolaceIcon background="dark" name="down" />
-              </View>
-              {accounts.map((account, index) => {
-                return (
-                  <AccountItem account={account} key={index} type="recieve" />
-                );
-              })}
-            </ScrollView>
-          </>
-        ) : (
-          <View style={[globalStyles.fullCenter, globalStyles.fullWidth]}>
+        {/* {accounts && accounts.length > 0 ? ( */}
+        <>
+          <ScrollView
+            refreshControl={
+              <RefreshControl refreshing={isLoading} onRefresh={refresh} />
+            }
+            bounces={true}
+            style={{marginTop: -50, width: '100%'}}>
+            <View
+              style={[
+                globalStyles.rowCenter,
+                {justifyContent: 'center', marginBottom: 20},
+              ]}>
+              <SolaceText size="sm" weight="extralight">
+                pull to refresh
+              </SolaceText>
+              <SolaceIcon background="dark" name="down" />
+            </View>
+            <AccountItem
+              account={{tokenAddress: 'SOL', amount: 0}}
+              type="recieve"
+            />
+            {accounts?.map((account, index) => {
+              return (
+                <AccountItem account={account} key={index} type="recieve" />
+              );
+            })}
+          </ScrollView>
+        </>
+        {/* ) : ( */}
+        {/* <View style={[globalStyles.fullCenter, globalStyles.fullWidth]}>
             <Image
               source={require('../../../../../assets/images/solace/send-money.png')}
               style={{
@@ -147,8 +151,8 @@ const RecieveScreen = () => {
               </SolaceText>{' '}
               to recieve
             </SolaceText>
-          </View>
-        )}
+          </View> */}
+        {/* )} */}
       </View>
     </SolaceContainer>
   );

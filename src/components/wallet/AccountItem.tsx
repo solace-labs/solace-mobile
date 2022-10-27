@@ -23,7 +23,9 @@ const AccountItem: React.FC<Props> = ({
 }) => {
   const navigation = useNavigation<WalletScreenProps['navigation']>();
 
-  const accountAddress = minifyAddress(tokenAddress, 5);
+  const isSol = tokenAddress === 'SOL';
+
+  const accountAddress = isSol ? 'SOL' : minifyAddress(tokenAddress, 5);
   const currentBalance = amount.toFixed(2);
 
   const redirectToAsset = () => {
@@ -42,12 +44,12 @@ const AccountItem: React.FC<Props> = ({
         <View style={globalStyles.rowCenter}>
           <View style={globalStyles.avatar}>
             <SolaceText type="secondary" weight="bold" color="awaiting">
-              {tokenAddress[0]}
+              {isSol ? 'S' : tokenAddress[0]}
             </SolaceText>
           </View>
           <View>
             <SolaceText weight="bold" align="left">
-              unknown token
+              {isSol ? 'SOL' : 'unknown token'}
             </SolaceText>
             <SolaceText
               size="sm"

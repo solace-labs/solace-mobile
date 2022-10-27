@@ -46,6 +46,7 @@ const SolacePaper: FC<PaperProps> = ({
 
   const defaultStyle: StyleProp<ViewStyle> = {
     padding: Styles.fontSize[size] * 1.5,
+    // padding: 10,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,

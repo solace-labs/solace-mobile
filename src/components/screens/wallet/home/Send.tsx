@@ -10,6 +10,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Toast from 'react-native-toast-message';
+import HapticFeedback from 'react-native-haptic-feedback';
 
 import {
   AccountStatus,
@@ -39,6 +40,11 @@ import {Colors} from '../../../../utils/colors';
 import {SolaceToast} from '../../../common/solaceui/SolaceToast';
 import {WalletStackParamList} from '../../../../navigation/Home/Home';
 
+const hapticFeedbackOptions = {
+  enableVibrateFallback: true,
+  ignoreAndroidSystemSettings: false,
+};
+
 type SendScreenProps = NativeStackScreenProps<WalletStackParamList, 'Send'>;
 
 const SendScreen = () => {
@@ -48,7 +54,9 @@ const SendScreen = () => {
     params: {asset, contact},
   } = useRoute<SendScreenProps['route']>();
 
-  const shortAsset = minifyAddress(asset, 4);
+  const isSol = asset === 'SOL';
+
+  const shortAsset = isSol ? 'SOL' : minifyAddress(asset, 4);
 
   const [amount, setAmount] = useState('');
   const [recipientAddress, setRecipientAddress] = useState(
@@ -303,7 +311,10 @@ const SolaceKeypad = ({
       {keys.map(key => {
         return (
           <TouchableOpacity
-            onPress={() => handleKeyChange(key)}
+            onPress={() => {
+              HapticFeedback.trigger('keyboardPress', hapticFeedbackOptions);
+              handleKeyChange(key);
+            }}
             key={key}
             style={{
               width: '33%',

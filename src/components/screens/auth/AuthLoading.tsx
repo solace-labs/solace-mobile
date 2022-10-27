@@ -71,6 +71,11 @@ const AuthLoading = () => {
       const keypair = KeyPair.fromSecretKey(
         Uint8Array.from(privateKey.split(',').map(e => +e)),
       );
+      console.log(
+        // 'CF8HAEPFwG79ui1AYJpasUDrQo3E9RSAqYeAMr7abz4n',
+        'From storage: ',
+        keypair.publicKey.toString(),
+      );
       const sdk = await SolaceSDK.retrieveFromName(solaceName, {
         network: NETWORK,
         owner: keypair,

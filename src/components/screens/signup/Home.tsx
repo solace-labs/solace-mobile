@@ -48,7 +48,7 @@ const HomeScreen = () => {
             dispatch(setAccountStatus(AccountStatus.RETRIEVE));
           }
         }}>
-        <SolaceText type="secondary" weight="bold" color="dark">
+        <SolaceText type="secondary" weight="bold" color="white">
           retrieve your vault
         </SolaceText>
       </SolaceButton>

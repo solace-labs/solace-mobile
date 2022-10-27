@@ -57,13 +57,7 @@ export const confirmTransaction = async (transactionId: string) => {
       onPress: () => {
         console.log(transactionId);
         const url = `https://solscan.io/tx/${transactionId}?&cluster=testnet`;
-        Linking.canOpenURL(url).then(supported => {
-          if (supported) {
-            Linking.openURL(url);
-          } else {
-            console.log("Don't know how to open URI: " + url);
-          }
-        });
+        Linking.openURL(url);
       },
       type: 'success',
     });

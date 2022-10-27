@@ -66,21 +66,9 @@ const WalletHoldings = () => {
   // }
 
   const openLink = () => {
-    const link = `https://solscan.io/account/${
-      state.sdk!.wallet
-    }?cluster=testnet`;
-    Linking.canOpenURL(link).then(supported => {
-      if (supported) {
-        Linking.openURL(link);
-      } else {
-        console.log("Don't know how to open URI: " + link);
-        showMessage({
-          message:
-            "can't open link. please select default browser in the setting",
-          type: 'info',
-        });
-      }
-    });
+    Linking.openURL(
+      `https://solscan.io/account/${state.sdk!.wallet}?cluster=testnet`,
+    );
   };
 
   // if (isLoading) {
@@ -118,29 +106,30 @@ const WalletHoldings = () => {
           </SolaceText>
         </TouchableOpacity>
       </View>
-      {accounts && accounts.length > 0 ? (
-        <ScrollView
-          // refreshControl={
-          //   <RefreshControl refreshing={isLoading} onRefresh={refresh} />
-          // }
-          bounces={true}
-          style={{width: '100%'}}>
-          <View
-            style={[
-              globalStyles.rowCenter,
-              {justifyContent: 'center', marginBottom: 20},
-            ]}>
-            {/* <SolaceText size="sm" weight="extralight">
+      {/* {accounts && accounts.length > 0 ? ( */}
+      <ScrollView
+        // refreshControl={
+        //   <RefreshControl refreshing={isLoading} onRefresh={refresh} />
+        // }
+        bounces={true}
+        style={{width: '100%'}}>
+        <View
+          style={[
+            globalStyles.rowCenter,
+            {justifyContent: 'center', marginBottom: 20},
+          ]}>
+          {/* <SolaceText size="sm" weight="extralight">
               pull to refresh
             </SolaceText>
             <SolaceIcon background="dark" name="down" /> */}
-          </View>
-          {accounts.map((account, index) => {
-            return <AccountItem account={account} key={index} type="send" />;
-          })}
-        </ScrollView>
-      ) : (
-        <View style={{flex: 1, width: '100%'}}>
+        </View>
+        <AccountItem account={{tokenAddress: 'SOL', amount: 0}} type="send" />
+        {accounts?.map((account, index) => {
+          return <AccountItem account={account} key={index} type="send" />;
+        })}
+      </ScrollView>
+      {/* ) : ( */}
+      {/* <View style={{flex: 1, width: '100%'}}>
           {isLoading ? (
             <View
               style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -160,8 +149,8 @@ const WalletHoldings = () => {
               </SolaceText>
             </>
           )}
-        </View>
-      )}
+        </View> */}
+      {/* )} */}
     </View>
   );
 };

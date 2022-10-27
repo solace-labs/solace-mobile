@@ -5,6 +5,7 @@ import moment from 'moment';
 import {WalletDataType} from '../components/screens/wallet/home/Incubation';
 import {StorageGetItem} from '../utils/storage';
 import {AppState} from '../state/contexts/GlobalContext';
+import {fetchGuardianData} from 'solace-sdk/dist/cjs/sdk/setup/guardian';
 
 export type Account = {
   amount: number;
@@ -76,6 +77,9 @@ export const getTokenAccount = async (sdk: SolaceSDK, spltoken: string) => {
 
 export const getMaxBalance = async (sdk: SolaceSDK, asset: string) => {
   try {
+    if (asset === 'SOL') {
+      return 0;
+    }
     const splTokenAddress = new PublicKey(asset);
     const accountInfo = await sdk?.getTokenAccountInfo(splTokenAddress);
     return +accountInfo!.amount.toString() / LAMPORTS_PER_SOL;
@@ -95,15 +99,18 @@ export const getGuardians = async (sdk: SolaceSDK) => {
         type: 'danger',
       });
     }
-    const {
-      pendingGuardians,
-      approvedGuardians,
-      guarding: whoIProtect,
-    } = await sdk.fetchWalletData();
+    // const {
+    //   pendingGuardians,
+    //   approvedGuardians,
+    //   guarding: whoIProtect,
+    // } = await sdk.fetchWalletData();
+    const {approvedGuardians, pendingGuardianData: pendingGuardians} =
+      await sdk.fetchGuardianData();
+
     return {
       approved: approvedGuardians,
       pending: pendingGuardians,
-      guarding: whoIProtect,
+      guarding: [],
     };
   } catch (e) {
     if (!(appstate === AppState.TESTING)) {

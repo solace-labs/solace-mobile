@@ -42,20 +42,20 @@ const RecieveItem = () => {
   const route = useRoute<WalletScreenProps['route']>();
   const spltoken = route.params.token;
 
-  const {
-    data: addressToken,
-    isLoading,
-    isFetching,
-  } = useQuery(['tokenaccount'], () => getTokenAccount(state?.sdk!, spltoken), {
-    enabled: !!state?.sdk && !!spltoken,
-  });
+  // const {
+  //   data: addressToken,
+  //   isLoading,
+  //   isFetching,
+  // } = useQuery(['tokenaccount'], () => getTokenAccount(state?.sdk!, spltoken), {
+  //   enabled: !!state?.sdk && !!spltoken,
+  // });
 
-  const queryClient = useQueryClient();
-  const refresh = async () => {
-    isLoading && (await queryClient.invalidateQueries(['tokenaccount']));
-  };
+  // const queryClient = useQueryClient();
+  // const refresh = async () => {
+  //   isLoading && (await queryClient.invalidateQueries(['tokenaccount']));
+  // };
 
-  useRefreshOnFocus(refresh);
+  // useRefreshOnFocus(refresh);
 
   const handleGoBack = () => {
     navigation.goBack();
@@ -75,15 +75,15 @@ const RecieveItem = () => {
     dispatch(setAccountStatus(AccountStatus.EXISITING));
   };
 
-  if (isLoading) {
-    return (
-      <SolaceContainer>
-        <SolaceLoader text="loading">
-          <ActivityIndicator size="small" />
-        </SolaceLoader>
-      </SolaceContainer>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <SolaceContainer>
+  //       <SolaceLoader text="loading">
+  //         <ActivityIndicator size="small" />
+  //       </SolaceLoader>
+  //     </SolaceContainer>
+  //   );
+  // }
 
   return (
     <SolaceContainer>
@@ -107,10 +107,7 @@ const RecieveItem = () => {
           <View style={[globalStyles.rowCenter, {flex: 0.5}]}>
             <View
               style={{borderColor: 'white', borderWidth: 16, borderRadius: 16}}>
-              <QRCode
-                value={addressToken ? addressToken : 'no-address'}
-                size={180}
-              />
+              <QRCode value={address ? address : 'no-address'} size={180} />
             </View>
           </View>
           <View style={[globalStyles.fullWidth, {flex: 0.5, paddingTop: 12}]}>

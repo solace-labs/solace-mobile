@@ -36,7 +36,7 @@ const SolaceButton: FC<ButtonProps> = ({
   style,
   children,
   fullWidth = true,
-  background = 'light',
+  background = 'purple',
   loading = false,
   mt = 0,
   mb = 0,
@@ -44,6 +44,8 @@ const SolaceButton: FC<ButtonProps> = ({
 }) => {
   const offset = useSharedValue(0);
   const width = useSharedValue(3);
+
+  const isPurple = background === 'purple';
 
   if (touchableProps.disabled) {
     width.value = withTiming(0, {duration: 50});
@@ -140,7 +142,8 @@ const SolaceButton: FC<ButtonProps> = ({
           {
             position: 'absolute',
             // width: 0,
-            backgroundColor: '#E5C5FF',
+            backgroundColor: isPurple ? '#E5C5FF' : '#dFdFdF',
+            // backgroundColor: 'gray',
             height: '100%',
             right: -1,
           },
@@ -161,7 +164,7 @@ const SolaceButton: FC<ButtonProps> = ({
             position: 'absolute',
             bottom: -3,
             width: Platform.OS === 'ios' ? '100%' : '99%',
-            backgroundColor: '#C072FF',
+            backgroundColor: isPurple ? '#C072FF' : '#666',
             // height: 4,
             transform: [{skewX: '45deg'}, {translateX: 2}],
           },

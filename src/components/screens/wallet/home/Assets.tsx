@@ -91,29 +91,30 @@ const Assets = () => {
         // endClick={handleAdd}
       />
       <View style={globalStyles.fullCenter}>
-        {accounts && accounts.length > 0 ? (
-          <ScrollView
-            refreshControl={
-              <RefreshControl refreshing={isLoading} onRefresh={refresh} />
-            }
-            bounces={true}
-            style={{marginTop: -50, width: '100%'}}>
-            <View
-              style={[
-                globalStyles.rowCenter,
-                {justifyContent: 'center', marginBottom: 20},
-              ]}>
-              <SolaceText size="sm" weight="extralight">
-                pull to refresh
-              </SolaceText>
-              <SolaceIcon background="darkest" color="white" name="down" />
-            </View>
-            {accounts.map((account, index) => {
-              return <AccountItem account={account} key={index} type="send" />;
-            })}
-          </ScrollView>
-        ) : (
-          <View style={{flex: 1, width: '100%'}}>
+        {/* {accounts && accounts.length > 0 ? ( */}
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={isLoading} onRefresh={refresh} />
+          }
+          bounces={true}
+          style={{marginTop: -50, width: '100%'}}>
+          <View
+            style={[
+              globalStyles.rowCenter,
+              {justifyContent: 'center', marginBottom: 20},
+            ]}>
+            <SolaceText size="sm" weight="extralight">
+              pull to refresh
+            </SolaceText>
+            <SolaceIcon background="darkest" color="white" name="down" />
+          </View>
+          <AccountItem account={{tokenAddress: 'SOL', amount: 0}} type="send" />
+          {accounts?.map((account, index) => {
+            return <AccountItem account={account} key={index} type="send" />;
+          })}
+        </ScrollView>
+        {/* ) : ( */}
+        {/* <View style={{flex: 1, width: '100%'}}>
             <Image
               source={require('../../../../../assets/images/solace/send-money.png')}
               style={globalStyles.image}
@@ -124,8 +125,8 @@ const Assets = () => {
             <SolaceText type="secondary" size="xs" mt={10}>
               sol transfers are coming very soon
             </SolaceText>
-          </View>
-        )}
+          </View> */}
+        {/* )} */}
       </View>
     </SolaceContainer>
   );
