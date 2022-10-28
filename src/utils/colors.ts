@@ -19,6 +19,7 @@ let theme = {
     lightpink: '#F0C4FF',
     nav: '#1a1a1a',
     hello: '#ffa',
+    gray: '#8a8a8a',
   },
   text: {
     white: '#ffffff',

@@ -142,7 +142,7 @@ const SolaceButton: FC<ButtonProps> = ({
           {
             position: 'absolute',
             // width: 0,
-            backgroundColor: isPurple ? '#E5C5FF' : '#dFdFdF',
+            backgroundColor: isPurple ? '#E5C5FF' : '#d2d2d2',
             // backgroundColor: 'gray',
             height: '100%',
             right: -1,
@@ -164,7 +164,7 @@ const SolaceButton: FC<ButtonProps> = ({
             position: 'absolute',
             bottom: -3,
             width: Platform.OS === 'ios' ? '100%' : '99%',
-            backgroundColor: isPurple ? '#C072FF' : '#666',
+            backgroundColor: isPurple ? '#C072FF' : '#3d3d3d',
             // height: 4,
             transform: [{skewX: '45deg'}, {translateX: 2}],
           },

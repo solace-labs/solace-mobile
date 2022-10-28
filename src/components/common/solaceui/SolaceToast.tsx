@@ -21,7 +21,7 @@ export function SolaceToast(props: SolaceToastProps) {
     success: (prop: any) => (
       <BaseToast
         {...prop}
-        style={{borderLeftColor: Colors.text.green}}
+        style={{borderLeftColor: Colors.text.green, marginTop: props.topOffset}}
         contentContainerStyle={{
           paddingHorizontal: 15,
           backgroundColor: Colors.background.darker,

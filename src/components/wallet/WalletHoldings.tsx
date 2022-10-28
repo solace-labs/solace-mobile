@@ -123,7 +123,9 @@ const WalletHoldings = () => {
             </SolaceText>
             <SolaceIcon background="dark" name="down" /> */}
         </View>
+
         <AccountItem account={{tokenAddress: 'SOL', amount: 0}} type="send" />
+
         {accounts?.map((account, index) => {
           return <AccountItem account={account} key={index} type="send" />;
         })}

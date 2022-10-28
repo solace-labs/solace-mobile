@@ -142,7 +142,7 @@ const Incubation = () => {
       </View>
       {show === 'yes' && (
         <SolaceButton onPress={handleIncubationEnd} loading={loading.value}>
-          <SolaceText type="secondary" weight="bold" color="dark">
+          <SolaceText type="secondary" weight="bold" color="white">
             end incubation
           </SolaceText>
         </SolaceButton>

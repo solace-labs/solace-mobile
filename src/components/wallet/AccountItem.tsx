@@ -37,7 +37,7 @@ const AccountItem: React.FC<Props> = ({
   };
 
   return (
-    <SolacePaper size="xs">
+    <SolacePaper size="xs" mb={10}>
       <TouchableOpacity
         style={[globalStyles.rowSpaceBetween, globalStyles.fullWidth]}
         onPress={redirectToAsset}>

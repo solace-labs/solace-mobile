@@ -154,9 +154,9 @@ const SendScreen = () => {
   };
 
   const handleAmountChange = (key: string, type?: 'max') => {
-    // if (+maxBalance < +(amount + key)) {
-    //   return;
-    // }
+    if (+maxBalance < +(amount + key)) {
+      return;
+    }
     if (type === 'max') {
       setAmount(key);
       return;
@@ -175,8 +175,8 @@ const SendScreen = () => {
     handleAmountChange(maxBalance!.toString(), 'max');
     Toast.show({
       type: 'success',
-      text1: 'max value',
-      text2: 'max value set',
+      text1: 'max balance value set',
+      // text2: 'max value set',
     });
   };
 
