@@ -1,6 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {TextStyle, TouchableOpacity, View, ViewStyle} from 'react-native';
-import React, {FC, useContext} from 'react';
+import {
+  ActivityIndicator,
+  TextStyle,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native';
+import React, {FC, useContext, useEffect, useState} from 'react';
 
 import {GlobalContext} from '../../../../state/contexts/GlobalContext';
 import {PublicKey} from 'solace-sdk';
@@ -28,6 +34,12 @@ import Zocial from 'react-native-vector-icons/Zocial';
 import {Colors} from '../../../../utils/colors';
 import globalStyles from '../../../../utils/global_styles';
 import {ActivityStackParamList} from '../../../../navigation/Home/Activity';
+import {OngoingTransfer} from 'solace-sdk/dist/cjs/sdk/types';
+import {minifyAddress} from '../../../../utils/helpers';
+import {LAMPORTS_PER_SOL} from '../../../../utils/constants';
+import {useQuery, useQueryClient} from '@tanstack/react-query';
+import {getOngoingTransfers} from '../../../../apis/sdk';
+import {useRefreshOnFocus} from '../../../../hooks/useRefreshOnFocus';
 
 type RecentActivityScreenProps = NativeStackScreenProps<
   ActivityStackParamList,
@@ -100,7 +112,7 @@ const getIcon = (name: string, variant: string, iconStyle: TextStyle) => {
 const RecentActivityScreen = () => {
   const {state} = useContext(GlobalContext);
   const navigation = useNavigation<RecentActivityScreenProps['navigation']>();
-
+  const sdk = state.sdk!;
   // const items: OptionItemType[] = [
   //   {
   //     iconType: 'ionicons',
@@ -149,6 +161,26 @@ const RecentActivityScreen = () => {
   //   },
   // ];
 
+  const queryClient = useQueryClient();
+
+  const {
+    data: transfers,
+    isLoading,
+    isFetching,
+  } = useQuery(['ongoing-transfers'], () => getOngoingTransfers(sdk!), {
+    enabled: sdk! !== undefined,
+  });
+
+  const refetch = async () => {
+    await queryClient.invalidateQueries(['ongoing-transfers']);
+  };
+
+  useRefreshOnFocus(refetch);
+
+  useEffect(() => {
+    queryClient.invalidateQueries(['ongoing-transfers']);
+  }, []);
+
   const navigateTo = (screen: keyof ActivityStackParamList) => {
     navigation.navigate(screen);
   };
@@ -158,13 +190,53 @@ const RecentActivityScreen = () => {
       <TopNavbar
         startIcon="lightning-bolt-outline"
         startIconType="mci"
+        endIcon="reload1"
+        endClick={refetch}
         text="activity"
       />
-      <View style={globalStyles.fullWidth}>
-        {/* {items.map((item, index) => {
+      <SolaceContainer>
+        <View style={globalStyles.fullWidth}>
+          {}
+          {/* {items.map((item, index) => {
           return <ActivityItem key={item.heading} item={item} index={index} />;
         })} */}
-      </View>
+          <SolaceText
+            size="lg"
+            weight="semibold"
+            mb={10}
+            mt={10}
+            color="awaiting"
+            align="left">
+            pending transfers {isFetching && <ActivityIndicator size="small" />}
+          </SolaceText>
+          {transfers?.map(trnsfr => {
+            return (
+              <View
+                key={trnsfr.seedKey.toString()}
+                style={[
+                  globalStyles.rowSpaceBetween,
+                  {
+                    borderTopWidth: 1,
+                    borderBottomWidth: 1,
+                    borderBottomColor: Colors.text.dark,
+                    borderTopColor: Colors.text.dark,
+                    paddingVertical: 20,
+                  },
+                ]}>
+                <SolaceText weight="semibold">
+                  {minifyAddress(trnsfr.reciever, 5)}
+                </SolaceText>
+                <SolaceText>
+                  {trnsfr.totalApprovals} / {trnsfr.threshold}
+                </SolaceText>
+                <SolaceText type="secondary" weight="bold">
+                  {trnsfr.amount / LAMPORTS_PER_SOL}
+                </SolaceText>
+              </View>
+            );
+          })}
+        </View>
+      </SolaceContainer>
     </SolaceContainer>
   );
 };

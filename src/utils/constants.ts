@@ -12,6 +12,7 @@ export const PROGRAM_ADDRESS =
     ? '8FRYfiEcSPFuJd27jkKaPBwFCiXDFYrnfwqgH9JFjS2U'
     : '3CvPZTk1PYMs6JzgiVNFtsAeijSNwbhrQTMYeFQKWpFw';
 export const LAMPORTS_PER_SOL = 1000000000;
+// export const SPL_TOKEN = 'DB6BcxUpHDSxEFpqDRjm98HTvX2JZapbBNN8RcR4K11z';
 export const SPL_TOKEN = 'DB6BcxUpHDSxEFpqDRjm98HTvX2JZapbBNN8RcR4K11z';
 export const TOKEN_PROGRAM_ID = new PublicKey(
   'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',

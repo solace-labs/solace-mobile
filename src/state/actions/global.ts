@@ -80,6 +80,13 @@ export const getContact = (id: string) => {
   };
 };
 
+export const setReciever = (reciever: string) => {
+  return {
+    type: 'SET_RECIEVER',
+    payload: reciever,
+  };
+};
+
 export const clearData = () => {
   return {
     type: 'CLEAR_DATA',

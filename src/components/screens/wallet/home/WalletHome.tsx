@@ -144,6 +144,7 @@ const WalletHomeScreen = () => {
             style={globalStyles.rowCenter}
             onPress={() => {
               endIncubation(data?.inIncubation ?? false);
+              // endIncubation(true);
             }}>
             <SolaceStatus
               type={data?.inIncubation ? 'success' : 'error'}

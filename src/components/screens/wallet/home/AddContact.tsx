@@ -30,7 +30,9 @@ export type WalletDataType = Awaited<
 const AddContactScreen = () => {
   const navigation = useNavigation<WalletScreenProps['navigation']>();
   const initialLoading = {message: '', value: false};
-  const [address, setAddress] = useState('');
+  const [address, setAddress] = useState(
+    'GNgMfSSJ4NjSuu1EdHj94P6TzQS24KH38y1si2CMrUsF',
+  );
   const [loading, setLoading] = useState(initialLoading);
   const {state} = useContext(GlobalContext);
 
@@ -68,6 +70,11 @@ const AddContactScreen = () => {
     return false;
   };
 
+  const checkInPubKeyHistory = (data: WalletDataType) => {
+    console.log(data.pubkeyHistory);
+    return data.pubkeyHistory.includes(new PublicKey(address));
+  };
+
   const handleAdd = async () => {
     try {
       setLoading({
@@ -77,7 +84,10 @@ const AddContactScreen = () => {
       const sdk = state.sdk!;
       const data = await sdk.fetchWalletData();
       const inIncubation = checkIncubationMode(data);
-      if (inIncubation) {
+      console.log(inIncubation);
+      /** check if the address is in pubkeyHistory */
+      const inPubKeyHistory = await checkInPubKeyHistory(data);
+      if (inIncubation || inPubKeyHistory) {
         await addContact();
         setLoading(initialLoading);
         return;
@@ -156,7 +166,7 @@ const AddContactScreen = () => {
         loading={loading.value}
         // mb={10}
         background="purple"
-        disabled={!address}>
+        disabled={!address || loading.value}>
         <SolaceText type="secondary" weight="bold" color="white">
           save contact
         </SolaceText>

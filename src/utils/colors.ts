@@ -20,6 +20,7 @@ let theme = {
     nav: '#1a1a1a',
     hello: '#ffa',
     gray: '#8a8a8a',
+    error: '#aa2222',
   },
   text: {
     white: '#ffffff',
@@ -37,6 +38,7 @@ let theme = {
     lightorange: '#FFCFC4',
     lightblue: '#C4E6FF',
     lightpink: '#F0C4FF',
+    error: '#aa2222',
   },
 };
 // if (colorScheme === 'dark') {

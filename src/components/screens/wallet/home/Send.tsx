@@ -1,12 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {
-  View,
-  TouchableOpacity,
-  ActivityIndicator,
-  Alert,
-  TextInput,
-} from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+import {View, TouchableOpacity, TextInput} from 'react-native';
+import React, {useContext, useState} from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Toast from 'react-native-toast-message';
@@ -22,14 +16,11 @@ import SolaceText from '../../../common/solaceui/SolaceText';
 import TopNavbar from '../../../common/TopNavbar';
 import globalStyles from '../../../../utils/global_styles';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import SolaceInput from '../../../common/solaceui/SolaceInput';
-import SolaceCustomInput from '../../../common/solaceui/SolaceCustomInput';
-import {PublicKey} from 'solace-sdk';
+import {SolaceSDK, PublicKey} from 'solace-sdk';
 import {confirmTransaction, getFeePayer} from '../../../../utils/apis';
 import {relayTransaction} from '../../../../utils/relayer';
 import {LAMPORTS_PER_SOL} from '../../../../utils/constants';
-import FlashMessage, {showMessage} from 'react-native-flash-message';
-import {setAccountStatus} from '../../../../state/actions/global';
+import {setAccountStatus, setReciever} from '../../../../state/actions/global';
 import SolaceLoader from '../../../common/solaceui/SolaceLoader';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useQuery, useQueryClient} from '@tanstack/react-query';
@@ -39,6 +30,7 @@ import {minifyAddress} from '../../../../utils/helpers';
 import {Colors} from '../../../../utils/colors';
 import {SolaceToast} from '../../../common/solaceui/SolaceToast';
 import {WalletStackParamList} from '../../../../navigation/Home/Home';
+import {PublicKeyType} from '../security/SecurityScreen';
 
 const hapticFeedbackOptions = {
   enableVibrateFallback: true,
@@ -51,19 +43,17 @@ const SendScreen = () => {
   const {state, dispatch} = useContext(GlobalContext);
   const navigation = useNavigation<SendScreenProps['navigation']>();
   const {
-    params: {asset, contact},
+    params: {asset},
   } = useRoute<SendScreenProps['route']>();
 
   const isSol = asset === 'SOL';
 
   const shortAsset = isSol ? 'SOL' : minifyAddress(asset, 4);
+  const recipientAddress =
+    state.send?.reciever || 'GNgMfSSJ4NjSuu1EdHj94P6TzQS24KH38y1si2CMrUsF';
+  // const recipientAddress = 'GNgMfSSJ4NjSuu1EdHj94P6TzQS24KH38y1si2CMrUsF';
 
   const [amount, setAmount] = useState('');
-  const [recipientAddress, setRecipientAddress] = useState(
-    contact ? contact : 'GNgMfSSJ4NjSuu1EdHj94P6TzQS24KH38y1si2CMrUsF',
-    // 'GNgMfSSJ4NjSuu1EdHj94P6TzQS24KH38y1si2CMrUsF',
-  );
-  // const [recipientAddress, setRecipientAddress] = useState('');
   const [sendLoading, setSendLoading] = useState({
     message: '',
     value: false,
@@ -91,45 +81,95 @@ const SendScreen = () => {
     navigation.goBack();
   };
 
+  const handleSolTransfer = async (
+    sdk: SolaceSDK,
+    amountInLamports: number,
+    reciever: PublicKeyType,
+    feePayer: PublicKeyType,
+  ) => {
+    return await sdk.requestSolTransfer(
+      {
+        amount: amountInLamports,
+        reciever,
+      },
+      feePayer,
+    );
+  };
+
+  const handleSplTransfer = async (
+    sdk: SolaceSDK,
+    amountInLamports: number,
+    reciever: PublicKeyType,
+    feePayer: PublicKeyType,
+  ) => {
+    const splTokenAddress = new PublicKey(asset);
+    const recieverTokenAccount = await sdk.getAnyAssociatedTokenAccount(
+      splTokenAddress,
+      reciever,
+    );
+    const accountInfo = await sdk.provider.connection.getAccountInfo(
+      recieverTokenAccount,
+    );
+    if (!accountInfo) {
+      const txn = await sdk.createAnyTokenAccount(
+        reciever,
+        recieverTokenAccount,
+        splTokenAddress,
+        feePayer,
+      );
+      setSendLoading({
+        message: 'creating token account...',
+        value: true,
+      });
+      const rs = await relayTransaction(txn);
+      await confirmTransaction(rs);
+    }
+    setSendLoading({
+      message: 'sending...',
+      value: true,
+    });
+    return await sdk.requestSplTransfer(
+      {
+        amount: amountInLamports,
+        mint: splTokenAddress,
+        reciever,
+        recieverTokenAccount,
+      },
+      feePayer!,
+    );
+  };
+
   const send = async () => {
     setSendLoading({
       message: 'sending...',
       value: true,
     });
-    // showMessage({
-    //   message: 'sending',
-    //   type: 'info',
-    // });
     try {
       const sdk = state.sdk!;
       const feePayer = await getFeePayer();
-      if (!sdk) {
+      if (!sdk || !feePayer) {
         return;
       }
-      const splTokenAddress = new PublicKey(asset);
       const reciever = new PublicKey(recipientAddress);
-      const recieverTokenAccount = await sdk.getPDAAssociatedTokenAccount(
-        splTokenAddress,
-        reciever,
-      );
-      const tx = await sdk.requestSplTransfer(
-        {
-          amount: +amount * LAMPORTS_PER_SOL,
-          mint: splTokenAddress,
-          reciever,
-          recieverTokenAccount,
-        },
-        feePayer!,
-      );
-      const response = await relayTransaction(tx);
+      let tx;
+      const amountInLamports = +amount * LAMPORTS_PER_SOL;
+
+      if (isSol) {
+        tx = await handleSolTransfer(sdk, amountInLamports, reciever, feePayer);
+      } else {
+        tx = await handleSplTransfer(sdk, amountInLamports, reciever, feePayer);
+      }
+
+      console.log('IS guarded', tx.isGuarded);
+      const response = await relayTransaction(tx.transaction);
       setSendLoading({
         message: 'finalizing... please wait',
         value: true,
       });
       await confirmTransaction(response);
-      const res = await sdk.fetchWalletData();
       setSendLoading({message: '', value: false});
       queryClient.invalidateQueries(['maxbalance']);
+      queryClient.invalidateQueries(['ongoing-transfers']);
       navigation.goBack();
     } catch (e: any) {
       console.log('SENDING ERROR: ', e);
@@ -137,9 +177,8 @@ const SendScreen = () => {
         dispatch(setAccountStatus(AccountStatus.EXISITING));
       } else {
         setSendLoading({message: '', value: false});
-        showMessage({
-          message: 'some error sending. try again later',
-          type: 'danger',
+        Toast.show({
+          text1: e.message,
         });
       }
     }
@@ -180,6 +219,11 @@ const SendScreen = () => {
     });
   };
 
+  const handleEdit = () => {
+    dispatch(setReciever(recipientAddress));
+    navigation.navigate('EditReciever');
+  };
+
   return (
     <SolaceContainer fullWidth={true}>
       <TopNavbar
@@ -187,15 +231,22 @@ const SendScreen = () => {
         startIconType="ionicons"
         // text={`to: (${ra})`}
         startClick={handleGoBack}
+        endClick={handleEdit}
         endIcon="edit"
         endIconType="feather">
-        <SolaceText size="md" weight="semibold">
-          to:{''}
-        </SolaceText>
-        <SolaceText size="md" weight="semibold" color="normal">
-          {' '}
-          ({minifyAddress(recipientAddress, 5)})
-        </SolaceText>
+        <TouchableOpacity onPress={handleEdit} style={globalStyles.rowCenter}>
+          <SolaceText size="md" weight="semibold">
+            to:{''}
+          </SolaceText>
+          {recipientAddress ? (
+            <SolaceText size="md" weight="semibold" color="normal">
+              {' '}
+              ({minifyAddress(recipientAddress, 5)})
+            </SolaceText>
+          ) : (
+            <></>
+          )}
+        </TouchableOpacity>
       </TopNavbar>
       <View
         style={[
@@ -269,7 +320,13 @@ const SendScreen = () => {
           <View
             style={{flex: 1, justifyContent: 'flex-end', paddingBottom: 12}}>
             <SolaceButton
-              onPress={send}
+              onPress={() => {
+                Toast.show({
+                  type: 'info',
+                  text1: 'sending',
+                });
+                send();
+              }}
               loading={sendLoading.value}
               background="purple"
               disabled={isDisabled()}
@@ -290,7 +347,7 @@ const SendScreen = () => {
         <SolaceKeypad handleKeyChange={handleAmountChange} />
       </View>
       {/* <Toast topOffset={50} /> */}
-      <SolaceToast topOffset={50} />
+      <SolaceToast topOffset={10} />
     </SolaceContainer>
   );
 };

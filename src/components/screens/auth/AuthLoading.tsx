@@ -3,7 +3,7 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useContext, useEffect} from 'react';
 import {showMessage} from 'react-native-flash-message';
-import {KeyPair, SolaceSDK} from 'solace-sdk';
+import {SolaceSDK, KeyPair} from 'solace-sdk';
 import {AuthStackParamList} from '../../../navigation/Auth';
 import {setAccountStatus, setSDK, setUser} from '../../../state/actions/global';
 import {
@@ -71,17 +71,15 @@ const AuthLoading = () => {
       const keypair = KeyPair.fromSecretKey(
         Uint8Array.from(privateKey.split(',').map(e => +e)),
       );
-      console.log(
-        // 'CF8HAEPFwG79ui1AYJpasUDrQo3E9RSAqYeAMr7abz4n',
-        'From storage: ',
-        keypair.publicKey.toString(),
-      );
       const sdk = await SolaceSDK.retrieveFromName(solaceName, {
         network: NETWORK,
         owner: keypair,
         programAddress: PROGRAM_ADDRESS,
       });
-      console.log('WALLET ADDRESS', sdk.wallet);
+      console.log('From storage: ', keypair.publicKey.toString());
+      console.log('From sdk: ', sdk.owner.publicKey.toString());
+      console.log('WALLET ADDRESS', sdk.wallet.toString());
+      console.log(await sdk.fetchOngoingTransfers());
       dispatch(setSDK(sdk));
       dispatch(setAccountStatus(AccountStatus.ACTIVE));
     } catch (e: any) {

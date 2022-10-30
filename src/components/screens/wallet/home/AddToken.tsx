@@ -26,8 +26,8 @@ const AddToken = () => {
   const navigation = useNavigation<WalletScreenProps['navigation']>();
   const initialLoading = {message: '', value: false};
   const [address, setAddress] = useState(
-    // 'DB6BcxUpHDSxEFpqDRjm98HTvX2JZapbBNN8RcR4K11z',
-    '',
+    SPL_TOKEN,
+    // '',
   );
   const [loading, setLoading] = useState(initialLoading);
   const {state} = useContext(GlobalContext);
@@ -57,6 +57,7 @@ const AddToken = () => {
       navigation.goBack();
     } catch (e: any) {
       setLoading(initialLoading);
+      console.log(e);
       showMessage({
         message: 'address is not a valid spl token',
         type: 'danger',

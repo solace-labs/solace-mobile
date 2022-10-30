@@ -1,3 +1,4 @@
+import SendScreen from '../../components/screens/wallet/home/Send';
 import {initialState} from '../contexts/GlobalContext';
 
 const reducer = (state: any, action: {type: string; payload: any}) => {
@@ -37,6 +38,14 @@ const reducer = (state: any, action: {type: string; payload: any}) => {
       return {
         ...state,
         retrieveData: payload,
+      };
+    case 'SET_RECIEVER':
+      return {
+        ...state,
+        send: {
+          ...state.send,
+          reciever: payload,
+        },
       };
     case 'CHANGE_NAME':
       return {...state, username: action.payload};

@@ -125,7 +125,17 @@ export const getGuardians = async (sdk: SolaceSDK) => {
 export const getContacts = async (sdk: SolaceSDK) => {
   try {
     const walletData = await sdk.fetchWalletData();
+    console.log(walletData);
     return walletData.trustedPubkeys;
+  } catch (e: any) {
+    console.log('Error: ', e);
+  }
+};
+
+export const getOngoingTransfers = async (sdk: SolaceSDK) => {
+  try {
+    console.log('FETCHING transfers');
+    return await sdk.fetchOngoingTransfers();
   } catch (e: any) {
     console.log('Error: ', e);
   }

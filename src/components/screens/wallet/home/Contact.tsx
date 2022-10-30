@@ -60,7 +60,7 @@ const ContactScreen = () => {
   };
 
   const sendToUntrusted = () => {
-    navigation.navigate('Send', {asset: asset.toString(), contact: ''});
+    navigation.navigate('Send', {asset: asset.toString()});
   };
 
   if (isLoading) {

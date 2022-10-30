@@ -36,24 +36,50 @@ export function SolaceToast(props: SolaceToastProps) {
       />
     ),
     /*
+      Overwrite 'info' type,
+      by modifying the existing `BaseToast` component
+    */
+    info: (prop: any) => (
+      <BaseToast
+        {...prop}
+        style={{
+          borderLeftColor: Colors.text.normal,
+          marginTop: props.topOffset,
+        }}
+        contentContainerStyle={{
+          paddingHorizontal: 15,
+          backgroundColor: Colors.background.darker,
+          borderWidth: 1,
+          borderColor: Colors.background.dark,
+        }}
+        text1Style={{
+          color: Colors.text.light,
+          fontSize: 15,
+          fontWeight: '400',
+        }}
+      />
+    ),
+    /*
       Overwrite 'error' type,
       by modifying the existing `ErrorToast` component
     */
     error: (prop: any) => (
       <ErrorToast
         {...prop}
-        style={{borderLeftColor: Colors.text.awaiting, borderRadiusLeft: 0}}
+        style={{
+          borderLeftColor: Colors.text.error,
+          marginTop: props.topOffset,
+        }}
         contentContainerStyle={{
           paddingHorizontal: 15,
-          backgroundColor: Colors.background.normal,
-          // borderWidth: 1,
-          // borderColor: Colors.background.dark,
-          // borderRadius: 10,
-          // overflow: 'hidden',
+          backgroundColor: Colors.background.darker,
+          borderWidth: 1,
+          borderColor: Colors.background.dark,
         }}
         text1Style={{
           color: Colors.text.light,
           fontSize: 15,
+          fontWeight: '400',
         }}
         text2Style={{
           fontSize: 15,

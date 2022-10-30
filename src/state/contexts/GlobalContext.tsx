@@ -35,6 +35,9 @@ export enum StatusEnum {
 
 type InitialStateType = {
   accountStatus: AccountStatus;
+  send?: {
+    reciever: string;
+  };
   user?: User;
   sdk?: SolaceSDK;
   updateStatus?: Update;
@@ -92,6 +95,9 @@ export const initialState = {
     ownerPrivateKey: '',
     isWalletCreated: false,
     pin: '',
+  },
+  send: {
+    reciever: '',
   },
   updateStatus: {
     loading: false,
@@ -183,7 +189,6 @@ const GlobalProvider = ({
     }
     /*** GETDATA */
     // const appstate = await StorageGetItem('appstate');
-    // const storeduser = await StorageGetItem('user');
     // console.log('appstate', appstate);
     // console.log('storeduser', storeduser);
     // await StorageClearAll();
