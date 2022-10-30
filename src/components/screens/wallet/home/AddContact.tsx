@@ -31,7 +31,8 @@ const AddContactScreen = () => {
   const navigation = useNavigation<WalletScreenProps['navigation']>();
   const initialLoading = {message: '', value: false};
   const [address, setAddress] = useState(
-    'GNgMfSSJ4NjSuu1EdHj94P6TzQS24KH38y1si2CMrUsF',
+    // 'GNgMfSSJ4NjSuu1EdHj94P6TzQS24KH38y1si2CMrUsF',
+    '',
   );
   const [loading, setLoading] = useState(initialLoading);
   const {state} = useContext(GlobalContext);

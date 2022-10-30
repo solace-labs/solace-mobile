@@ -118,10 +118,6 @@ const RecieveScreen = () => {
               </SolaceText>
               <SolaceIcon background="dark" name="down" />
             </View>
-            <AccountItem
-              account={{tokenAddress: 'SOL', amount: 0}}
-              type="recieve"
-            />
             {accounts?.map((account, index) => {
               return (
                 <AccountItem account={account} key={index} type="recieve" />

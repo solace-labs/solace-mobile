@@ -28,7 +28,7 @@ import WalletActivity from '../../../wallet/WalletActivity';
 import globalStyles from '../../../../utils/global_styles';
 import SolaceStatus from '../../../common/solaceui/SolaceStatus';
 import {useRefreshOnFocus} from '../../../../hooks/useRefreshOnFocus';
-import {getIncubationData} from '../../../../apis/sdk';
+import {getIncubationData, getMaxBalance} from '../../../../apis/sdk';
 import {Colors} from '../../../../utils/colors';
 import SolacePaper from '../../../common/solaceui/SolacePaper';
 import WalletHoldings from '../../../wallet/WalletHoldings';
@@ -134,8 +134,16 @@ const WalletHomeScreen = () => {
           name="lock"
         /> */}
         <Image
-          source={require('../../../../../assets/images/solace/solana-icon.png')}
-          style={globalStyles.avatar}
+          source={require('../../../../../assets/images/solace/zolana.png')}
+          style={[
+            // globalStyles.avatar,
+            {
+              resizeMode: 'contain',
+              backgroundColor: 'transparent',
+              height: 24,
+              width: 24,
+            },
+          ]}
         />
         {isLoading ? (
           <ActivityIndicator size="small" />
@@ -210,7 +218,7 @@ const WalletHomeScreen = () => {
 
       <View style={[globalStyles.fullCenter, {flex: 0.2}]}>
         <SolaceText size="xl" weight="bold">
-          $0.00
+          ${(32 * data?.balance! || 0).toFixed(2)}
         </SolaceText>
       </View>
       <View style={[globalStyles.fullCenter, {flex: 0.4}]}>

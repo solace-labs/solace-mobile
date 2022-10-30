@@ -9510,10 +9510,10 @@
     "ip" "^1.1.5"
     "smart-buffer" "^4.2.0"
 
-"solace-sdk@^2.0.25":
-  "integrity" "sha512-8Eo97HX61/GEPaNIBxeaBWJOqI+jP1JDaLMcD92PasEzcALTUXdE5HXatznYxS6rS5ba40rBFFNWpwvAkgmXQw=="
-  "resolved" "https://registry.npmjs.org/solace-sdk/-/solace-sdk-2.0.25.tgz"
-  "version" "2.0.25"
+"solace-sdk@^2.0.26":
+  "integrity" "sha512-SeM0ynDoRFm+/zwgmsngWIrc62tgFnKtbRywBBkAX/f47iWVRTFRUlG78f6q4E+ZHyccqg2Ao9TwsrMMhgx0tw=="
+  "resolved" "https://registry.npmjs.org/solace-sdk/-/solace-sdk-2.0.26.tgz"
+  "version" "2.0.26"
   dependencies:
     "@solana/spl-token" "^0.3.4"
     "anchor-rn" "^0.18.2"

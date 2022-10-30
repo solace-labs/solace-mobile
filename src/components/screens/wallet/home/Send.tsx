@@ -50,7 +50,7 @@ const SendScreen = () => {
 
   const shortAsset = isSol ? 'SOL' : minifyAddress(asset, 4);
   const recipientAddress =
-    state.send?.reciever || 'GNgMfSSJ4NjSuu1EdHj94P6TzQS24KH38y1si2CMrUsF';
+    state.send?.reciever || 'DxSmybUQhHBu8W4kfoKfmMrsCgcd3TXmjcpoWokzUs6B';
   // const recipientAddress = 'GNgMfSSJ4NjSuu1EdHj94P6TzQS24KH38y1si2CMrUsF';
 
   const [amount, setAmount] = useState('');
@@ -87,9 +87,11 @@ const SendScreen = () => {
     reciever: PublicKeyType,
     feePayer: PublicKeyType,
   ) => {
+    console.log('INSIDE SOL TRANSFER', amountInLamports, reciever);
     return await sdk.requestSolTransfer(
       {
         amount: amountInLamports,
+        // amount: 10,
         reciever,
       },
       feePayer,
@@ -147,13 +149,14 @@ const SendScreen = () => {
     try {
       const sdk = state.sdk!;
       const feePayer = await getFeePayer();
+      // console.log({feePayer});
       if (!sdk || !feePayer) {
         return;
       }
       const reciever = new PublicKey(recipientAddress);
       let tx;
       const amountInLamports = +amount * LAMPORTS_PER_SOL;
-      console.log(amountInLamports);
+      // console.log(amountInLamports);
 
       if (isSol) {
         tx = await handleSolTransfer(sdk, amountInLamports, reciever, feePayer);
@@ -161,7 +164,7 @@ const SendScreen = () => {
         tx = await handleSplTransfer(sdk, amountInLamports, reciever, feePayer);
       }
 
-      console.log('IS guarded', tx.isGuarded, tx);
+      // console.log('IS guarded', tx.isGuarded, tx);
       const response = await relayTransaction(tx.transaction);
       setSendLoading({
         message: 'finalizing... please wait',

@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {Image, View} from 'react-native';
+import {Image, Linking, View} from 'react-native';
 import React from 'react';
 
 import {PublicKey} from 'solace-sdk';
@@ -25,6 +25,10 @@ export type OptionItemType = {
   handlePress: () => void;
 };
 
+const openLink = (link: string) => {
+  Linking.openURL(link);
+};
+
 const AboutScreen = () => {
   const navigation = useNavigation<AboutScreenProps['navigation']>();
 
@@ -33,31 +37,41 @@ const AboutScreen = () => {
       iconType: 'ionicons',
       icon: 'document-outline',
       heading: 'terms of service',
-      handlePress: () => {},
+      handlePress: () => {
+        openLink('https://www.solace.money/terms-conditions');
+      },
     },
     {
       iconType: 'ionicons',
       icon: 'document-outline',
       heading: 'privacy policy',
-      handlePress: () => {},
+      handlePress: () => {
+        openLink('https://www.solace.money/terms-conditions');
+      },
     },
     {
       iconType: 'ionicons',
       icon: 'globe-outline',
       heading: 'website',
-      handlePress: () => {},
+      handlePress: () => {
+        openLink('https://www.solace.money');
+      },
     },
     {
       iconType: 'ionicons',
       icon: 'logo-twitter',
       heading: 'twitter',
-      handlePress: () => {},
+      handlePress: () => {
+        openLink('https://twitter.com/Solaceprotocol');
+      },
     },
     {
       iconType: 'mci',
       icon: 'discord',
       heading: 'discord',
-      handlePress: () => {},
+      handlePress: () => {
+        openLink('https://discord.com/invite/hV2yB9jk7V');
+      },
     },
   ];
 

@@ -25,11 +25,7 @@ type AddGuardianScreenProps = NativeStackScreenProps<
 >;
 
 const AddGuardian = () => {
-  const [address, setAddress] = useState(
-    // 'GNgMfSSJ4NjSuu1EdHj94P6TzQS24KH38y1si2CMrUsF',
-    // '2EUpmLqZNLbiwq1NYmvPLVPCByGsntfqfSEMpPj4eqPS',
-    'G9PfPVfBuKF4xr4yLt4LjfDezwunPsezCvdjfVBJnHk2',
-  );
+  const [address, setAddress] = useState('');
   const {state} = useContext(GlobalContext);
   const navigation = useNavigation<AddGuardianScreenProps['navigation']>();
   const [loading, setLoading] = useState({

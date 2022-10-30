@@ -26,8 +26,9 @@ const AddToken = () => {
   const navigation = useNavigation<WalletScreenProps['navigation']>();
   const initialLoading = {message: '', value: false};
   const [address, setAddress] = useState(
-    SPL_TOKEN,
+    // SPL_TOKEN,
     // '',
+    '',
   );
   const [loading, setLoading] = useState(initialLoading);
   const {state} = useContext(GlobalContext);

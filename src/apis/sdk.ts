@@ -62,9 +62,11 @@ const checkIncubationMode = (data: WalletDataType) => {
 
 export const getIncubationData = async (sdk: SolaceSDK) => {
   const data = await sdk!.fetchWalletData();
+  const solBalance = await sdk.provider.connection.getBalance(sdk.wallet);
   return {
     inIncubation: checkIncubationMode(data),
     endTime: getIncubationTime(data.createdAt),
+    balance: solBalance / LAMPORTS_PER_SOL,
   };
 };
 

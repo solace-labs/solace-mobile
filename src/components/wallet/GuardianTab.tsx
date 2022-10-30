@@ -11,8 +11,6 @@ import {PublicKeyType} from '../screens/wallet/security/Guardian';
 import SolaceText from '../common/solaceui/SolaceText';
 import globalStyles from '../../utils/global_styles';
 import {guardianStyles as styles} from './GuardianSecondTab';
-import Clipboard from '@react-native-community/clipboard';
-import {showMessage} from 'react-native-flash-message';
 import {firstCharacter, minifyAddress} from '../../utils/helpers';
 
 import Fontisto from 'react-native-vector-icons/Fontisto';

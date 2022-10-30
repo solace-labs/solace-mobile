@@ -1,5 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {TextStyle, TouchableOpacity, View, ViewStyle} from 'react-native';
+import {
+  Linking,
+  TextStyle,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native';
 import React, {FC, useContext} from 'react';
 
 import {GlobalContext} from '../../../../state/contexts/GlobalContext';
@@ -27,6 +33,7 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Zocial from 'react-native-vector-icons/Zocial';
 import {Colors} from '../../../../utils/colors';
 import globalStyles from '../../../../utils/global_styles';
+import {showMessage} from 'react-native-flash-message';
 
 type SecurityScreenProps = NativeStackScreenProps<
   SecurityStackParamList,
@@ -92,6 +99,10 @@ const getIcon = (name: string, variant: string, iconStyle: TextStyle) => {
   }
 };
 
+const openLink = (link: string) => {
+  Linking.openURL(link);
+};
+
 const SecurityScreen = () => {
   const {state} = useContext(GlobalContext);
   const navigation = useNavigation<SecurityScreenProps['navigation']>();
@@ -113,7 +124,11 @@ const SecurityScreen = () => {
       subHeading:
         'make transaction without guardians with addresses you cant trust',
       handlePress: () => {
-        navigateTo('TrustedAddresses');
+        // navigateTo('TrustedAddresses');
+        showMessage({
+          message: 'coming soon...',
+          type: 'info',
+        });
       },
     },
     {
@@ -121,20 +136,32 @@ const SecurityScreen = () => {
       icon: 'check-decagram-outline',
       heading: 'trusted lists',
       subHeading: 'interact with popular defi apps which you can trust',
-      handlePress: () => {},
+      handlePress: () => {
+        showMessage({
+          message: 'coming soon...',
+          type: 'info',
+        });
+      },
     },
     {
       iconType: 'ionicons',
       icon: 'ios-time-outline',
       heading: 'trusted sessions',
       subHeading: 'manage your payment methods',
-      handlePress: () => {},
+      handlePress: () => {
+        showMessage({
+          message: 'coming soon...',
+          type: 'info',
+        });
+      },
     },
     {
       iconType: 'ionicons',
       icon: 'ios-mic-outline',
       heading: 'support',
-      handlePress: () => {},
+      handlePress: () => {
+        openLink('https://www.solace.money');
+      },
     },
     {
       iconType: 'ionicons',

@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
   ActivityIndicator,
+  ScrollView,
   TextStyle,
   TouchableOpacity,
   View,
@@ -40,6 +41,7 @@ import {LAMPORTS_PER_SOL} from '../../../../utils/constants';
 import {useQuery, useQueryClient} from '@tanstack/react-query';
 import {getOngoingTransfers} from '../../../../apis/sdk';
 import {useRefreshOnFocus} from '../../../../hooks/useRefreshOnFocus';
+import SolacePaper from '../../../common/solaceui/SolacePaper';
 
 type RecentActivityScreenProps = NativeStackScreenProps<
   ActivityStackParamList,
@@ -200,41 +202,42 @@ const RecentActivityScreen = () => {
           {/* {items.map((item, index) => {
           return <ActivityItem key={item.heading} item={item} index={index} />;
         })} */}
-          <SolaceText
-            size="lg"
-            weight="semibold"
-            mb={10}
-            mt={10}
-            color="awaiting"
-            align="left">
+          <SolaceText size="lg" weight="semibold" mb={10} mt={10} align="left">
             pending transfers {isFetching && <ActivityIndicator size="small" />}
           </SolaceText>
-          {transfers?.map(trnsfr => {
-            return (
-              <View
-                key={trnsfr.seedKey.toString()}
-                style={[
-                  globalStyles.rowSpaceBetween,
-                  {
-                    borderTopWidth: 1,
-                    borderBottomWidth: 1,
-                    borderBottomColor: Colors.text.dark,
-                    borderTopColor: Colors.text.dark,
-                    paddingVertical: 20,
-                  },
-                ]}>
-                <SolaceText weight="semibold">
-                  {minifyAddress(trnsfr.reciever, 5)}
-                </SolaceText>
-                <SolaceText>
-                  {trnsfr.totalApprovals} / {trnsfr.threshold}
-                </SolaceText>
-                <SolaceText type="secondary" weight="bold">
-                  {trnsfr.amount / LAMPORTS_PER_SOL}
-                </SolaceText>
-              </View>
-            );
-          })}
+          <ScrollView
+            // style={{marginBottom: 50}}
+            contentContainerStyle={{paddingBottom: 60}}>
+            {transfers?.map(trnsfr => {
+              return (
+                <SolacePaper
+                  key={trnsfr.seedKey.toString()}
+                  style={[
+                    globalStyles.rowSpaceBetween,
+                    {
+                      marginTop: 12,
+                      paddingVertical: 16,
+                    },
+                  ]}>
+                  <SolaceText weight="semibold">
+                    {minifyAddress(trnsfr.reciever, 5)}
+                  </SolaceText>
+                  <SolaceText type="secondary" weight="bold" color="awaiting">
+                    {trnsfr.totalApprovals}/{trnsfr.threshold}
+                  </SolaceText>
+                  <View>
+                    <SolaceText type="secondary" weight="bold">
+                      -{trnsfr.amount / LAMPORTS_PER_SOL}{' '}
+                      {/* {minifyAddress(trnsfr.mint!, 3)} */}
+                    </SolaceText>
+                    <SolaceText weight="semibold" color="normal">
+                      {trnsfr.mint ? minifyAddress(trnsfr.mint!, 4) : 'SOL'}
+                    </SolaceText>
+                  </View>
+                </SolacePaper>
+              );
+            })}
+          </ScrollView>
         </View>
       </SolaceContainer>
     </SolaceContainer>

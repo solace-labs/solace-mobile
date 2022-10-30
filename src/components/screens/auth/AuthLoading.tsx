@@ -67,7 +67,7 @@ const AuthLoading = () => {
       const privateKey = user.ownerPrivateKey;
       const tokens = await StorageGetItem('tokens');
       const solaceName = user.solaceName;
-      console.log('from retrieve account', {tokens, solaceName});
+      // console.log('from retrieve account', {tokens, solaceName});
       const keypair = KeyPair.fromSecretKey(
         Uint8Array.from(privateKey.split(',').map(e => +e)),
       );
@@ -79,7 +79,8 @@ const AuthLoading = () => {
       console.log('From storage: ', keypair.publicKey.toString());
       console.log('From sdk: ', sdk.owner.publicKey.toString());
       console.log('WALLET ADDRESS', sdk.wallet.toString());
-      console.log(await sdk.fetchOngoingTransfers());
+      // console.log(await sdk.fetchOngoingTransfers());
+      console.log(await sdk.fetchWalletData());
       dispatch(setSDK(sdk));
       dispatch(setAccountStatus(AccountStatus.ACTIVE));
     } catch (e: any) {
