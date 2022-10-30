@@ -22,6 +22,11 @@ export const getAccounts = async (sdk: SolaceSDK) => {
       },
     );
     const accs: Account[] = [];
+    const solBalance = await sdk.provider.connection.getBalance(sdk.wallet);
+    accs.push({
+      tokenAddress: 'SOL',
+      amount: solBalance / LAMPORTS_PER_SOL,
+    });
     for (let i = 0; i < allAccounts.value.length; i++) {
       const accountInfoBuffer = Buffer.from(allAccounts.value[i].account.data);
       const accountInfo = await SolaceSDK.getAccountInfo(accountInfoBuffer);
@@ -78,10 +83,12 @@ export const getTokenAccount = async (sdk: SolaceSDK, spltoken: string) => {
 export const getMaxBalance = async (sdk: SolaceSDK, asset: string) => {
   try {
     if (asset === 'SOL') {
-      return 0;
+      const solBalance = await sdk.provider.connection.getBalance(sdk.wallet);
+      return solBalance / LAMPORTS_PER_SOL;
     }
     const splTokenAddress = new PublicKey(asset);
     const accountInfo = await sdk?.getTokenAccountInfo(splTokenAddress);
+    console.log(accountInfo);
     return +accountInfo!.amount.toString() / LAMPORTS_PER_SOL;
   } catch (e: any) {
     console.log(e.message);
@@ -125,7 +132,7 @@ export const getGuardians = async (sdk: SolaceSDK) => {
 export const getContacts = async (sdk: SolaceSDK) => {
   try {
     const walletData = await sdk.fetchWalletData();
-    console.log(walletData);
+    // console.log(walletData);
     return walletData.trustedPubkeys;
   } catch (e: any) {
     console.log('Error: ', e);

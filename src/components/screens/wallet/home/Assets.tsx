@@ -108,7 +108,7 @@ const Assets = () => {
             </SolaceText>
             <SolaceIcon background="darkest" color="white" name="down" />
           </View>
-          <AccountItem account={{tokenAddress: 'SOL', amount: 0}} type="send" />
+          {/* <AccountItem account={{tokenAddress: 'SOL', amount: 0}} type="send" /> */}
           {accounts?.map((account, index) => {
             return <AccountItem account={account} key={index} type="send" />;
           })}

@@ -153,6 +153,7 @@ const SendScreen = () => {
       const reciever = new PublicKey(recipientAddress);
       let tx;
       const amountInLamports = +amount * LAMPORTS_PER_SOL;
+      console.log(amountInLamports);
 
       if (isSol) {
         tx = await handleSolTransfer(sdk, amountInLamports, reciever, feePayer);
@@ -160,7 +161,7 @@ const SendScreen = () => {
         tx = await handleSplTransfer(sdk, amountInLamports, reciever, feePayer);
       }
 
-      console.log('IS guarded', tx.isGuarded);
+      console.log('IS guarded', tx.isGuarded, tx);
       const response = await relayTransaction(tx.transaction);
       setSendLoading({
         message: 'finalizing... please wait',
@@ -178,6 +179,7 @@ const SendScreen = () => {
       } else {
         setSendLoading({message: '', value: false});
         Toast.show({
+          type: 'error',
           text1: e.message,
         });
       }
