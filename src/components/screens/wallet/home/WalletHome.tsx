@@ -237,10 +237,11 @@ const WalletHomeScreen = () => {
             />
             <SolaceIcon
               onPress={() => {
-                showMessage({
-                  message: 'coming soon...',
-                  type: 'info',
-                });
+                // showMessage({
+                //   message: 'coming soon...',
+                //   type: 'info',
+                // });
+                navigation.navigate('Buy');
               }}
               background="lightblue"
               name="dollar"

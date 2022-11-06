@@ -10,6 +10,7 @@ import ContactScreen from '../../components/screens/wallet/home/Contact';
 import SendScreen from '../../components/screens/wallet/home/Send';
 import Incubation from '../../components/screens/wallet/home/Incubation';
 import EditRecieverScreen from '../../components/screens/wallet/home/EditReciever';
+import Buy from '../../components/screens/wallet/home/Buy';
 
 export type WalletStackParamList = {
   Wallet: undefined;
@@ -22,6 +23,7 @@ export type WalletStackParamList = {
   Send: {asset: string};
   Incubation: {show: 'yes' | 'no'};
   EditReciever: undefined;
+  Buy: undefined;
 };
 
 const HomeStack = createNativeStackNavigator<WalletStackParamList>();
@@ -59,6 +61,13 @@ const HomeScreenStack = () => {
         }}
         name="Incubation"
         component={Incubation}
+      />
+      <HomeStack.Screen
+        options={{
+          presentation: 'modal',
+        }}
+        name="Buy"
+        component={Buy}
       />
     </HomeStack.Navigator>
   );
