@@ -1,4 +1,4 @@
-import {View} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 import React, {useContext, useState} from 'react';
 import {
   AppState,
@@ -18,6 +18,8 @@ import {StorageGetItem} from '../../../../utils/storage';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
 import {SecurityStackParamList} from '../../../../navigation/Home/Security';
+import QRCodeScanner from 'react-native-qrcode-scanner';
+import {BarCodeReadEvent, RNCamera} from 'react-native-camera';
 
 type AddGuardianScreenProps = NativeStackScreenProps<
   SecurityStackParamList,
@@ -96,6 +98,10 @@ const AddGuardian = () => {
     navigation.goBack();
   };
 
+  const onRead = (e: BarCodeReadEvent) => {
+    console.log(e);
+  };
+
   return (
     <SolaceContainer>
       <TopNavbar
@@ -105,6 +111,16 @@ const AddGuardian = () => {
         startClick={handleGoBack}
       />
       <View style={{flex: 1, marginTop: 8}}>
+        <QRCodeScanner
+          onRead={e => onRead(e)}
+          flashMode={RNCamera.Constants.FlashMode.torch}
+          topContent={<TopNavbar />}
+          bottomContent={
+            <TouchableOpacity>
+              <SolaceText>Hello</SolaceText>
+            </TouchableOpacity>
+          }
+        />
         <SolaceCustomInput
           iconName="line-scan"
           iconType="mci"
