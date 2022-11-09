@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
+  Alert,
   Linking,
   TextStyle,
   TouchableOpacity,
@@ -8,7 +9,11 @@ import {
 } from 'react-native';
 import React, {FC, useContext} from 'react';
 
-import {GlobalContext} from '../../../../state/contexts/GlobalContext';
+import {
+  AccountStatus,
+  AppState,
+  GlobalContext,
+} from '../../../../state/contexts/GlobalContext';
 import {PublicKey} from 'solace-sdk';
 import SolaceContainer from '../../../common/solaceui/SolaceContainer';
 import SolaceText from '../../../common/solaceui/SolaceText';
@@ -34,6 +39,8 @@ import Zocial from 'react-native-vector-icons/Zocial';
 import {Colors} from '../../../../utils/colors';
 import globalStyles from '../../../../utils/global_styles';
 import {showMessage} from 'react-native-flash-message';
+import {clearData, setAccountStatus} from '../../../../state/actions/global';
+import {StorageClearAll, StorageGetItem} from '../../../../utils/storage';
 
 type SecurityScreenProps = NativeStackScreenProps<
   SecurityStackParamList,
@@ -104,8 +111,35 @@ const openLink = (link: string) => {
 };
 
 const SecurityScreen = () => {
-  const {state} = useContext(GlobalContext);
+  const {dispatch} = useContext(GlobalContext);
   const navigation = useNavigation<SecurityScreenProps['navigation']>();
+
+  const logout = async () => {
+    Alert.alert(
+      'are you sure you want to logout?',
+      'you will have to retrieve your vault using google drive.',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: async () => {
+            const appState = await StorageGetItem('appstate');
+            if (appState === AppState.TESTING) {
+              dispatch(setAccountStatus(AccountStatus.NEW));
+            } else {
+              await StorageClearAll();
+              dispatch(clearData());
+              dispatch(setAccountStatus(AccountStatus.NEW));
+            }
+          },
+        },
+      ],
+    );
+  };
 
   const items: OptionItemType[] = [
     {
@@ -169,6 +203,14 @@ const SecurityScreen = () => {
       heading: 'about',
       handlePress: () => {
         navigateTo('About');
+      },
+    },
+    {
+      iconType: 'antdesign',
+      icon: 'lock',
+      heading: 'logout',
+      handlePress: async () => {
+        await logout();
       },
     },
   ];

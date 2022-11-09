@@ -27,6 +27,8 @@ let theme = {
     light: '#d4d4d8',
     normal: '#9999A5',
     dark: '#27272a',
+    darker: '#101010',
+    darkest: '#0D0D0D',
     black: '#000000',
     purple: '#772CB3',
     approved: '#00ac64',
