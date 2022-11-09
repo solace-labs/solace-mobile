@@ -111,16 +111,6 @@ const AddGuardian = () => {
         startClick={handleGoBack}
       />
       <View style={{flex: 1, marginTop: 8}}>
-        <QRCodeScanner
-          onRead={e => onRead(e)}
-          flashMode={RNCamera.Constants.FlashMode.torch}
-          topContent={<TopNavbar />}
-          bottomContent={
-            <TouchableOpacity>
-              <SolaceText>Hello</SolaceText>
-            </TouchableOpacity>
-          }
-        />
         <SolaceCustomInput
           iconName="line-scan"
           iconType="mci"
@@ -134,6 +124,26 @@ const AddGuardian = () => {
           value={address}
           placeholder="wallet address of guardian"
           onChangeText={setAddress}
+        />
+        <QRCodeScanner
+          containerStyle={{width: '100%', borderWidth: 1, borderColor: 'white'}}
+          cameraContainerStyle={{
+            width: '100%',
+            padding: 10,
+            borderWidth: 1,
+            borderColor: 'red',
+          }}
+          cameraStyle={{
+            width: '100%',
+          }}
+          onRead={e => onRead(e)}
+          flashMode={RNCamera.Constants.FlashMode.torch}
+          topContent={<SolaceText>scan qr code</SolaceText>}
+          bottomContent={
+            <TouchableOpacity>
+              <SolaceText>Hello</SolaceText>
+            </TouchableOpacity>
+          }
         />
         {loading.value && <SolaceLoader text={loading.message} />}
       </View>

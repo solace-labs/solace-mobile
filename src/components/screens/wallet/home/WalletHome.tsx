@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
+  ScrollView,
 } from 'react-native';
 import React, {useContext} from 'react';
 import Clipboard from '@react-native-community/clipboard';
@@ -177,89 +178,91 @@ const WalletHomeScreen = () => {
           name="lock"
         />
       </View>
-      <View style={[globalStyles.fullCenter, {flex: 0.4}]}>
-        <Image
-          source={require('../../../../../assets/images/solace/solace-icon.png')}
-          style={{
-            height: 35,
-            resizeMode: 'contain',
-            overflow: 'hidden',
-            marginBottom: 12,
-          }}
-        />
-        <SolaceText weight="bold" size="lg">
-          {user?.solaceName ? user.solaceName : 'solaceuser'}
-        </SolaceText>
-        <TouchableOpacity onPress={copy} style={{marginTop: 12}}>
-          <View style={{alignItems: 'center'}}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={[globalStyles.fullCenter, {paddingVertical: 20}]}>
+          <Image
+            source={require('../../../../../assets/images/solace/solace-icon.png')}
+            style={{
+              height: 35,
+              resizeMode: 'contain',
+              overflow: 'hidden',
+              marginBottom: 12,
+            }}
+          />
+          <SolaceText weight="bold" size="lg">
+            {user?.solaceName ? user.solaceName : 'solaceuser'}
+          </SolaceText>
+          <TouchableOpacity onPress={copy} style={{marginTop: 12}}>
+            <View style={{alignItems: 'center'}}>
+              <View
+                style={[
+                  globalStyles.rowCenter,
+                  {
+                    backgroundColor: Colors.background.normal,
+                    paddingVertical: 6,
+                    paddingHorizontal: 12,
+                    borderRadius: 18,
+                  },
+                ]}>
+                <SolaceText type="primary" weight="semibold" size="sm">
+                  {shortaddress}
+                </SolaceText>
+                <MCI
+                  name="content-copy"
+                  color={Colors.text.white}
+                  size={18}
+                  style={{marginLeft: 12}}
+                />
+              </View>
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        <View style={[globalStyles.fullCenter, {paddingVertical: 20}]}>
+          <SolaceText size="xl" weight="bold">
+            ${(32 * data?.balance! || 0).toFixed(2)}
+          </SolaceText>
+        </View>
+        <View style={[globalStyles.fullCenter, {flex: 0.4}]}>
+          <SolacePaper>
             <View
               style={[
                 globalStyles.rowCenter,
-                {
-                  backgroundColor: Colors.background.normal,
-                  paddingVertical: 6,
-                  paddingHorizontal: 12,
-                  borderRadius: 18,
-                },
+                {width: '80%', justifyContent: 'space-between'},
               ]}>
-              <SolaceText type="primary" weight="semibold" size="sm">
-                {shortaddress}
-              </SolaceText>
-              <MCI
-                name="content-copy"
-                color={Colors.text.white}
-                size={18}
-                style={{marginLeft: 12}}
+              <SolaceIcon
+                onPress={handleSend}
+                background="lightpink"
+                name="ios-send-outline"
+                variant="ionicons"
+                subText="send"
+              />
+              <SolaceIcon
+                onPress={() => {
+                  // showMessage({
+                  //   message: 'coming soon...',
+                  //   type: 'info',
+                  // });
+                  navigation.navigate('Buy');
+                }}
+                background="lightblue"
+                name="dollar"
+                variant="fa"
+                subText="buy"
+              />
+              <SolaceIcon
+                onPress={handleRecieve}
+                background="lightgreen"
+                name="arrowdown"
+                variant="antdesign"
+                subText="recieve"
               />
             </View>
-          </View>
-        </TouchableOpacity>
-      </View>
-
-      <View style={[globalStyles.fullCenter, {flex: 0.2}]}>
-        <SolaceText size="xl" weight="bold">
-          ${(32 * data?.balance! || 0).toFixed(2)}
-        </SolaceText>
-      </View>
-      <View style={[globalStyles.fullCenter, {flex: 0.4}]}>
-        <SolacePaper>
-          <View
-            style={[
-              globalStyles.rowCenter,
-              {width: '80%', justifyContent: 'space-between'},
-            ]}>
-            <SolaceIcon
-              onPress={handleSend}
-              background="lightpink"
-              name="ios-send-outline"
-              variant="ionicons"
-              subText="send"
-            />
-            <SolaceIcon
-              onPress={() => {
-                // showMessage({
-                //   message: 'coming soon...',
-                //   type: 'info',
-                // });
-                navigation.navigate('Buy');
-              }}
-              background="lightblue"
-              name="dollar"
-              variant="fa"
-              subText="buy"
-            />
-            <SolaceIcon
-              onPress={handleRecieve}
-              background="lightgreen"
-              name="arrowdown"
-              variant="antdesign"
-              subText="recieve"
-            />
-          </View>
-        </SolacePaper>
-      </View>
-      <WalletHoldings />
-      {/* <WalletActivity data={[]} /> */}
+          </SolacePaper>
+        </View>
+        <WalletHoldings />
+        {/* <WalletActivity data={[]} /> */}
+      </ScrollView>
     </SolaceContainer>
   );
 };

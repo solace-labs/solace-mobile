@@ -46,6 +46,10 @@ type InitialStateType = {
   contacts?: Contact[];
   awsCognito?: AwsCognito;
   retrieveData?: RetrieveData;
+  addresses: {
+    guardian: string;
+    contact: string;
+  };
 };
 
 export type RetrieveData = {
@@ -112,6 +116,10 @@ export const initialState = {
       address: '1231jkajsdkf02198487',
     },
   ],
+  addresses: {
+    guardian: '',
+    contact: '',
+  },
 };
 
 export const getKeypairFromPrivateKey = (user: User) => {

@@ -65,30 +65,6 @@ const WalletHoldings = () => {
   //   );
   // }
 
-  const openLink = () => {
-    Linking.openURL(
-      `https://solscan.io/account/${state.sdk!.wallet}?cluster=testnet`,
-    );
-  };
-
-  // if (isLoading) {
-  //   return (
-  //     <SolaceContainer>
-  //       {/* <TopNavbar
-  //         startIcon="ios-return-up-back"
-  //         startIconType="ionicons"
-  //         // endIcon="plus"
-  //         text="send"
-  //         startClick={handleGoBack}
-  //         // endClick={handleAdd}
-  //       /> */}
-  //       <SolaceLoader text="getting tokens">
-  //         <ActivityIndicator size="small" />
-  //       </SolaceLoader>
-  //     </SolaceContainer>
-  //   );
-  // }
-
   return (
     <View style={{flex: 0.6, justifyContent: 'space-between', marginTop: 20}}>
       <View style={globalStyles.rowSpaceBetween}>
@@ -96,7 +72,6 @@ const WalletHoldings = () => {
           vault holdings
         </SolaceText>
         <TouchableOpacity onPress={goToAssets}>
-          {/* see more */}
           <SolaceText
             type="secondary"
             color="normal"
@@ -106,53 +81,13 @@ const WalletHoldings = () => {
           </SolaceText>
         </TouchableOpacity>
       </View>
-      {/* {accounts && accounts.length > 0 ? ( */}
-      <ScrollView
-        // refreshControl={
-        //   <RefreshControl refreshing={isLoading} onRefresh={refresh} />
-        // }
-        bounces={true}
-        style={{width: '100%'}}>
-        <View
-          style={[
-            globalStyles.rowCenter,
-            {justifyContent: 'center', marginBottom: 20},
-          ]}>
-          {/* <SolaceText size="sm" weight="extralight">
-              pull to refresh
-            </SolaceText>
-            <SolaceIcon background="dark" name="down" /> */}
-        </View>
-
-        {/* <AccountItem account={{tokenAddress: 'SOL', amount: 0}} type="send" /> */}
-
+      {/* <ScrollView bounces={true} style={{width: '100%', paddingTop: 10}}> */}
+      <View style={{paddingTop: 10}}>
         {accounts?.map((account, index) => {
           return <AccountItem account={account} key={index} type="send" />;
         })}
-      </ScrollView>
-      {/* ) : ( */}
-      {/* <View style={{flex: 1, width: '100%'}}>
-          {isLoading ? (
-            <View
-              style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-              <ActivityIndicator size="small" />
-            </View>
-          ) : (
-            <>
-              <Image
-                source={require('../../../assets/images/solace/send-money.png')}
-                style={[globalStyles.image, {height: 150}]}
-              />
-              <SolaceText type="secondary" size="sm" weight="bold">
-                no tokens found
-              </SolaceText>
-              <SolaceText type="secondary" size="xs" mt={10}>
-                sol transfers are coming very soon
-              </SolaceText>
-            </>
-          )}
-        </View> */}
-      {/* )} */}
+      </View>
+      {/* </ScrollView> */}
     </View>
   );
 };

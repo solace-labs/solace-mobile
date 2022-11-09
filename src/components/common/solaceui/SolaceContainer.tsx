@@ -8,6 +8,7 @@ import {
   ViewProps,
   ViewStyle,
 } from 'react-native';
+
 import type {StyleProp} from 'react-native';
 import {Colors} from '../../../utils/colors';
 
