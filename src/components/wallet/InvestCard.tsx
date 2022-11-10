@@ -8,8 +8,13 @@ import {
 import React, {FC} from 'react';
 import SolaceText from '../common/solaceui/SolaceText';
 import {Colors} from '../../utils/colors';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {WalletStackParamList} from '../../navigation/Home/Home';
+import {useNavigation} from '@react-navigation/native';
 
-export type GuardianCardType = {
+type InvestScreenProps = NativeStackScreenProps<WalletStackParamList, 'Invest'>;
+
+export type InvestCardType = {
   data: {
     id: number;
     heading: string;
@@ -19,11 +24,12 @@ export type GuardianCardType = {
   };
 };
 
-const InvestCard: FC<GuardianCardType> = ({data}) => {
+const InvestCard: FC<InvestCardType> = ({data}) => {
+  const navigation = useNavigation<InvestScreenProps['navigation']>();
   return (
     <TouchableOpacity
       onPress={() => {
-        Linking.openURL(data.url);
+        navigation.navigate('WebView', {uri: data.url, title: data.heading});
       }}>
       <View
         style={{

@@ -12,6 +12,7 @@ import Incubation from '../../components/screens/wallet/home/Incubation';
 import EditRecieverScreen from '../../components/screens/wallet/home/EditReciever';
 import Buy from '../../components/screens/wallet/home/Buy';
 import Invest from '../../components/screens/wallet/home/Invest';
+import WebView from '../../components/screens/wallet/home/WebView';
 
 export type WalletStackParamList = {
   Wallet: undefined;
@@ -26,6 +27,7 @@ export type WalletStackParamList = {
   EditReciever: undefined;
   Buy: undefined;
   Invest: undefined;
+  WebView: {uri: string; title: string};
 };
 
 const HomeStack = createNativeStackNavigator<WalletStackParamList>();
@@ -44,6 +46,7 @@ const HomeScreenStack = () => {
       <HomeStack.Screen name="AddToken" component={AddToken} />
       <HomeStack.Screen name="Contact" component={ContactScreen} />
       <HomeStack.Screen name="Invest" component={Invest} />
+      <HomeStack.Screen name="WebView" component={WebView} />
       <HomeStack.Screen
         options={{
           presentation: 'modal',
